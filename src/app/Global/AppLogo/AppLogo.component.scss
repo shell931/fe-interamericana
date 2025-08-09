@@ -1,0 +1,30 @@
+   .logoimg{
+     height: 50px;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
+    transition: all 0.1s;
+  }
+ 
+  .fixedlogo{
+    max-height: 35px !important;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
+    transition: all 0.1s;
+  }
+
+
+  @media (max-width: 640px){
+    .logoimg {
+      height: 30px;
+      transition: all 0.1s;
+    }
+   }
+
+
+  @media (max-width: 767px){
+    .logoimg {
+      height: 40px;
+      transition: all 0.1s;
+    }
+   }
+

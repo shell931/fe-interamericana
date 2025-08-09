@@ -1,0 +1,203 @@
+@import 'variables';
+@import 'material-theme';
+@import "core/core";
+@import "pages/pages";
+@import "components/components";
+@import "utilities/utilities";
+@import "admin/admin";
+@import "table_general";
+// @import "~@ng-select/ng-select/themes/material.theme.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+mat-sidenav.em-sidebar {
+  width: 433px !important;
+  max-width: 100vw !important;
+}
+
+// Estilos globales para todos los inputs y textareas
+input,
+input.form-control,
+textarea,
+textarea.form-control {
+  font-weight: 200 !important;
+  font-size: 14px !important;
+  transition: none !important;
+}
+
+input::placeholder,
+input.form-control::placeholder,
+textarea::placeholder,
+textarea.form-control::placeholder {
+  font-weight: 200 !important;
+  font-size: 14px !important;
+  color: #999 !important;
+}
+
+input:hover,
+input:focus,
+input:active,
+input.form-control:hover,
+input.form-control:focus,
+input.form-control:active,
+textarea:hover,
+textarea:focus,
+textarea:active,
+textarea.form-control:hover,
+textarea.form-control:focus,
+textarea.form-control:active {
+  outline: none !important;
+  border: 1px solid #ced4da !important;
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+// Estilos específicos para inputs de ng-select
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+  font-weight: 200 !important;
+  font-size: 14px !important;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input > input:focus {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+// Hacer que el contenedor principal de la página de cuenta ocupe todo el ancho disponible
+.inner-container,
+.account-info {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 auto;
+  padding: 2.5rem 2rem !important;
+  box-sizing: border-box;
+}
+
+// Estilos globales para elementos de texto
+span {
+  font-weight: 200 !important;
+  font-size: 15px !important;
+}
+
+b {
+  font-weight: 200 !important;
+  font-size: 15px !important;
+  display: inline-block !important;
+}
+
+label {
+  font-weight: 200 !important;
+  font-size: 15px !important;
+  display: inline-block !important;
+  margin-right: 5px;
+}
+
+p {
+  font-weight: 200 !important;
+  font-size: 15px !important;
+  display: inline-block !important;
+}
+
+h4 {
+  font-weight: 200 !important;
+}
+
+// Estilos globales para tablas
+table {
+  width: 100%;
+
+  tr {
+    font-weight: 200 !important;
+    font-size: 14px !important;
+  }
+
+  td {
+    font-weight: 200 !important;
+    font-size: 14px !important;
+  }
+
+  th {
+    font-weight: 200 !important;
+    font-size: 14px !important;
+  }
+}
+
+// Estilos específicos para tablas de Material
+.mat-table {
+  tr {
+    font-weight: 200 !important;
+    font-size: 14px !important;
+  }
+
+  td {
+    font-weight: 200 !important;
+    font-size: 14px !important;
+  }
+
+  th {
+    font-weight: 200 !important;
+    font-size: 14px !important;
+  }
+}
+
+// Estilos globales para material-icons (excluyendo header)
+.material-icons {
+  color: #3f403f !important;
+}
+
+// Para casos donde el icono esté dentro de otros elementos
+i.material-icons {
+  color: #3f403f !important;
+}
+
+// Para iconos en botones y otros elementos interactivos
+button .material-icons,
+a .material-icons,
+.mat-button .material-icons,
+.mat-raised-button .material-icons,
+.mat-icon-button .material-icons {
+  color: #3f403f !important;
+}
+
+// Excepciones para el header - iconos en blanco
+header .material-icons,
+#header .material-icons,
+.kompraloheader .material-icons,
+.dark .material-icons,
+.header-v1 .material-icons,
+.header-v2 .material-icons,
+.header-v3 .material-icons {
+  color: white !important;
+}
+
+// También para elementos específicos del header
+.top-link .material-icons,
+.navbar .material-icons,
+.menu .material-icons {
+  color: white !important;
+}
+
+// Iconos específicos que deben permanecer blancos
+button[mat-fab] .material-icons,
+button[mat-mini-fab] .material-icons,
+.color-black-font.material-icons {
+  color: white !important;
+}
+
+// Iconos en menús que deben tener color #3f403f
+mat-menu .material-icons,
+.mat-menu-panel .material-icons {
+  color: #3f403f !important;
+}
+
+// Iconos en el menú de navegación de cuenta (fondo oscuro)
+.user-nav-list .material-icons {
+  color: white !important;
+}

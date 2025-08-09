@@ -1,0 +1,203 @@
+<div class="inner-container section-gap-lg">
+    <div class="container">
+        <div fxLayout='row wrap' fxLayoutAlign="center center">
+            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="80" fxFlex.lg="70" fxFlex.xl="70">
+                <div fxLayout='row wrap' fxLayoutAlign="center center">
+
+                    <mat-card class="register-form loginbg p-5">
+                        <h3 class="titulo"><span>Registra tus datos</span></h3>
+
+                        <form [formGroup]="registerForm">
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <label><b>Nombres</b><b class="obligatory"> *</b></label>
+                                        <input type="text" formControlName="name" class="form-control" required maxlength="30">
+                                        <mat-error
+                                            *ngIf="registerForm.get('name').hasError('required') && registerForm.get('name').touched">
+                                            Este campo es obligatorio.</mat-error>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label><b>Apellidos</b><b class="obligatory"> *</b></label>
+                                        <input type="text" placeholder="Apellidos" formControlName="second_name"
+                                            class="form-control" required maxlength="30">
+                                        <mat-error
+                                            *ngIf="registerForm.get('second_name').hasError('required') && registerForm.get('second_name').touched">
+                                            Este campo es obligatorio.</mat-error>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <label><b>Tipo de identificación</b><b class="obligatory"> *</b></label>
+                                        <ng-select [items]="identifier$ | async" bindLabel="type_identifier"
+                                            bindValue="id" [formControl]="identifiersFilterCtrl"
+                                            formControlName="identifiersCtrl" [(ngModel)]="selectIdentifiers" required>
+                                        </ng-select>
+                                        <mat-error
+                                            *ngIf="registerForm.get('identifiersCtrl').hasError('required') && registerForm.get('identifiersCtrl').touched">
+                                            Este campo es obligatorio.</mat-error>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label><b>Número de identificación</b><b class="obligatory"> *</b></label>
+                                        <input type="text" placeholder="Número de identificación"
+                                            formControlName="number_identifier" class="form-control" required maxlength="10">
+                                        <mat-error
+                                            *ngIf="registerForm.get('number_identifier').hasError('required') && registerForm.get('number_identifier').touched">
+                                            Este campo es obligatorio.</mat-error>
+                                        <mat-error *ngIf="registerForm.controls['number_identifier'].hasError('pattern')">
+                                            Solo se aceptan números
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <label><b>Email</b><b class="obligatory"> *</b></label>
+                                        <input type="text" formControlName="email" placeholder="Email"
+                                            class="form-control" required maxlength="50">
+                                        <mat-error
+                                            *ngIf="registerForm.controls['email'].touched && !registerForm.controls['email'].valid">
+                                            <mat-error *ngIf="registerForm.controls['email'].hasError('required')"
+                                                class="required alert-error">
+                                                Deberas ingresar un email
+                                            </mat-error>
+                                            <mat-error *ngIf="registerForm.controls['email'].hasError('pattern')">
+                                                Debes incluir un formato de email valido.
+                                            </mat-error>
+                                        </mat-error>
+                                    </div>
+                                    <div class="col-sm">
+                                        <label><b>Password</b><b class="obligatory"> *</b></label>
+                                        <input type="password" placeholder="Password" formControlName="password"
+                                            class="form-control" required maxlength="50">
+                                        <mat-error
+                                            *ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched">
+                                            Este campo es obligatorio.</mat-error>
+                                    </div>
+                                </div>
+                                <!-- <div class="row">
+                                    <div class="col-sm">
+                                        <div class="mb-4">
+                                            <label>Repetir Password</label>
+                                            <input type="password" placeholder="Repetir Password"
+                                                formControlName="repeat_password" class="form-control" required>
+                                            <mat-error
+                                                *ngIf="registerForm.get('repeat_password').hasError('required') && registerForm.get('repeat_password').touched">
+                                                Este campo es obligatorio.</mat-error>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm">
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="mb-4">
+                                <h4><strong>Agrega un domicilio</strong></h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm">
+
+                                    <label><b>Departamento</b><b class="obligatory"> *</b></label>
+                                    <ng-select [items]="depart$ | async" bindLabel="departament"
+                                        bindValue="id_departament" [formControl]="departamentFilterCtrl"
+                                        formControlName="departamentCtrl" (change)="citieChangeAction($event)"
+                                        (selectionChange)="citieChangeAction(departamentCtrl)" required>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="registerForm.get('departamentCtrl').hasError('required') && registerForm.get('departamentCtrl').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                </div>
+                                <div class="col-sm">
+                                    <label><b>Ciudad</b><b class="obligatory"> *</b></label>
+                                    <ng-select [items]="city$ | async" bindLabel="city" bindValue="id_city"
+                                        [formControl]="citieCtrl" formControlName="citieCtrl" [(ngModel)]="selectedCity"
+                                        required>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="registerForm.get('citieCtrl').hasError('required') && registerForm.get('citieCtrl').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                </div>
+                            </div>
+
+                            <label><b>Barrio</b><b class="obligatory"> *</b></label>
+                            <input type="text" placeholder="Barrio" formControlName="neighborhood" class="form-control"
+                                required maxlength="80">
+                            <mat-error
+                                *ngIf="registerForm.get('neighborhood').hasError('required') && registerForm.get('neighborhood').touched">
+                                Este campo es obligatorio.</mat-error>
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <label><b>Via</b><b class="obligatory"> *</b></label>
+                                    <input type="text" placeholder="Via" formControlName="via" class="form-control"
+                                        required maxlength="20">
+                                    <mat-error
+                                        *ngIf="registerForm.get('via').hasError('required') && registerForm.get('via').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                </div>
+                                <div class="col-sm">
+                                    <label><b>#</b><b class="obligatory"> *</b></label>
+                                    <input type="text" placeholder="#" formControlName="number_streeth"
+                                        class="form-control" required maxlength="20">
+                                    <mat-error
+                                        *ngIf="registerForm.get('number_streeth').hasError('required') && registerForm.get('number_streeth').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                </div>
+                                <div class="col-sm">
+                                    <label><b>-</b><b class="obligatory"> *</b></label>
+                                    <input type="text" placeholder="-" formControlName="sn" class="form-control"
+                                        required maxlength="20">
+                                    <mat-error
+                                        *ngIf="registerForm.get('sn').hasError('required') && registerForm.get('sn').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                </div>
+                            </div>
+                            <div class="col-sm" style="padding-left: 0px;padding-right: 0px;">
+                                <label><b>Datos adicionales</b><b class="obligatory"> *</b></label>
+                                <textarea type="text" placeholder="Datos adicionales" formControlName="aditional_data"
+                                    class="form-control" required maxlength="200"></textarea>
+                                <mat-error
+                                    *ngIf="registerForm.get('aditional_data').hasError('required') && registerForm.get('aditional_data').touched">
+                                    Este campo es obligatorio.</mat-error>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm">
+                                    <label><b>Teléfono de contacto</b><b class="obligatory"> *</b></label>
+                                    <input type="text" placeholder="Telefono de contacto" formControlName="phone"
+                                        class="form-control" required maxlength="50" minlength="7">
+                                    <mat-error
+                                        *ngIf="registerForm.get('phone').hasError('required') && registerForm.get('phone').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                    <mat-hint>Mas de 7 digitos</mat-hint>
+                                </div>
+                                <div class="col-sm">
+                                    <label><b>Persona de contacto</b><b class="obligatory"> *</b></label>
+                                    <input type="text" placeholder="Persona de contacto" formControlName="contact"
+                                        class="form-control" required maxlength="50">
+                                    <mat-error
+                                        *ngIf="registerForm.get('contact').hasError('required') && registerForm.get('contact').touched">
+                                        Este campo es obligatorio.</mat-error>
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <button color="accent" class="mb-3" mat-raised-button
+                                    (click)="register_user_front()">Registrar</button>
+
+                                <div class="mt-2" *ngIf="validate_user">
+                                    <li style="color:red">
+                                        <label style="color:red">
+                                            El usuario ya se encuentra registrado
+                                        </label>
+                                    </li>
+                                </div>
+
+                                <div> Ya tienes una cuenta? entonces <a class="accent-color"
+                                        [routerLink]="['/session/signin']">Ingresa</a></div>
+                            </div>
+
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+.mat-card-image {
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 10px;
+    float: right;
+    margin-right: 2rem;
+}
+
+mat-card {
+    box-shadow: none !important;
+}
+
+mat-card p {
+    box-shadow: none !important;
+}
+
+.mat-line {
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+    padding: 0.5em 0;
+}
+
+p.mat-line {
+    margin: 0.3rem 0 !important;
+    padding: 0.5em 0 !important;
+}
+
+h4 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.prede {
+    color: #362f2f;
+}

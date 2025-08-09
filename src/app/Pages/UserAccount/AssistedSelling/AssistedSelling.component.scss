@@ -1,0 +1,62 @@
+@import '../../../../assets/scss/_table_general.scss';
+
+.dash-title {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0px;
+}
+
+hr {
+  height: 0.5px;
+  background-color: #f3f3f4;
+}
+
+.class_aprobed {
+  background-color: #c0f48f;
+  color: rgba(0, 0, 0, .87);
+  display: inline-block;
+  vertical-align: baseline;
+  padding: 2px 7px;
+  margin: 0 12px 0 0;
+  border-radius: 5px;
+  font-size: 13px;
+  width: 100px;
+}
+
+.class_anul {
+  background-color: #acc3f6;
+  color: rgba(0, 0, 0, .87);
+  display: inline-block;
+  vertical-align: baseline;
+  padding: 2px 7px;
+  margin: 0 12px 0 0;
+  border-radius: 5px;
+  font-size: 13px;
+  width: 100px;
+}
+
+.class_reject {
+  background-color: #f25567;
+  color: rgba(0, 0, 0, .87);
+  display: inline-block;
+  vertical-align: baseline;
+  padding: 2px 7px;
+  margin: 0 12px 0 0;
+  border-radius: 5px;
+  font-size: 13px;
+  width: 100px;
+}
+
+.class_label {
+  margin-bottom: 0px;
+  margin-top: 5px;
+}
+
+input {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  outline: none;
+  height: 30px;
+  border-radius: 5px;
+}

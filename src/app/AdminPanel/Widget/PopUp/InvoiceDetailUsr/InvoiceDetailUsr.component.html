@@ -1,0 +1,97 @@
+<div class="mb-5">
+    <div class="table-responsive-x">
+        <table>
+            <tr>
+                <td colspan="6"><b>DATOS DE LA COMPRA</b></td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo identificación</th>
+                <th>Identificación</th>
+                <th>Departamento</th>
+                <th>Ciudad</th>
+                <th>Dirección</th>
+            </tr>
+            <tr>
+                <td>{{data.name_client}}</td>
+                <td>{{data.type_identifier}}</td>
+                <td>{{data.number_identifier}}</td>
+                <td>{{data.departament}}</td>
+                <td>{{data.nameci}}</td>
+                <td>{{data.adress}}</td>
+            </tr>
+            <tr>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Referencia Tx</th>
+                <th>Método de pago</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>{{data.phone}}</td>
+                <td>{{data.email}}</td>
+                <td>{{data.reference}}</td>
+                <td>{{data.paymentmethod}}</td>
+                <td>{{data.name_state}}</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="py-1 mb-5">
+        <div fxLayout="row wrap" fxLayoutAlign="start center" class="col-gap">
+            <div *ngFor="let item of data.image_gallery">
+                <img width="626" height="800" class="img_size" src="{{ item }}" alt="cart Image">
+            </div>
+            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" class="size_card">
+                <div class="text-right">
+                    <div class="table-responsive-x">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Prod</th>
+                                    <th>Cod</th>
+                                    <th>Precio</th>
+                                    <th>cantidad</th>
+                                    <th>Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of adminprList">
+                                    <th><label class="color_res">
+                                            <img class="img-circle inline-block"
+                                                src="{{img_product_rout}}{{item.image}}" width="50" height="50"
+                                                style=" border-radius: 10%;">
+                                            {{ item.name_product }}
+                                        </label></th>
+                                    <th><label class="color_res">{{ item.product_code }}</label> </th>
+                                    <th><label class="color_res">{{ item.unit_price|currency : 'USD' : 'symbol' :
+                                            '1.0-0'
+                                            }}</label>
+                                    </th>
+                                    <th><label class="color_res">{{ item.quantity }}</label></th>
+                                    <th><label class="color_res">{{ item.total_price|currency : 'USD' : 'symbol' :
+                                            '1.0-0'
+                                            }}</label></th>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><b>Total</b></td>
+                                    <td>
+                                        <!-- <strong>{{data.total_price|currency : 'COP' : 'symbol' : '1.0-0' }}</strong> -->
+                                        <strong>{{data.total_price|currency : 'USD' : 'symbol' : '1.0-0' }}</strong>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

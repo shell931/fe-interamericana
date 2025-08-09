@@ -1,0 +1,19 @@
+.conta{
+    margin-top: 80px;
+    background-color: white;
+}
+
+html body {
+    margin: 0;
+    color: #3A405B;
+    padding: 0;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-family: "Roboto", sans-serif;
+    background: #ffffff;
+}
+
+.incorrec_user_pass{
+    color:red;
+}

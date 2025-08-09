@@ -1,0 +1,102 @@
+<div class="inner-container">
+    <div class="final-receipt-page section-gap">
+        <div class="account-info">
+
+            <div fxLayout="row wrap" class="col-gap mx-0">
+                <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="15" fxFlex.lg="15" fxFlex.xl="15" class="user-nav-list">
+                    <mat-list role="list">
+                        <mat-list-item role="listitem">
+                            <a [routerLink]="['/account/profile']" routerLinkActive="tab-active">
+                                <span>
+                                    <i class="material-icons">account_circle</i>Tu información
+                                </span>
+                            </a>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <a [routerLink]="['/account/order-history']" routerLinkActive="tab-active">
+                                <i class="material-icons">history</i>
+                                <span>Compras</span>
+                            </a>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <a [routerLink]="['/account/address']" routerLinkActive="tab-active">
+                                <i class="material-icons">location_on</i>
+                                <span>Ubicaciones</span>
+                            </a>
+                        </mat-list-item>
+
+                        <mat-list-item role="listitem">
+                            <a [routerLink]="['/account/cards']" routerLinkActive="tab-active">
+                                <i class="material-icons">credit_card</i>
+                                <span>Tarjetas guardadas</span>
+                            </a>
+                        </mat-list-item>
+
+
+                        <mat-list-item role="listitem" *ngIf="show_store_pr">
+                            <a [routerLink]="['/account/store_adm']" routerLinkActive="tab-active">
+                                <i class="material-icons">account_balance</i>
+                                <span>Tu tienda</span>
+                            </a>
+                        </mat-list-item>
+
+                        <mat-list-item role="listitem" *ngIf="show_store_pr">
+                            <a [routerLink]="['/account/product_adm']" routerLinkActive="tab-active">
+                                <i class="material-icons">add_shopping_cart</i>
+                                <span>Productos</span>
+                            </a>
+                        </mat-list-item>
+
+                        <mat-list-item role="listitem" *ngIf="show_store_pr">
+                            <a [routerLink]="['/account/invoice_adm']" routerLinkActive="tab-active">
+                                <i class="material-icons">fact_check</i>
+                                <span>Facturas</span>
+                                <span matBadge="{{number_invoice_inprocces}}" matBadgeOverlap="false"></span>
+                            </a>
+                        </mat-list-item>
+
+                        <mat-list-item role="listitem" *ngIf="show_store_pr">
+                            <a [routerLink]="['/account/balance_status']" routerLinkActive="tab-active">
+                                <i class="material-icons">paid</i>
+                                <span>Saldo</span>
+                            </a>
+                        </mat-list-item>
+
+                        <mat-list-item role="listitem" *ngIf="show_store_pr">
+                            <a [routerLink]="['/account/transfers_view']" routerLinkActive="tab-active">
+                                <i class="material-icons">assignment</i>
+                                <span>Transferencias</span>
+                            </a>
+                        </mat-list-item>
+
+                        <!-- <mat-list-item role="listitem" *ngIf="show_store_pr">
+                            <a (click)="RouteAssitedSelling()" routerLinkActive="tab-active">
+                                <i class="material-icons">link</i>
+                                <span>Compra asistida</span>
+                            </a>
+                        </mat-list-item> -->
+
+                    </mat-list>
+                </div>
+                <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="85" fxFlex.lg="85" fxFlex.xl="85"
+                    class="user-content-wrapper">
+                    <div class="tab-container">
+                        <div class="user-info">
+                            <!-- <div fxLayoutAlign="flex-start"> -->
+                            <div class="login-user-img">
+                                <!-- <img src="assets/images/user-4.jpg" width="70" alt="Active User"> -->
+                            </div>
+                            <div class="bienvenida">
+                                <b>Hola, {{name}}</b>
+                                <p style="margin-left: 10px;">{{email}}</p>
+                            </div>
+                            <!-- </div> -->
+                        </div>
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

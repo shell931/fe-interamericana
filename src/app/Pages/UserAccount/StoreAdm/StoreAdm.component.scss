@@ -1,0 +1,72 @@
+.account-info{
+    max-width: 1280px;
+    margin: 0 auto;
+    background: #f4f4f4;
+    overflow: hidden;
+    border-radius: 20px;
+    // margin-top: 4rem;
+}
+
+.mat-card-image{
+    border: 1px solid #eee;
+        padding: 10px;
+        border-radius: 10px;
+        float: right;
+        margin-right: 2rem;
+    }
+
+    mat-card{
+        box-shadow:none !important;
+
+    }
+
+    mat-card p{
+        box-shadow:none !important;
+
+    }
+
+    .mat-line {
+        font-size: 1rem;
+        border-bottom: 1px solid #eee;
+        padding: 0.5em 0;
+    }
+
+    h4{
+        font-size: 1.1rem;
+        font-weight: 500;
+        }
+
+// Estilos para la estructura de información en filas
+.info-grid {
+    width: 100%;
+}
+
+.info-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    gap: 2rem;
+}
+
+.info-item {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-item.full-width {
+    flex: 1 1 100%;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+}
+
+.info-value {
+    font-weight: 200;
+    color: #666;
+}

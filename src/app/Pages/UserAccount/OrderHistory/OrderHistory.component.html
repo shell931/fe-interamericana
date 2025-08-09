@@ -1,0 +1,80 @@
+<mat-card>
+    <b> Tus compras </b>
+
+    <!-- <mat-card class="m-3">
+        <div fxLayout="row wrap">
+            <div fxFlex.gt-md="600px" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-form-field class="w-100">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card> -->
+
+    <div class="buttonIn mt-2">
+        <input class="inputsearch" matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar" autocomplete="off" type="search">
+        <button class="btn btn-primary button-search class_search" type="submit" tabindex="-1">
+            <span class="mat-button-wrapper">
+                <i class="fa fa-search"></i>
+            </span></button>
+    </div>
+
+    <div class="table-responsive-x">
+        <table mat-table [dataSource]="dataSource" class="w-100 table-scroll-wrap">
+
+            <ng-container matColumnDef="action">
+                <th class="px-3" mat-header-cell *matHeaderCellDef> Action </th>
+                <td class="px-3" mat-cell *matCellDef="let element">
+                    <button mat-icon-button (click)="onSeeDialog(element)" color="primary">
+                  <i class="material-icons">remove_red_eye</i>
+               </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reference">
+                <th class="px-3" mat-header-cell *matHeaderCellDef> Referencia </th>
+                <td class="px-3" mat-cell *matCellDef="let element"> {{ element.reference}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="name_external_state">
+                <th class="px-3" mat-header-cell *matHeaderCellDef> Estado </th>
+                <td class="px-3" mat-cell *matCellDef="let element">
+                    <div *ngIf="element.ex_state_id === 1" class="class_pend" align="center">
+                        {{element.name_external_state}}
+                    </div>
+                    <div *ngIf="element.ex_state_id === 2" class="class_reject" align="center">
+                        {{element.name_external_state}}
+                    </div>
+                    <div *ngIf="element.ex_state_id === 3" class="class_reject" align="center">
+                        {{element.name_external_state}}
+                    </div>
+                    <div *ngIf="element.ex_state_id === 4" class="class_reject" align="center">
+                        {{element.name_external_state}}
+                    </div>
+                    <div *ngIf="element.ex_state_id === 5" class="class_aprobe" align="center">
+                        {{element.name_external_state}}
+                    </div>
+                    <div *ngIf="element.ex_state_id === 6" class="class_reject" align="center">
+                        {{element.name_external_state}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="created_at">
+                <th class="px-3" mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td class="px-3" mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="total_p">
+                <th class="px-3" mat-header-cell *matHeaderCellDef> Total </th>
+                <td class="px-3" mat-cell *matCellDef="let element"> {{ element.total_p|currency : 'USD' : 'symbol' : '1.0-0' }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[15, 30, 45, 60]"></mat-paginator>
+</mat-card>

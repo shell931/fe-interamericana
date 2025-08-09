@@ -1,0 +1,222 @@
+<div class="main-container">
+
+
+    <div class="container">
+
+        <div class="box-content1">
+
+
+
+            <swiper [config]="config" class="slider_home">
+                <div class="swiper-wrapper">
+                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner.jpg" alt="slider1"
+                        class="swiper-slide" />
+
+                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner2.jpg" alt="slider1"
+                        class="swiper-slide" />
+                </div>
+
+                <div class="swiper-pagination"></div>
+
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </swiper>
+
+
+
+        </div>
+        <!-- banner-->
+        <!-- <div class="banners1 banners" fxShow="false" fxHide.gt-sm="false">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
+                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn1.jpg" alt="image"> </figure>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
+                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn2.jpg" alt="image"> </figure>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
+                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn3.jpg" alt="image"> </figure>
+                </div>
+            </div>
+        </div> -->
+        <!-- /banner-->
+
+        <div class="row mt-5">
+
+            <!-- Productos destacados-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div layout="row" layout-wrap>
+
+                    <div class="col-lg-12 pl-0">
+
+                        <h3 class="titulo"><span>Productos Destacados</span>
+                        </h3>
+                    </div>
+
+                    <div fxLayout="row wrap" fxLayoutAlign="center start">
+                        <mat-card class="example-card card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="50%"
+                            *ngFor="let card of productsGrid">
+
+                            <mat-card-content class="product-content producto_destacado relative">
+
+                                <a class="p-link link_producto" *ngIf="!card?.id" [routerLink]="[card?.route_product]">
+                                    <img class="img_size image_pixeled" mat-card-image [defaultImage]="card?.image"
+                                        [lazyLoad]="card?.image">
+                                </a>
+
+                                <a class="p-link" *ngIf="card?.id"
+                                    [routerLink]="['/products', card?.type, card?.id_product]">
+                                    <img class="img_size image_pixeled" mat-card-image [src]="card?.image"
+                                        [defaultImage]="card?.image" [lazyLoad]="card?.image">
+                                </a>
+                                <div class="right-block">
+                                    <h6 class="titulo_producto"><a *ngIf="product?.id_product"
+                                            [routerLink]="['/products', card?.type, card?.id_product]"
+                                            class="title-link">{{card?.name}}</a>
+                                    </h6>
+
+                                    <h6 class="titulo_producto"><a *ngIf="!product?.id_product"
+                                            [routerLink]="['/products/accessories/card?.id_product']"
+                                            class="title-link">{{card?.name}}</a>
+                                    </h6>
+
+                                    <p class="price">
+                                        <span class="price-new">{{card?.price | currency : 'USD' : 'symbol' :
+                                            '1.0-0'}}</span>
+                                    </p>
+                                    <p class="price red">
+                                        <span class="price-red">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}
+                                            <img class="cards" src="assets/images/tarjetas.png" /> </span>
+                                    </p>
+
+                                    <div class="rating-star">
+                                        <embryo-Rating [rate]="card.rating"></embryo-Rating>
+                                    </div>
+                                    <button (click)="productAddToWishlist(card, i+'-wishlist')" type="button"
+                                        class="wishlist btn-button" title="Añadir a lista de deseos"><i
+                                            class="fa fa-heart-o"></i>
+                                    </button>
+
+                                    <div class="btn_comprar" *ngIf="checkCartAlready(card)">
+                                        <embryo-AddToCardButton [product]="product"
+                                            (addToCart)="addToCartProduct($event)">
+
+                                        </embryo-AddToCardButton>
+                                        <ng-container *ngIf="card">
+                                            <button mat-fab (click)="addToCartProduct(card)" class="btn-button"><i
+                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
+                                        </ng-container>
+                                    </div>
+                                    <div class="btn_comprar" *ngIf="!checkCartAlready(card)">
+                                        <button class="btn-button" mat-fab *ngIf="card?.id_product"
+                                            [routerLink]="['/products', card?.type, card?.id_product]"><i
+                                                class="fa fa-eye" aria-hidden="true"></i> </button>
+                                        <button class="btn-button" mat-fab *ngIf="!card?.id_product"
+                                            [routerLink]="[card?.route_product]"><i class="fa fa-eye"
+                                                aria-hidden="true"></i> </button>
+                                    </div>
+                                    <span class="deliveryicon">
+                                        <img src="assets/images/shipping-fast-solid.svg" /> Envío gratis</span>
+                                    <bar-rating [(rate)]="rate" [max]="5"></bar-rating>
+                                </div>
+
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!-- /Productos destacados-->
+
+        </div>
+
+        <a class="btn btn-block transparent-btn" (click)="extendGridStructure()">VER MAS PRODUCTOS</a>
+
+        <!-- Tiendas -->
+        <!-- <div class="tiendas_grid">
+            <div class="col-lg-12 mt-5 pl-0">
+                <h3 class="titulo"><span>Nuestras Tiendas</span>
+                </h3>
+            </div>
+            <div fxLayout="row wrap">
+                <mat-card class="card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="33%"
+                    *ngFor="let card of obsStore | async | paginate: { itemsPerPage: 10, currentPage: p }  ">
+                    <mat-card-content>
+                        <a class="p-link link_tiendas" *ngIf="!card?.id" [routerLink]="[card?.route_store]">
+                            <img mat-card-image [defaultImage]="card?.logo_store" [lazyLoad]="card?.logo_store">
+                        </a>
+                        <mat-card-header>
+                            <mat-card-subtitle>
+                                <h5 class="card-title item-title">{{card?.name_store }}</h5>
+                            </mat-card-subtitle>
+                        </mat-card-header>
+                        <p class="desc_tienda">
+                            {{card?.description }}
+                        </p>
+                        <a class="p-link" *ngIf="!card?.id" [routerLink]="[card?.route_store]">
+                            <span class="float-end btn-comprar-card mt-2">Ver Productos<i
+                                    class="fa fa-plus px-1"></i></span>
+                        </a>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <a class="btn btn-block transparent-btn" (click)="extendGridStructure()">VER MAS TIENDAS</a>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-12 col-xs-12 ">
+                    <img _ngcontent-embryo-seo-pre-c396=""
+                        src="assets/kompralostyle/image/catalog/banners/banners-audifonos.png" alt="image">
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <img _ngcontent-embryo-seo-pre-c396=""
+                        src="assets/kompralostyle/image/catalog/banners/banners-celulares.png" alt="image">
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <img _ngcontent-embryo-seo-pre-c396=""
+                        src="assets/kompralostyle/image/catalog/banners/banners-acccelulares.png" alt="image">
+                </div>
+            </div>
+        </div> -->
+        <!-- /Tiendas -->
+
+        <!-- <div class="row" align="center">
+            <div class="col-md-4 col-sm-12 col-xs-12 ">
+                <img class="icon_home" _ngcontent-embryo-seo-pre-c396=""
+                    src="assets/kompralostyle/image/catalog/banners/reclamacion.svg" alt="image">
+                <p>
+                    <b>1. Indica tu inconformidad</b>
+                </p>
+                <p>
+                    Si tienes alguna inconformidad con tu producto, garantizaremos el retorno de tu dinero.
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <img class="icon_home" _ngcontent-embryo-seo-pre-c396=""
+                    src="assets/kompralostyle/image/catalog/banners/charla.svg" alt="image">
+                <p>
+                    <b>2. Respuesta y atención del vendedor</b>
+                </p>
+                <p>
+                    Establecemos un plazo para la respuesta y atención del vendedor, nuestro equipo intervendrá por una
+                    respuesta
+                    oportuna.
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <img class="icon_home" _ngcontent-embryo-seo-pre-c396=""
+                    src="assets/kompralostyle/image/catalog/banners/reclamacion.svg" alt="image">
+                <p>
+                    <b>3. Si no hay solución devolvemos tu dinero </b>
+                </p>
+                <p>
+                    En menos de 24 horas tu dinero estará de vuelta.
+                </p>
+            </div>
+        </div> -->
+
+    </div>
+</div>

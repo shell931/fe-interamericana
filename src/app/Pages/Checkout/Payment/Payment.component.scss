@@ -1,0 +1,217 @@
+.cardpage {
+    border-radius: 15px !important;
+    padding: 3rem !important;
+    --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+}
+
+.font-weight-class{
+  font-weight: 200 !important;
+}
+
+// Estilos para todos los placeholders del formulario de pago
+.form-control::placeholder {
+  font-weight: 200 !important;
+  font-size: 14px !important;
+  color: #999 !important;
+}
+
+// Eliminar efectos de hover de los inputs
+.form-control:hover,
+.form-control:focus,
+.form-control:active {
+  outline: none !important;
+  border: 1px solid #ced4da !important;
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+// Eliminar transiciones por defecto
+.form-control {
+  transition: none !important;
+  font-weight: 200 !important;
+  font-size: 14px !important;
+}
+
+p{
+  font-weight: 200 !important;
+}
+
+// Estilos para los textos de las pestañas
+.mat-tab-label {
+  font-weight: 200 !important;
+}
+
+.mat-tab-label-content {
+  font-weight: 200 !important;
+}
+
+// Sobrescribir estilos globales con selectores más específicos
+mat-tab-group .mat-tab-label .mat-tab-label-content {
+  font-weight: 200 !important;
+  text-transform: none !important;
+}
+
+.titulo {
+    margin-bottom: 2rem;
+}
+
+label {
+    display: block;
+    margin-top: 1rem;
+}
+
+label b {
+    font-weight: 600;
+}
+
+.button-pay {
+    width: 100%;
+}
+
+.cards_icon {
+    width: 60px;
+    height: 45px;
+}
+
+.class_label {
+    margin-bottom: 0px;
+}
+
+.row-between {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.info-entrega {
+  flex: 1 1 auto;
+}
+
+.button-option {
+  width: auto !important;
+  min-width: 180px;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+// Centrar el div del checkout horizontalmente
+.col-md-8.col-sm-12.col-xs-12.mt-2 {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.col-md-8.col-sm-12.col-xs-12.mt-2 .cardpage {
+    width: 100%;
+    max-width: 800px;
+}
+
+.view-cart.text-center {
+  text-align: center;
+}
+
+.mobile-view {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .mobile-view {
+        display: block;
+    }
+    .web-view {
+        display: none;
+    }
+    .cards_icon[_ngcontent-embryo-seo-pre-c418] {
+        width: 55px;
+        height: 45px;
+    }
+}
+
+.row-between-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 0.5rem;
+}
+
+.bf-ui-separator {
+  width: calc(100% + 6rem);
+  margin-left: -3rem;
+  height: 1px;
+  background: #e0e0e0;
+  border: none;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.link-action {
+  color: #1976d2;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.link-action:hover {
+  color: #0d47a1;
+  text-decoration: none;
+}
+
+// Estilos para centrar el mensaje de carrito vacío
+.section-gap-lg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: 2rem;
+  margin: 0;
+  position: relative;
+}
+
+.section-gap-lg h4 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.section-gap-lg a {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+
+.section-gap-lg a:hover {
+  background-color: #0056b3;
+  text-decoration: none;
+  color: white;
+}
+
+// Asegurar que el contenedor principal también centre el contenido
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Centrar el contenido cuando no hay productos
+.container:has(.section-gap-lg) {
+  justify-content: center;
+  align-items: center;
+}
+

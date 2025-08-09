@@ -1,0 +1,121 @@
+.cart-item-price{
+  font-weight: 200 !important;
+}
+
+.card-delete{
+  margin-left: 60px;
+}
+
+.img_edit {
+    width: 80px;
+    height: 80px;
+    border-radius: 10%;
+}
+
+.cartbg {
+    border-radius: 5px !important;
+    border: 0px;
+    background: #fff !important;
+    box-shadow: 0px 14px 15px -10px rgb(193 194 200 / 54%);
+    padding: 1rem;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.titulocart {
+    font-weight: 600;
+    float: left;
+    text-align: left;
+}
+
+.mobile-view {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .cartbg {
+        border-radius: 15px;
+        border: 0px;
+        background: #fff !important;
+        box-shadow: 0px 14px 15px -10px rgb(193 194 200 / 54%);
+        border-radius: 1.2rem;
+        padding: 1rem;
+        width: 100%;
+    }
+    .mobile-view {
+        display: block;
+    }
+    .web-view {
+        display: none;
+    }
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 120px;
+  justify-content: space-between;
+  background: #fff;
+}
+
+.quantity-control input {
+  width: 40px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 200;
+  outline: none;
+}
+
+.quantity-control button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #aaa;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.quantity-control button:active {
+  color: #333;
+}
+
+.cart-total{
+  margin-top: 25px !important;
+}
+
+// Estilos para forzar el scroll al inicio
+.cart-page {
+  scroll-behavior: smooth;
+}
+
+// Asegurar que el contenedor principal tenga scroll suave
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-behavior: smooth;
+}
+
+// Efecto visual para indicar que se está haciendo scroll
+.cart-page {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

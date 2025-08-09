@@ -1,0 +1,48 @@
+.text-card-header {
+    font-weight: 200 !important;
+    color: #000000c7 !important;
+}
+
+.cartbtn {
+    font-size: 1.5rem;
+    color: #eee;
+}
+
+#mat-badge-content-1 {
+    width: 23px;
+    height: 23px;
+    line-height: 21px;
+    text-align: center;
+    border-radius: 100%;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    position: absolute;
+    bottom: 4px !important;
+    left: 0px !important;
+    top: auto !important;
+    font-size: 12px;
+    color: #fff;
+    background: #79dc78;
+    border: 2px solid #79dc78;
+}
+
+button {
+    margin: 0;
+    border: 0;
+    background: transparent;
+}
+
+.mat-badge-accent .mat-badge-content {
+    background: #efe64e !important;
+    color: #333;
+    top: -3px !important;
+}
+
+.padicon {
+    padding-top: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: black !important;
+}

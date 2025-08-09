@@ -1,0 +1,111 @@
+<div class="container mt-5" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80"
+     fxLayoutAlign="center center">
+  <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80">
+    <mat-card class="cardpage">
+      <h3 class="titulo"><span>{{calculateData?.title}}</span></h3>
+      <div class="row mb-4 mt-1">
+        <div class="col-md">
+          <p class="pt-2">Calcula fácilmente la tarifa de una venta. Solo ingresa el valor de la compra, haz clic en
+            "Calcular tarifa" y !listo!.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <p class="title-bg text-white font-bold rounded p-2 h5 text-center">Digite el Valor de Compra</p>
+          <form (ngSubmit)='calculate()' [formGroup]='form' novalidate class="form">
+            <div class="form-row">
+              <p class="col-md-4 mt-2">Valor de la venta</p>
+              <input class="text-center form-control h5 font-bold col-md-8" prefix="$" formControlName='amount' mask="separator" thousandSeparator="."  type="text" placeholder="Ingrese valor" />
+              <div class="alert  alert-danger" *ngIf="form.get('amount').hasError('required') && form.get('amount').touched">
+                El valor es requerido
+              </div>
+            </div>
+            <div class="form-row">
+              <p class="col-md-4 mt-2">Iva de la venta %</p>
+              <input class="text-center form-control h5 font-bold col-md-8" suffix="%" formControlName='vatPercentage' mask="separator" thousandSeparator="."  type="text" placeholder="Ingrese valor" />
+              <div class="alert  alert-danger" *ngIf="form.get('vatPercentage').hasError('required') && form.get('vatPercentage').touched">
+                El porcentaje es requerido
+              </div>
+            </div>
+            <div class="text-center">
+              <button mat-raised-button color="accent" [disabled]='form.invalid' class="mt-2 h6 font-bold">CALCULAR TARIFA</button>
+            </div>
+          </form>
+
+          <div class="mt-4 border rounded p-2">
+            <div class="row">
+              <div class="col-8 text-left">
+                Base gravable:
+              </div>
+              <div class="col-4 text-right">
+                {{calculateData?.taxableBase | currency : 'USD' : 'symbol' : '1.0-0'}}
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-8 text-left">
+                IVA:
+              </div>
+              <div class="col-4 text-right">
+                {{calculateData?.vat | currency : 'USD' : 'symbol' : '1.0-0'}}
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-8 text-left">
+                Valor total (Valor venta + IVA):
+              </div>
+              <div class="col-4 text-right">
+                {{(calculateData?.taxableBase + calculateData?.vat) | currency : 'USD' : 'symbol' : '1.0-0'}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md">
+          <img src="assets/images/calculator/calculator.png" class="img-fluid" alt="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md mb-3">
+          <app-card-calculator
+            title="Descuentos Kómpralo"
+            [items]="itemsKompralo"
+            [footer]="footerCommissions"
+          ></app-card-calculator>
+        </div>
+        <div class="col-md mb-3">
+          <app-card-calculator
+            title="Retenciones"
+            [items]="itemsWithHoldings"
+            [footer]="footerWithHoldings"
+          ></app-card-calculator>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-1">
+        <div class="col-10 col-md-6">
+          <div class="row third-title-bg rounded py-1 mb-1">
+            <div class="col-8 font-bold text-md">
+              Total Retenciones y Comisiones:
+            </div>
+            <div class="col-4 text-right text-md">
+              {{calculateData?.totalWithholdingCommissions | currency : 'USD' : 'symbol' : '1.0-0'}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-2">
+        <div class="col-10 col-md-7">
+          <div class="row title-bg rounded">
+            <div class="col-8 h5 text-white m-0 py-3 px-2 font-bold">
+              *TOTAL A TRANSFERIR:
+            </div>
+            <div class="col-4 text-right h5 text-white m-0 py-3 px-2 font-bold">
+              {{calculateData?.totalTransfer | currency: 'USD' : 'symbol' : '1.0-0'}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-2">
+        <small>*Este valor es por transacción, no incluye costo de transferencia más IVA.</small>
+      </div>
+    </mat-card>
+  </div>
+</div>

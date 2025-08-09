@@ -1,0 +1,25 @@
+@import '../../../../assets/scss/pages/_product-cards.scss';
+
+
+input {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    outline: none;
+    height: 30px;
+    border-radius: 5px;
+}
+
+
+.backgroundstyle {
+    background-color: white;
+}
+
+.pad_t {
+    padding-top: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: black !important;
+}

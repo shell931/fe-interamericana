@@ -1,0 +1,70 @@
+.account-info {
+    max-width: 90%;
+    margin: auto;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 20px;
+    --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+    padding: 20px !important;
+}
+
+.user-nav-list {
+    flex: inherit;
+    background: #232526;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #414345, #232526);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #414345, #232526);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    margin: 0;
+    border-radius: 10px;
+    padding-top: 1rem;
+}
+
+.user-nav-list a {
+    color: #eee;
+}
+
+.mat-list-item-content a {
+    margin-bottom: 1rem !important;
+    padding: 0 16px !important;
+}
+
+p {
+  color: black !important;
+}
+
+.bienvenida {
+    margin-left: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+}
+
+.bienvenida h4 {
+    font-size: 1.2rem;
+}
+
+.bienvenida h4 {
+    font-size: 1.2rem;
+}
+
+.mat-table th {
+    font-size: 600;
+}
+
+span{
+  font-weight: 200;
+}
+
+b{
+  font-size: 16px !important;
+  font-weight: 200 !important;
+}
+
+p{
+  font-size: 16px !important;
+  font-weight: 200 !important;
+}

@@ -1,0 +1,86 @@
+.card-header {
+  background-color: transparent !important;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+.color_title {
+  color: #00a650;
+}
+
+.product-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.product-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-info-container {
+  width: 100%;
+  max-width: 300px;
+}
+
+.cart_view {
+  color: #3483fa;
+}
+
+.add-to-card {
+  font-weight: 200 !important;
+  font-size: 16px;
+  word-wrap: break-word;
+}
+
+.title-add-to-card {
+  font-weight: 200 !important;
+  font-size: 18px !important;
+  margin-bottom: 1rem;
+}
+
+.button-view-cart {
+  margin-top: 1.5rem;
+}
+
+// Responsive breakpoints
+@media (max-width: 767.98px) {
+  .product-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .title-add-to-card {
+    font-size: 16px !important;
+  }
+
+  .add-to-card {
+    font-size: 14px;
+  }
+
+  .button-view-cart {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .product-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .title-add-to-card {
+    font-size: 15px !important;
+  }
+
+  .add-to-card {
+    font-size: 13px;
+  }
+}

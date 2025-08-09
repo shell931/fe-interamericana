@@ -1,0 +1,81 @@
+<div class="container">
+    <div class="row mt-5 backgroundstyle">
+        <div class="col-lg-3 col-sm-12 col-xs-12">
+            <mat-card class="card_category">
+                <b>
+                    Buscar tiendas por categoria:
+                </b>
+                <mat-tree [dataSource]="dataSourceTree" [treeControl]="treeControl" class="example-tree mt-3">
+                    <mat-nested-tree-node *matTreeNodeDef="let node;">
+                        <ul>
+                            <li (click)="GetProductCategory(node.id)">
+                                <div class="categ">
+                                    <a (click)="GetProductCategory(node.id)" class=" link-category ">
+                                        <img _ngcontent-embryo-seo-pre-c396=" " src=" assets/images/icons_category_store/{{node.icon}} " alt="image " class="image-li ">{{node.name_category}}
+                                    </a>
+                                </div>
+                                <div align="right ">
+                                    <span class="material-icons icon_arrow_forward_ios ">
+                                        arrow_forward_ios
+                                    </span>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </mat-nested-tree-node>
+                </mat-tree>
+            </mat-card>
+        </div>
+
+
+        <div class="col-lg-9 col-sm-12 col-xs-12 pad_t">
+
+            <div class="container ">
+                <div class="tiendas_grid ">
+                    <!-- <mat-toolbar class="style_toolbar ">
+                        <mat-form-field style="width: 100% " floatLabel='never'> -->
+                    <div class="buttonIn">
+                        <input class="inputsearch" matInput [(ngModel)]="searchText " placeholder="Buscar tiendas " type="search" autocomplete="off ">
+                        <button class="btn btn-primary button-search class_search" type="submit" tabindex="-1">
+                            <span class="mat-button-wrapper">
+                                <i class="fa fa-search"></i>
+                            </span></button>
+                    </div>
+                    <!-- </mat-form-field>
+                    </mat-toolbar> -->
+                    <div fxLayout="row wrap " fxLayoutAlign="none " class="col-gap div_produc mb-5 ">
+                        <mat-card class="card_store_prod " fxFlex="25% " fxFlex.xs="50% " fxFlex.sm="33% " *ngFor="let card of obsStore | async | filter : searchText | paginate: { itemsPerPage: 8, currentPage: p } ">
+
+                            <mat-card-content>
+                                <a class="p-link link_tiendas " *ngIf="!card?.id " [routerLink]="[card?.route_store] ">
+
+                                    <img mat-card-image [src]="card?.logo_store " [ngClass]="{ transparent: !loaded } " (load)="onLoad() " alt="Photo ">
+
+                                </a>
+
+                                <mat-card-header>
+                                    <mat-card-subtitle>
+                                        <h5 class="card-title item-title ">{{card?.name_store }}</h5>
+                                    </mat-card-subtitle>
+                                </mat-card-header>
+
+                                <p class="desc_tienda ">
+                                    {{card?.description }}
+                                </p>
+                                <a class="p-link " *ngIf="!card?.id " [routerLink]="[card?.route_store] ">
+                                    <span class="float-end btn-comprar-card mt-2 ">Ver Productos<i
+                                            class="fa fa-plus px-1 "></i></span>
+                                </a>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <mat-paginator class="mb-5 " [pageSizeOptions]="[8, 8, 25, 100] "></mat-paginator>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

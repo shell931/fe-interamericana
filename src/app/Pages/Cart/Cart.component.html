@@ -1,0 +1,77 @@
+<div class="cart-page" *ngIf="(embryoService.localStorageCartProducts && embryoService.localStorageCartProducts.length>0); else elseBlock">
+    <div class="container" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80">
+
+        <div class="mt-5 mb-5">
+            <mat-card class="cartbg">
+                <div class="cart-wrapper">
+                    <div class="cart-shop-list mb-1 text-center">
+                        <div fxLayout='row wrap' fxLayoutAlign="start center" class="cart-item" *ngFor="let product of embryoService.localStorageCartProducts">
+                            <div fxFlex.xs="30" fxFlex.sm="30" fxFlex.md="10" fxFlex.lg="20" fxFlex.xl="20" class="cart-product-image">
+                                <div class="cart-item-thumb">
+                                    <a href="javascript:void(0)" class="p-link">
+                                        <img class="img_edit" [src]="product.image" alt="cart image">
+                                    </a>
+                                </div>
+                            </div>
+                            <div fxFlex.xs="70" fxFlex.sm="70" fxFlex.md="90" fxFlex.lg="80" fxFlex.xl="80">
+                                <div fxLayout='row wrap' fxLayoutAlign="center center" class="cart-product-info">
+                                    <div fxFlex.xs="100" fxFlex.sm="40" fxFlex.md="30" fxFlex.lg="40" fxFlex.xl="40">
+                                        <div class="cart-item-price" align="left">
+
+                                            <p>{{product?.name}}</p>
+                                            <span>{{ calculateProductSinglePrice(product, getQuantityValue(product)) |
+                                                             currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="quantity-control">
+                                            <button type="button" (click)="decrement(product)">-</button>
+                                            <input type="text" [value]="getQuantityValue(product)" readonly>
+                                            <button type="button" (click)="increment(product)">+</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="cart-item-price card-delete">
+                                            <a href="javascript:void(0)" class="accent-color remove-cart" (click)="removeProduct(product)"><span class="material-icons" style="font-size: 20px !important;">delete</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart-total" fxLayout='row wrap' fxLayoutAlign="flex-end">
+                        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="40" fxFlex.lg="40" fxFlex.xl="40">
+                            <div>
+                                <!-- <p>Subtotal</p><span fxFlex></span> {{calculateTotalPrice() | currency:embryoService?.currency}} -->
+                            </div>
+                            <div>
+                                <!-- <p>Shipping..</p><span fxFlex></span> {{embryoService.shipping | currency:embryoService?.currency}} -->
+                            </div>
+                            <div>
+                                <!-- <p>Tax(GST)</p><span fxFlex></span> {{embryoService.tax | currency:embryoService?.currency}} -->
+                            </div>
+                            <div class="mb-2">
+                                <h4>Total</h4><span fxFlex></span>
+                                <h4> {{getTotalPrice() | currency : 'USD' : 'symbol' : '1.0-0'}}</h4>
+                            </div>
+                            <div> <span fxFlex></span><button mat-raised-button color="accent" (click)="updateLocalCartProduct()">Continuar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+
+
+    </div>
+</div>
+
+<ng-template #elseBlock>
+    <div class="section-gap-lg text-center" align="center">
+        <div class="mb-4">
+            <img src="assets/images/empty-cart.png" height="128" width="128" alt="cart-empty">
+        </div>
+        <h4> Your Shopping Bag is empty.</h4>
+        <a href="javascript:void(0)" class="primary-color" [routerLink]="['/']">Go for Shopping</a>
+    </div>
+</ng-template>

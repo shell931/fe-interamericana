@@ -1,0 +1,159 @@
+.description-product {
+    font-size: 14px;
+    font-weight: 200;
+    color: #000000c7;
+}
+
+.container {
+    max-width: 1080px;
+}
+
+p {
+    color: #111;
+}
+
+.product-box-desc {
+    padding: 10px 20px;
+    position: relative;
+}
+
+.inner-box-desc {
+    position: relative;
+}
+
+.product-box-desc .inner-box-desc:before {
+    content: "";
+    width: 4px;
+    background: #79dc78;
+    height: 100%;
+    position: absolute;
+    left: -20px;
+    top: 0;
+}
+
+.icon.favorits {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #666;
+    border: 1px solid #e6e6e6;
+    cursor: pointer;
+}
+
+.product_ind {
+    box-shadow: none !important;
+    margin-right: 1rem !important;
+    border: 0px;
+}
+
+.mat-flat-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-fab.mat-accent,
+.mat-mini-fab.mat-accent {
+    background: #79dc78;
+}
+
+.mat-raised-button {
+    background: #f0e74c;
+}
+
+.mat-grid-tile .mat-figure {
+    position: relative !important;
+}
+
+.titulo_producto {
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    margin: 0 0 7px 0;
+    font-weight: 300 !important;
+    font-size: 0.8rem;
+}
+
+.price {
+    margin: 0;
+    line-height: 21px;
+    color: #111;
+    font-size: 1.2rem !important;
+    font-weight: 500;
+    text-align: left !important;
+    display: block;
+}
+
+.price-red {
+    color: #FD0000;
+}
+
+.deliveryicon {
+    color: #111;
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
+.deliveryicon img {
+    height: 25px;
+    vertical-align: middle;
+    background: #79dc78;
+    padding: 5px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.cards {
+    height: 25px;
+}
+
+.agregarcarrito {
+    width: 200px;
+}
+
+.comprarahora {
+    width: 200px;
+    background: #ddd !important;
+    color: #333 !important;
+}
+
+.bordercol {
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.product-detail-image-gallery .mat-grid-tile {
+    position: relative;
+    overflow: hidden;
+    width: 100% !important;
+}
+
+.container.white {
+    padding: 40px;
+    background: #fff;
+}
+
+.galeria_item {
+    border: 1px solid #ddd;
+}
+
+.reviewc {
+    background: #ddd;
+    border: 0px !important;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.reviewb {
+    background: #79dc78;
+    color: #fff;
+    border: 0px !important;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+@media (max-width:991px) {
+    .top5s {
+        margin-top: 2rem;
+    }
+}

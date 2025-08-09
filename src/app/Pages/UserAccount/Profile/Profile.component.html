@@ -1,0 +1,17 @@
+<b>Tu información</b>
+<div class="pt-3">
+    <div class="proflie-field mb-3">
+        <label>Nombre:</label>
+        <span>{{name}}</span>
+    </div>
+    <!-- <div class="proflie-field mb-3">
+      <label>Mobile Number:</label>
+      <span>+120 256 254 125</span>
+    </div> -->
+    <div class="proflie-field mb-3">
+        <label>E-mail:</label>
+        <span>{{email}}</span>
+    </div>
+
+    <button mat-raised-button color="accent" [routerLink]="['edit']" [queryParams]="{type:'info'}">Editar</button>
+</div>

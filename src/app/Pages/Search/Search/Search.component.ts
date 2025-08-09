@@ -1,0 +1,243 @@
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { ApiService } from '../../../Services/api.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { EmbryoService } from '../../../Services/Embryo.service';
+import { environment } from '../../../../../src/environments/environment';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+
+export interface Prod {
+    image: string;
+    name: string;
+    price: string;
+    produc_code: string;
+    brand: string;
+    product_code: string;
+    discount_price: string;
+    id_product: string;
+    availability: boolean;
+    route_product: string;
+    id_store: string;
+}
+
+
+interface subcategoryNode {
+    id: number;
+    name_category: string;
+    children?: subcategoryNode[];
+    type: string;
+    icon:any;
+}
+
+interface ExampleFlatNode {
+    expandable: boolean;
+    name: string;
+    level: number;
+}
+
+@Component({
+    selector: 'app-Search',
+    templateUrl: './Search.component.html',
+    styleUrls: ['./Search.component.scss']
+})
+
+export class SearchComponent implements OnInit {
+
+
+    private _transformer = (node: subcategoryNode, level: number) => {
+        return {
+            expandable: !!node.children && node.children.length > 0,
+            name: node.name_category,
+            level: level,
+            id: node.id,
+            name_category: node.name_category,            
+            icon: node.icon,            
+            type: node.type
+        };
+    }
+
+    treeControlN = new FlatTreeControl<ExampleFlatNode>(
+        node => node.level, node => node.expandable);
+
+    treeFlattener = new MatTreeFlattener(
+        this._transformer, node => node.level, node => node.expandable, node => node.children);
+    dataSourceN = new MatTreeFlatDataSource(this.treeControlN, this.treeFlattener);
+
+
+
+
+    treeControl = new NestedTreeControl<subcategoryNode>(node => node.children);
+    dataSourceTree = new MatTreeNestedDataSource<subcategoryNode>();
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    productsGrid: Prod[] = [];
+    dataSource = new MatTableDataSource<Prod>(this.productsGrid);
+    obs: Observable<any>;
+    id: any;
+    get_product: Prod[] = [];
+    get_categories: subcategoryNode[] = [];
+    loaded = false;
+    get_subca: any[] = [];
+    p:any;
+
+    constructor(private route: ActivatedRoute,
+        private router: Router,
+        public embryoService: EmbryoService,
+        private apiService: ApiService,
+        private changeDetectorRef: ChangeDetectorRef,
+
+    ) {
+        // this.dataSourceTree.data = TREE_DATA;
+    }
+
+    hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+
+    ngOnInit() {                 
+        this.route.params.subscribe(res => {
+            this.id = res.id;
+            this.apiService.FilterProducts(this.id).subscribe(res => this.getProductData(res));
+        })
+        this.apiService.getCategories().subscribe(res => this.getCategoriesMenu(res));
+    }
+
+    SearchByCategories(type, id_category){
+        localStorage.removeItem("id_category_prod_search");
+        localStorage.removeItem("type_cate_subcate_search");
+        localStorage.setItem('id_category_prod_search', id_category);
+        localStorage.setItem('type_cate_subcate_search', type);
+
+        if(type=="category"){
+            this.apiService.getProductsbyCategory(id_category).subscribe(res => this.getProductData(res));
+        }else{
+            this.apiService.getProductsbySubcategory(id_category).subscribe(res => this.getProductData(res));
+        }
+    }
+
+    getCategoriesMenu(response) {
+        this.get_categories = [];
+        for (var i = 0; i < response.length; i++) {
+            let subcategor = this.createSubcategories(response[i].rel_categories);
+            this.get_categories.push(
+                {
+                    id: response[i].id,
+                    name_category: response[i].name_category,
+                    type: 'category',
+                    children: subcategor,
+                    icon: response[i].icon,
+                });
+        }            
+        this.dataSourceN.data = this.get_categories;
+    }
+
+    createSubcategories(subcate) {
+        this.get_subca = [];
+        for (var i = 0; i < subcate.length; i++) {
+            this.get_subca.push(
+                {
+                    id: subcate[i].id,
+                    name_category: subcate[i].name_subcategory,
+                    type: 'subcategory'
+                },
+            );
+        }
+        return this.get_subca;
+    }
+
+    getProductData(response) {
+        this.get_product = [];
+        for (var i = 0; i < response.length; i++) {
+            let get_image = environment.api.baseBucketImageUrl + response[i].image;
+            let get_name_product = response[i].name_product;
+            let get_total_price = response[i].total_price;
+            let get_produc_code = response[i].product_code;
+            let get_brand = response[i].brand;
+            let get_product_code = response[i].product_code;
+            let get_discount_price = response[i].discount_price;
+            let get_id_product = response[i].id_product;
+            let get_availability = response[i].availability;
+            let get_id_store = response[i].store;
+            this.get_product.push({
+                image: get_image,
+                name: get_name_product,
+                price: get_total_price,
+                produc_code: get_produc_code,
+                brand: get_brand,
+                product_code: get_product_code,
+                discount_price: get_discount_price,
+                id_product: get_id_product,
+                availability: get_availability,
+                id_store: get_id_store,
+                route_product: '/products/accessories/' + get_id_product
+            });
+        }
+        this.productsGrid = this.get_product;
+        this.dataSource = new MatTableDataSource<Prod>(this.productsGrid);
+        this.changeDetectorRef.detectChanges();
+        this.dataSource.paginator = this.paginator;
+        this.obs = this.dataSource.connect();
+
+    }
+
+    public onLoad() {
+        this.loaded = true;
+    }
+
+    public checkCartAlready(singleProduct) {
+        let products = JSON.parse(localStorage.getItem("cart_item")) || [];
+        if (!products.some((item) => item.name == singleProduct.name)) {
+            return true;
+        }
+    }
+
+    public addToCartProduct(value: any) {
+
+        let myObj_product = {
+            "brand": value.brand,
+            "discount_price": value.discount_price,
+            "id_product": value.id_product,
+            "id_store": value.id_store,
+            "name": value.name,
+            "price": value.price,
+            "produc_code": value.produc_code,
+            "canti": 1,
+            "quantity": 1,
+            "image": value.image,
+            "route_product": value.route_product
+        };
+
+        let products = JSON.parse(localStorage.getItem("cart_item")) || [];
+        if (products.length > 0) {
+            this.embryoService.addToCart(myObj_product);
+            // let id_store_storage;
+            // for (var i = 0; i < 1; i++) {
+            //     id_store_storage = products[i].id_store;
+            // }
+            // if (id_store_storage == value.id_store) {
+            //     this.embryoService.addToCart(value);
+            // }
+            // else {
+            //     //   const dialogRef = this.dialog.open(DialogContentProductDiferentStoreDetail, {
+            //     //      width: '500px',
+            //     //    });      
+            //     //   dialogRef.afterClosed().subscribe(result => {
+            //     //      console.log(`Dialog result: ${result}`);
+            //     //   });
+            // }
+        } else {
+            this.embryoService.addToCart(myObj_product);
+        }
+
+    }
+
+    public productAddToWishlist(value: any) {
+        this.embryoService.addToWishlist(value);
+    }
+
+
+
+
+}

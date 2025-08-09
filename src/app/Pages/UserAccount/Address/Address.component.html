@@ -1,0 +1,34 @@
+<mat-card>
+    <b>Ubicaciones</b>
+    <div fxLayout="row wrap" class="col-gap">
+        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100">
+            <!-- <h5>Billing Address</h5> -->
+
+            <mat-list>
+                <mat-list-item *ngFor="let location of locationsGrid; last as last" class="mb-3" style="border: 1px solid #ccc!important;border-radius: 16px;padding-right: 16px;
+                padding-left: 16px;">
+                    <p mat-line class="demo-2 prede plabel" *ngIf="location.predetermined==true">
+                        <strong>Predeterminada</strong></p>
+                    <p mat-line class="demo-2"> {{location.via}} #{{location.number}} - {{location.sn}}</p>
+                    <p mat-line class="demo-2"> {{location.neighborhood}}</p>
+                    <p mat-line class="demo-2"> {{location.nameci}} - {{location.departament}}</p>
+                    <p mat-line class="demo-2"> {{location.additional_data}} </p>
+                    <p mat-line class="demo-2"> {{location.contact}} - {{location.phone}} </p>
+                    <button mat-mini-fab class="log-in-user" [matMenuTriggerFor]="loginuser">
+                            <i class="material-icons mr-1">more_vert</i>
+                        </button>
+                    <mat-menu #loginuser="matMenu">
+                        <button mat-menu-item [routerLink]="['/account/address/edit',location.id]"><i
+                                    class="material-icons mr-1">edit</i><span>Editar</span></button>
+                        <button mat-menu-item (click)="predetermined(location.id)"><i
+                                    class="material-icons mr-1">done_outline</i><span>Establecer predeterminada</span></button>
+                        <button mat-menu-item (click)="deleteLocation(location.id)"><i
+                                    class="material-icons mr-1">restore_from_trash</i><span>Eliminar</span></button>
+                    </mat-menu>
+                    <!-- <mat-divider [inset]="true" *ngIf="!last"></mat-divider> -->
+                </mat-list-item>
+                <button mat-raised-button color="accent" [routerLink]="['/account/address/create']" [queryParams]="{type:'info'}">Agrega una ubicación</button>
+            </mat-list>
+        </div>
+    </div>
+</mat-card>

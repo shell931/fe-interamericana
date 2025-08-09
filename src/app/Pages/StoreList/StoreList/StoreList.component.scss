@@ -1,0 +1,161 @@
+.tiendas_grid .mat-card-content {
+  border: 1px solid #eee;
+  background: transparent !important;
+  padding: 0.6rem;
+  transition: .3s transform cubic-bezier(.155, 1.105, .295, 1.12), .3s, .3s -webkit-transform cubic-bezier(.155, 1.105, .295, 1.12);
+}
+
+.tiendas_grid .link_tiendas img {
+  border: 0px !important;
+}
+
+.tiendas_grid .mat-card-content:hover {
+  transform: scale(1.05);
+}
+
+.mat-card {
+  border: 0px !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.mat-card-content {
+  overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: black !important;
+  font-weight: 300;
+}
+
+.mat-card-header,
+.desc_tienda {
+  // margin: 0px;
+  // min-height: 4rem;
+  // text-align: justify;
+  font-size: 14px;
+  color: #000000c7;
+  font-weight: 200;
+}
+
+.mat-card-header-text {
+  margin: 0px !important;
+}
+
+.tiendas_grid .mat-card .mat-card-image {
+  padding: 0px;
+}
+
+.mat-card-image {
+  width: 100%;
+  margin: 0px;
+  border-radius: 0px !important;
+}
+
+@media screen and (max-width: 1280px) {
+  .block-policy1 .mat-card-content {
+    padding: 1rem;
+    border-radius: 0rem !important;
+  }
+
+  .block-policy1 i {
+    font-size: 1.5rem;
+    float: left;
+    color: #222;
+  }
+
+  .block-policy1 .item-inner p {
+    float: left;
+    text-align: left;
+    position: relative;
+    margin-left: 1rem;
+  }
+
+  .block-policy1 .item-inner .content b {
+    color: #222;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  .card_store_prod {
+    flex: 1 1 25% !important;
+    width: 25% !important;
+    max-width: 25% !important;
+  }
+
+  .producto_destacado .link_producto {
+    height: 130px !important;
+    overflow: hidden !important;
+    display: block !important;
+  }
+
+  .producto_destacado .link_producto .mat-card-image {
+    height: 100% !important;
+    overflow: hidden !important;
+    display: block !important;
+  }
+}
+
+li {
+  list-style-type: none;
+  border-bottom: 1px solid #e3e1e1;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+}
+
+.icon_arrow_forward_ios {
+  padding-top: 5px;
+  color: #e3e1e1
+}
+
+.image-li {
+  max-width: 15%;
+  padding-right: 10px;
+}
+
+.link-category {
+  padding-left: 10px;
+}
+
+.categ {
+  padding-bottom: 7px;
+  padding-top: 5px;
+}
+
+.card_category {
+  margin-top: 45px;
+}
+
+.backgroundstyle {
+  background-color: white;
+}
+
+.pad_t {
+  padding-top: 10px;
+}
+
+@media (max-width:640px) {
+  .card_store_prod {
+    flex: 1 1 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+}
+
+.mat-card-subtitle {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.card-title {
+  font-weight: 300;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  font-family: "Poppins", sans-serif;
+  color: #000000;
+  margin-bottom: 5px;
+}

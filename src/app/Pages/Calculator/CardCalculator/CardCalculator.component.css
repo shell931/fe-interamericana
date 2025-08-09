@@ -1,0 +1,19 @@
+.card-header {
+  border-radius: 6px 6px 0 0;
+  background-color: yellow;
+}
+
+.card-content {
+  min-height: 108px;
+  font-size: 12px;
+}
+
+.card-footer {
+  border-radius: 0 0 6px 6px;
+  background: #cccccc;
+  font-size: 12px;
+}
+
+.mat-card-calculator {
+  border-radius: 0 !important;
+}

@@ -1,0 +1,52 @@
+.text-wishlist {
+    font-weight: 200 !important;
+    color: #000000c7 !important;
+}
+
+.favoritos {
+    font-size: 1.5rem;
+    color: #eee;
+}
+
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+    top: -3px !important;
+}
+
+a {
+    text-decoration: none;
+    color: black !important;
+}
+
+#mat-badge-content-0 {
+    width: 23px;
+    height: 23px;
+    line-height: 21px;
+    text-align: center;
+    border-radius: 100%;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    position: absolute;
+    bottom: 4px;
+    right: -11px;
+    top: auto;
+    font-size: 12px;
+    color: #fff;
+    background: #79dc78;
+    border: 2px solid #79dc78;
+}
+
+.footermobile #mat-badge-content-0 {
+    right: 0px !important;
+    left: auto !important;
+    bottom: 10px !important;
+}
+
+button {
+    margin: 0;
+    border: 0;
+    background: transparent;
+}
+
+.padicon {
+    padding-top: 15px;
+}
