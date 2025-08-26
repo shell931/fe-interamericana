@@ -65,8 +65,8 @@ export class DetailStoreComponent implements OnInit {
             level: level,
             id_store: node.id_store,
             id: node.id,
-            name_category: node.name_category,            
-            icon: node.icon,            
+            name_category: node.name_category,
+            icon: node.icon,
             type: node.type
         };
     }
@@ -128,10 +128,10 @@ export class DetailStoreComponent implements OnInit {
             this.apiService.getProductsbyCategorybyStore(id, id_store).subscribe(res => this.getProductData(res, id_store));
         } else {
             this.apiService.getProductsbySubcategorybyStore(id, id_store).subscribe(res => this.getProductData(res, id_store));
-        }    
+        }
     }
 
-    getCategoriesMenu(response, id_store) {        
+    getCategoriesMenu(response, id_store) {
         this.get_categories = [];
         for (var i = 0; i < response.length; i++) {
             let subcategor = this.createSubcategories(response[i].rel_categories, id_store);
@@ -144,9 +144,17 @@ export class DetailStoreComponent implements OnInit {
                     type: 'category',
                     children: subcategor,
                 });
-        }            
+        }
         this.dataSourceTree.data = this.get_categories;
         this.dataSourceN.data = this.get_categories;
+        // Ensure categories tree is always expanded by default
+        setTimeout(() => {
+            try {
+                this.treeControlN.expandAll();
+            } catch (error) {
+                // no-op if expandAll is unavailable
+            }
+        });
     }
 
     createSubcategories(subcate, id_store) {
@@ -176,8 +184,8 @@ export class DetailStoreComponent implements OnInit {
         this.storeGrid = myObj_store;
     }
 
-    getProductData(response, store_id) {    
-        this.get_product = [];    
+    getProductData(response, store_id) {
+        this.get_product = [];
         for (var i = 0; i < response.length; i++) {
             let get_image = environment.api.baseBucketImageUrl + response[i].image;
             let get_name_product = response[i].name_product;
@@ -204,7 +212,7 @@ export class DetailStoreComponent implements OnInit {
             });
         }
 
-        this.productsGrid = this.get_product;    
+        this.productsGrid = this.get_product;
         this.dataSource = new MatTableDataSource<Prod>(this.productsGrid);
         this.changeDetectorRef.detectChanges();
         this.dataSource.paginator = this.paginator;
@@ -257,7 +265,7 @@ export class DetailStoreComponent implements OnInit {
             // else {
             //     //   const dialogRef = this.dialog.open(DialogContentProductDiferentStoreDetail, {
             //     //      width: '500px',
-            //     //    });      
+            //     //    });
             //     //   dialogRef.afterClosed().subscribe(result => {
             //     //      console.log(`Dialog result: ${result}`);
             //     //   });
@@ -295,18 +303,18 @@ export class FilterPipe implements PipeTransform {
         this.route.params.subscribe(res => {
             this.id = res.id;
         })
-        
-        let id_category_prod = localStorage.getItem('id_category_prod');        
-        let type_cate_subcate = localStorage.getItem('type_cate_subcate');                 
-        
+
+        let id_category_prod = localStorage.getItem('id_category_prod');
+        let type_cate_subcate = localStorage.getItem('type_cate_subcate');
+
         if (type_cate_subcate == "category") {
             this.apiService.getProductsbyCategorybyStore(id_category_prod, this.id).subscribe(res => this.getProductData(res, posts, find, this.id));
-        } else if(type_cate_subcate == "subcategory") {            
+        } else if(type_cate_subcate == "subcategory") {
             this.apiService.getProductsbySubcategorybyStore(id_category_prod, this.id).subscribe(res => this.getProductData(res, posts, find, this.id));
-        }else{            
+        }else{
             this.apiService.getProductStoresbyStoreid(this.id).subscribe(res => this.getProductData(res, posts, find, this.id));
         }
-    
+
         if (!posts) return [];
         if (!find) return posts;
         find = find.toLowerCase();

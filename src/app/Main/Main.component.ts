@@ -81,7 +81,7 @@ export class MainComponent implements OnInit {
    ) {
 
 
-      title.setTitle('Swiftly');
+      title.setTitle('interamericana');
 
       meta.addTags([
          { name: 'author', content: 'The IRON Network' },

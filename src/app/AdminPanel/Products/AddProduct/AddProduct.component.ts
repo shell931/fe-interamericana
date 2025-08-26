@@ -311,7 +311,8 @@ export class AddProductComponent implements OnInit {
                      var dateTime = date + ' ' + time;
                      var dates_as_int = [dateTime];
                      const dates = dates_as_int.map(date => new Date(date).getTime());
-                     const namefile = id_store + '-' + this.selectedSubcategory.id + '-' + dates + i + '.' + get_type_img;
+                     const random = Math.random().toString(36).substring(2, 15);
+                     const namefile = id_store + '-' + random + '.' + get_type_img;
 
                      if (i == 0) {
                         get_first_image_name = namefile;

@@ -136,14 +136,14 @@
 
                 <ng-template #gridtype>
                     <div class="buttonIn">
-                        <input class="inputsearch" matInput [(ngModel)]="searchText" placeholder="Buscar producto" autocomplete="off" type="search">
+                        <input class="inputsearch" matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar producto" autocomplete="off" type="search">
                         <button class="btn btn-primary button-search class_search" type="submit" tabindex="-1">
                             <span class="mat-button-wrapper">
                                 <i class="fa fa-search"></i>
                             </span></button>
                     </div>
                     <div fxLayout="row wrap" fxLayoutAlign="none" class="col-gap div_produc">
-                        <mat-card class="example-card card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="33%" *ngFor="let card of obs | async | filter : searchText | paginate: { itemsPerPage: 12, currentPage: p }  ">
+                        <mat-card class="example-card card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="33%" *ngFor="let card of obs | async">
                             <mat-card-content class="product-content producto_destacado relative">
                                 <a class="p-link" [routerLink]="['/account/product_adm/edit',card.id_product]">
                                     <img class="img_size" mat-card-image [src]="card?.image" [ngClass]="{ transparent: !loaded }" alt="Photo" style="width: 165px;height: 165px;">
@@ -160,17 +160,17 @@
                                     <div class="mb-2">
                                         <span class="">
                                             <a [routerLink]="['/account/product_adm/edit',card.id_product]">
-                                                <img style="max-width: 15%;" src="assets/images/icons_products/072-editar.svg" /> 
+                                                <img style="max-width: 15%;" src="assets/images/icons_products/072-editar.svg" />
                                             </a>
                                         </span>
-                                        <span class="">                                                                                        
+                                        <span class="">
                                             <swal #deleteSwal title="Eliminar producto"
                                                 text="Esta seguro que desea eliminar este producto"
                                                 [showCancelButton]="true" [focusCancel]="true"
                                                 (confirm)="getDeleteResponse(card)">
                                             </swal>
                                             <a [swal]="deleteSwal">
-                                                <img style="max-width: 15%; padding-left: 5px;" src="assets/images/icons_products/069-delete-1.svg" /> 
+                                                <img style="max-width: 15%; padding-left: 5px;" src="assets/images/icons_products/069-delete-1.svg" />
                                             </a>
                                         </span>
                                     </div>
@@ -178,7 +178,7 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
-                    <mat-paginator [pageSizeOptions]="[15, 15, 25, 100]"></mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[15, 15, 25, 100]" [pageSize]="15"></mat-paginator>
                 </ng-template>
             </mat-list>
         </div>

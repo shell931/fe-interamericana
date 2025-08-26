@@ -172,7 +172,7 @@ export class ProductsAdm implements OnInit {
 */
 	getDeleteResponse(data) {
 		console.log(data.name_product);
-		
+
 		if (this.showType == 'grid') {
 			let id_product = data.id_product;
 			this.apiService.deleteProduct(id_product).subscribe(
@@ -185,7 +185,7 @@ export class ProductsAdm implements OnInit {
 				},
 				error => console.log(error)
 			);
-		} 
+		}
 		// else if (this.showType == 'list') {
 		// 	let id_product = this.productsGrid[i];
 		// 	id_product = id_product["id_product"];

@@ -348,7 +348,8 @@ export class ProductsListComponent implements OnInit {
    }
 
    extendGridStructure() {
-      this.router.navigate(['/storelist']);
+      // this.router.navigate(['/storelist']);
+      this.router.navigate(['/storefront/6']);
    }
 
 

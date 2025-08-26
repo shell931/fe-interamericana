@@ -10,6 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../../../../src/environments/environment';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { log } from 'console';
 
 
 declare let alertify: any;
@@ -213,7 +214,6 @@ export class ProductEditAdmComponent implements OnInit {
                 id_image: gallery[i].id,
                 image: gallery[i].image,
             });
-
         }
 
         this.productForm.get('name_product').setValue(this.name_product)
@@ -253,7 +253,10 @@ export class ProductEditAdmComponent implements OnInit {
     }
 
     onSelect(event) {
-        this.files.push(...event.addedFiles);
+        const added = (event && event.addedFiles) ? event.addedFiles : [];
+        for (const file of added) {
+            this.files.push(file);
+        }
     }
 
     onRemove(event) {
@@ -297,16 +300,22 @@ export class ProductEditAdmComponent implements OnInit {
     }
 
     onValidatePixels(file: File) {
-        return new Promise((resolve, reject) => {
-            const Img = new Image();
-            Img.src = URL.createObjectURL(file);
-            Img.onload = (e: any) => {
-                console.log(e);
-                const height = e.target.height;
-                const width = e.path[0].width;
-                if (height >= this.heightMin || width >= this.widthMin) {
+        return new Promise((resolve) => {
+            const image = new Image();
+            const objectUrl = URL.createObjectURL(file);
+            image.src = objectUrl;
+            image.onload = () => {
+                const width = image.naturalWidth || image.width;
+                const height = image.naturalHeight || image.height;
+                URL.revokeObjectURL(objectUrl);
+                if (height >= Number(this.heightMin) || width >= Number(this.widthMin)) {
                     resolve(true);
+                    return;
                 }
+                resolve(false);
+            };
+            image.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
                 resolve(false);
             };
         });

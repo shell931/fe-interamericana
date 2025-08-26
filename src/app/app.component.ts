@@ -38,7 +38,7 @@ import {
       ]
 })
 export class AppComponent {
-  title = 'Swiftly';
+  title = 'interamericana';
 
 
 }

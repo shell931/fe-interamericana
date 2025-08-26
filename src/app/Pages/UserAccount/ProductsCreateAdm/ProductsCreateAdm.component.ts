@@ -159,7 +159,10 @@ export class ProductsCreateAdmComponent implements OnInit {
 
 	onSelect(event) {
 		console.log(event);
-		this.files.push(...event.addedFiles);
+		const added = (event && event.addedFiles) ? event.addedFiles : [];
+		for (const file of added) {
+			this.files.push(file);
+		}
 	}
 
 	onRemove(event) {
@@ -195,16 +198,22 @@ export class ProductsCreateAdmComponent implements OnInit {
 
 
 	onValidatePixels(file: File) {
-		return new Promise((resolve, reject) => {
-			const Img = new Image();
-			Img.src = URL.createObjectURL(file);
-			Img.onload = (e: any) => {
-				console.log(e);
-				const height = e.target.height;
-				const width = e.path[0].width;
-				if (height >= this.heightMin || width >= this.widthMin) {
+		return new Promise((resolve) => {
+			const image = new Image();
+			const objectUrl = URL.createObjectURL(file);
+			image.src = objectUrl;
+			image.onload = () => {
+				const width = image.naturalWidth || image.width;
+				const height = image.naturalHeight || image.height;
+				URL.revokeObjectURL(objectUrl);
+				if (height >= Number(this.heightMin) || width >= Number(this.widthMin)) {
 					resolve(true);
+					return;
 				}
+				resolve(false);
+			};
+			image.onerror = () => {
+				URL.revokeObjectURL(objectUrl);
 				resolve(false);
 			};
 		});
@@ -302,7 +311,10 @@ export class ProductsCreateAdmComponent implements OnInit {
 							var dateTime = date + ' ' + time;
 							var dates_as_int = [dateTime];
 							const dates = dates_as_int.map(date => new Date(date).getTime());
-							const namefile = id_store + '-' + this.selectedSubcategory.id + '-' + dates + i + '.' + get_type_img;
+						const subcategoryId = (typeof this.selectedSubcategory === 'object' && this.selectedSubcategory)
+							? (this.selectedSubcategory.id ?? this.selectedSubcategory)
+							: this.selectedSubcategory;
+						const namefile = id_store + '-' + subcategoryId + '-' + dates + i + '.' + get_type_img;
 
 							if (i == 0) {
 								get_first_image_name = namefile;

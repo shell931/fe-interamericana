@@ -109,7 +109,7 @@
                                     <div fxLayout='row wrap'>
                                         <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" class="relative img_up mt-3">
                                             <ngx-dropzone (change)="selectFile($event)" multiple="true" [expandable]="true" [disableClick]="true" [accept]="'image/*'" [maxFileSize]="'1000000'">
-                                                <ngx-dropzone-label>Arrastar imagenes del producto aqui!</ngx-dropzone-label>
+                                                <ngx-dropzone-label>Arrastrar imagenes del producto aqui!</ngx-dropzone-label>
                                                 <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
                                                     <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
                                                 </ngx-dropzone-image-preview>

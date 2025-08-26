@@ -104,7 +104,7 @@
 
 
                                 <div class="relative mt-3">
-                                    <ngx-dropzone (change)="selectFile($event)" multiple="true" [expandable]="true" [disableClick]="true" [accept]="'image/*'" [maxFileSize]="'1000000'">
+                                    <ngx-dropzone (change)="selectFile($event)" multiple="true" [expandable]="true" [disableClick]="false" [accept]="'image/*'" [maxFileSize]="'1000000'">
                                         <ngx-dropzone-label>Añadir imagenes del producto aqui!
                                         </ngx-dropzone-label>
                                         <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">

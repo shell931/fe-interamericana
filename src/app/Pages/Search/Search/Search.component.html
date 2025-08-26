@@ -8,7 +8,7 @@
     <div class="row container_search">
         <div class="col-3 ">
             <mat-card class="mat_categories">
-                <b>Buscar productos por categoria:</b>
+                <b>Buscar productos por categoria..:</b>
                 <mat-list role="list">
                     <mat-tree [dataSource]="dataSourceN" [treeControl]="treeControlN" class="example-tree">
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="nav-li" matTreeNodePaddingIndent="0">
@@ -80,8 +80,7 @@
                                         </button>
                                     </div>
                                     <span class="deliveryicon ">
-                                        <img src="assets/images/shipping-fast-solid.svg " /> Envío gratis</span>
-                                    <bar-rating [(rate)]="rate " [max]="5 "></bar-rating>
+                                        <img src="assets/images/shipping-fast-solid.svg " /> Envío a todo el país</span>
                                 </div>
                             </mat-card-content>
                         </mat-card>
@@ -98,7 +97,7 @@
 
 <!-- <div class="row rowprod ">
     <div class="col-md-2 borderdiv ">
-    
+
     </div>
     <div class="col-md-10 ">
 

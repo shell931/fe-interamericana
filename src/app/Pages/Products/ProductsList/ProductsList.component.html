@@ -46,6 +46,13 @@
             <!-- Productos destacados-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
+                <!-- Botón personalizado -->
+                <div class="text-center mb-4">
+                    <button class="custom-btn" (click)="extendGridStructure()">
+                        VER TODOS LOS PRODUCTOS
+                    </button>
+                </div>
+
                 <div layout="row" layout-wrap>
 
                     <div class="col-lg-12 pl-0">
@@ -117,8 +124,7 @@
                                                 aria-hidden="true"></i> </button>
                                     </div>
                                     <span class="deliveryicon">
-                                        <img src="assets/images/shipping-fast-solid.svg" /> Envío gratis</span>
-                                    <bar-rating [(rate)]="rate" [max]="5"></bar-rating>
+                                        <img src="assets/images/shipping-fast-solid.svg" /> Envío a todo el país</span>
                                 </div>
 
                             </mat-card-content>
