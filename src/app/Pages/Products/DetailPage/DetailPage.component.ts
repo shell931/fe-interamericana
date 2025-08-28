@@ -62,7 +62,7 @@ export class DetailPageComponent implements OnInit {
    getProductData(response) {
 
       console.log(response);
-      
+
 
 
       let gallery = response.rel_product;
@@ -72,8 +72,8 @@ export class DetailPageComponent implements OnInit {
          this.get_pr[i] = image_route;
       }
 
-      let myObj_product; 
-      myObj_product = { 
+      let myObj_product;
+      myObj_product = {
          availablity: response.availability,
          brand: response.brand,
          category: "Jewellery",
@@ -96,7 +96,7 @@ export class DetailPageComponent implements OnInit {
          quantity: 1,
          valid_quant:1
       };
-      this.productsGrid = myObj_product;      
+      this.productsGrid = myObj_product;
    }
 
    // public getData() {
