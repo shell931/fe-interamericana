@@ -5,14 +5,14 @@
 </div> -->
 
 
-<div class="container">
+<div class="container-fluid" style="max-width: 80%; margin: 0 auto;">
     <div class="row mt-5 backgroundstyle">
-        <div class="col-lg-3 col-sm-12 col-xs-12 pad_t">
+        <div class="col-lg-2 col-sm-12 col-xs-12 pad_t">
             <div class="banner_tienda">
-                <h3 class="titulo mb-5"><b> {{name_store}}</b></h3>
+                <!-- <h3 class="titulo mb-5"><b style="font-weight: 600 !important;"> {{name_store}}</b></h3> -->
             </div>
             <mat-card class="mat_categories">
-                <b>Buscar productos por categoria:</b>
+                <!-- <b style="font-weight: 600 !important;">Categorias:</b> -->
                 <mat-list role="list">
                     <mat-tree [dataSource]="dataSourceN" [treeControl]="treeControlN" class="example-tree">
                         <!-- This is the tree node template for leaf nodes -->
@@ -29,8 +29,8 @@
                         <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding class="nav-li">
                             <mat-list-item>
                                 <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="link-category">
-                                    <!-- <img _ngcontent-embryo-seo-pre-c396="" src="assets/images/categories/mascota-amigable.svg" alt="image" class="image-li">{{node.name}} -->
-                                    <img _ngcontent-embryo-seo-pre-c396="" src=" assets/images/icons_category_product/{{node.icon}}" alt="image" class="image-li">{{node.name}}
+                                    <!-- <img _ngcontent-embryo-seo-pre-c396="" src=" assets/images/icons_category_product/{{node.icon}}" alt="image" class="image-li">{{node.name}} -->
+                                    <b style="font-weight: 600 !important;">{{node.name}}</b>
                                 </a>
                                 <!-- <mat-icon>home</mat-icon> {{node.name}} -->
                                 <div class="mat-tree-node">
@@ -49,7 +49,7 @@
             </mat-card>
         </div>
 
-        <div class="col-lg-9 col-sm-12 col-xs-12 pad_t" style="width: 100%; max-width: 100%;">
+                 <div class="col-lg-10 col-sm-12 col-xs-12 pad_t">
 
             <!-- <mat-toolbar class=""> -->
             <!-- <mat-form-field style="width: 100%" floatLabel='never'> -->
@@ -78,12 +78,8 @@
                         <div class="right-block">
                             <h6 class="titulo_producto"><a *ngIf="product?.id_product" [routerLink]="['/products', card?.type, card?.id_product]" class="title-link">{{card?.name}}</a> </h6>
                             <h6 class="titulo_producto"><a *ngIf="!product?.id_product" [routerLink]="['/products/accessories/card?.id_product']" class="title-link">{{card?.name}}</a> </h6>
-                            <p class="price">
-                                <span class="price-new">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
-                            </p>
-                            <p class="price red">
-                                <span class="price-red">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}} <img
-                                        class="cards" src="assets/images/tarjetas.png" /> </span>
+                            <p class="price price-container-custom">
+                                <span class="price-new price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
                             </p>
                             <div class="rating-star">
                                 <embryo-Rating [rate]="card.rating"></embryo-Rating>

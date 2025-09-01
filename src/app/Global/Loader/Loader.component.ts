@@ -18,4 +18,11 @@ export class LoaderComponent implements OnInit {
       }
     );
   }
+
+  // Función simple para manejar rutas de assets en producción
+  getAssetUrl(path: string): string {
+    // En desarrollo: http://localhost:4200/assets/...
+    // En producción: https://domain.com/interamericana/assets/...
+    return path;
+  }
 }

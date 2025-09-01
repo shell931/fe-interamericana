@@ -4,11 +4,11 @@
     </embryo-ProductGrid>
 </div> -->
 
-<div class="container mt-5">
+<div class="container-fluid mt-5" style="max-width: 80%; margin: 0 auto;">
     <div class="row container_search">
-        <div class="col-3 ">
+        <div class="col-2 ">
             <mat-card class="mat_categories">
-                <b>Buscar productos por categoria..:</b>
+                <!-- <b>Buscar productos por categoria:</b> -->
                 <mat-list role="list">
                     <mat-tree [dataSource]="dataSourceN" [treeControl]="treeControlN" class="example-tree">
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="nav-li" matTreeNodePaddingIndent="0">
@@ -37,7 +37,7 @@
                 </mat-list>
             </mat-card>
         </div>
-        <div class="col-9">
+        <div class="col-10 ">
             <div class="container">
                 <div>
                     <div fxLayout="row wrap" fxLayoutAlign="none" class="col-gap div_produc mb-5">
@@ -52,12 +52,8 @@
                                 <div class="right-block ">
                                     <h6 class="titulo_producto "><a *ngIf="product?.id_product " [routerLink]="[ '/products', card?.type, card?.id_product] " class="title-link ">{{card?.name}}</a> </h6>
                                     <h6 class="titulo_producto "><a *ngIf="!product?.id_product " [routerLink]="[ '/products/accessories/card?.id_product'] " class="title-link ">{{card?.name}}</a> </h6>
-                                    <p class="price ">
-                                        <span class="price-new ">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
-                                    </p>
-                                    <p class="price red ">
-                                        <span class="price-red ">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}} <img
-                                                class="cards " src="assets/images/tarjetas.png " /> </span>
+                                    <p class="price price-container-custom">
+                                        <span class="price-new price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
                                     </p>
                                     <div class="rating-star ">
                                         <embryo-Rating [rate]="card.rating "></embryo-Rating>

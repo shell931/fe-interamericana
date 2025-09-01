@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "export NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && ng build",
-    "build:prod": "export NODE_OPTIONS=--openssl-legacy-provider && ng build --configuration production --aot --base-href \"/swiftly/\"",
+    "build:prod": "export NODE_OPTIONS=--openssl-legacy-provider && ng build --configuration production --aot --base-href \"/interamericana/\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

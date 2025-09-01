@@ -88,13 +88,10 @@
                                             class="title-link">{{card?.name}}</a>
                                     </h6>
 
-                                    <p class="price">
-                                        <span class="price-new">{{card?.price | currency : 'USD' : 'symbol' :
+                                    <p class="price price-container-custom">
+                                        <span class="price-new price-new-custom">{{card?.price | currency : 'USD' :
+                                            'symbol' :
                                             '1.0-0'}}</span>
-                                    </p>
-                                    <p class="price red">
-                                        <span class="price-red">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}
-                                            <img class="cards" src="assets/images/tarjetas.png" /> </span>
                                     </p>
 
                                     <div class="rating-star">
@@ -139,7 +136,11 @@
 
         </div>
 
-        <a class="btn btn-block transparent-btn" (click)="extendGridStructure()">VER MAS PRODUCTOS</a>
+        <div class="text-center mb-4 mt-4">
+            <button class="custom-btn" (click)="extendGridStructure()">
+                VER TODOS LOS PRODUCTOS
+            </button>
+        </div>
 
         <!-- Tiendas -->
         <!-- <div class="tiendas_grid">

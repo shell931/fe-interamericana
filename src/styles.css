@@ -1750,3 +1750,13 @@ b, strong {
   font-weight: 200 !important;
   font-size: 14px !important;
 }
+
+/* Clase global para estilos de precios */
+.price-container-custom {
+  padding-bottom: 10px !important;
+}
+
+.price-new-custom {
+  font-weight: bold !important;
+  color: #333333 !important;
+}

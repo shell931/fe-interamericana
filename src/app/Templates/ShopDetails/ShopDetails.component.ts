@@ -50,7 +50,7 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
    }
 
    /**
-    * getImagePath is used to change the image path on click event. 
+    * getImagePath is used to change the image path on click event.
     */
    public getImagePath(imgPath: string, index: number) {
       document.querySelector('.border-active').classList.remove('border-active');
@@ -87,7 +87,7 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
    public addToCart(value: any) {
 
       this.validate_canti = false;
-      
+
       if (value.valid_quant == 0) {
          this.validate_canti = true;
       } else {
@@ -113,8 +113,8 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
             // let id_store_storage;
             // for (var i = 0; i < 1; i++) {
             //    id_store_storage = products[i].id_store;
-            // }         
-            // console.log(id_store_storage);      
+            // }
+            // console.log(id_store_storage);
             // console.log(value.store_id);
             // if (id_store_storage == value.store_id) {
             //    this.embryoService.addToCart(value);
@@ -122,7 +122,7 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
             // else {
             //    const dialogRef = this.dialog.open(DialogContentProductDiferentStoreDetail, {
             //       width: '500px',
-            //     });      
+            //     });
             //    dialogRef.afterClosed().subscribe(result => {
             //       console.log(`Dialog result: ${result}`);
             //    });
@@ -132,6 +132,16 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
          }
          // this.embryoService.addToCart(value);
       }
+   }
+
+   // Función simple para manejar rutas de assets en producción
+   getAssetUrl(path: string): string {
+      // Si ya es una URL completa (http/https), la devolvemos tal como está
+      if (path && (path.startsWith('http') || path.startsWith('//'))) {
+         return path;
+      }
+      // Para rutas relativas, Angular las maneja automáticamente con base-href
+      return path;
    }
 }
 

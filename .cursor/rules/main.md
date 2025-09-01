@@ -1,8 +1,8 @@
 # Cursor Rules for Angular fe-market Project
 
 ## Project Overview
-This is an Angular 10 e-commerce application called "Swiftly" with the following characteristics:
-- Base path: `/swiftly/`
+This is an Angular 10 e-commerce application called "Interamericana" with the following characteristics:
+- Base path: `/interamericana/`
 - Uses Angular Material, Bootstrap, and ngx-bootstrap
 - Implements lazy loading for modules
 - Uses Traefik for reverse proxy and Nginx for static file serving

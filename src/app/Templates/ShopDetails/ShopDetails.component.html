@@ -14,7 +14,7 @@
 
                                 <div class="product-image-gallery-item mb-2" *ngFor="let img of detailData?.image_gallery; let i=index">
                                     <a id="{{i}}_img" class="p-link" [ngClass]="{ 'border-active': i === 0 }" href="javascript:void(0)" (click)="getImagePath(img, i)">
-                                        <img width="200px" [src]="img" alt="" class="galeria_item">
+                                        <img width="200px" [src]="getAssetUrl(img)" alt="" class="galeria_item">
                                     </a>
                                 </div>
 
@@ -51,20 +51,10 @@
 
                     <div class="product_page_price price mb-2" itemprop="offerDetails" itemscope="" itemtype="http://data-vocabulary.org/Offer">
 
-                        <p class="price">
-                            <span class="price-new">{{totalPrice | currency : 'USD' : 'symbol' :
+                        <p class="price price-container-custom">
+                            <span class="price-new price-new-custom">{{totalPrice | currency : 'USD' : 'symbol' :
                                         '1.0-0'}}</span>
-
                         </p>
-
-
-                        <p class="price red">
-                            <span class="price-red">{{totalPrice | currency : 'USD' : 'symbol' : '1.0-0'}} <img
-                                            class="cards" src="assets/images/tarjetas.png" /> </span>
-
-                        </p>
-
-
                     </div>
 
 
