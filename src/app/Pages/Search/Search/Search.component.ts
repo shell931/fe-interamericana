@@ -31,7 +31,8 @@ interface subcategoryNode {
     name_category: string;
     children?: subcategoryNode[];
     type: string;
-    icon:any;
+    icon: any;
+    active?: boolean;
 }
 
 interface ExampleFlatNode {
@@ -55,8 +56,8 @@ export class SearchComponent implements OnInit {
             name: node.name_category,
             level: level,
             id: node.id,
-            name_category: node.name_category,            
-            icon: node.icon,            
+            name_category: node.name_category,
+            icon: node.icon,
             type: node.type
         };
     }
@@ -82,7 +83,7 @@ export class SearchComponent implements OnInit {
     get_categories: subcategoryNode[] = [];
     loaded = false;
     get_subca: any[] = [];
-    p:any;
+    p: any;
 
     constructor(private route: ActivatedRoute,
         private router: Router,
@@ -96,7 +97,7 @@ export class SearchComponent implements OnInit {
 
     hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-    ngOnInit() {                 
+    ngOnInit() {
         this.route.params.subscribe(res => {
             this.id = res.id;
             this.apiService.FilterProducts(this.id).subscribe(res => this.getProductData(res));
@@ -104,15 +105,15 @@ export class SearchComponent implements OnInit {
         this.apiService.getCategories().subscribe(res => this.getCategoriesMenu(res));
     }
 
-    SearchByCategories(type, id_category){
+    SearchByCategories(type, id_category) {
         localStorage.removeItem("id_category_prod_search");
         localStorage.removeItem("type_cate_subcate_search");
         localStorage.setItem('id_category_prod_search', id_category);
         localStorage.setItem('type_cate_subcate_search', type);
 
-        if(type=="category"){
+        if (type == "category") {
             this.apiService.getProductsbyCategory(id_category).subscribe(res => this.getProductData(res));
-        }else{
+        } else {
             this.apiService.getProductsbySubcategory(id_category).subscribe(res => this.getProductData(res));
         }
     }
@@ -121,16 +122,22 @@ export class SearchComponent implements OnInit {
         this.get_categories = [];
         for (var i = 0; i < response.length; i++) {
             let subcategor = this.createSubcategories(response[i].rel_categories);
-            this.get_categories.push(
-                {
-                    id: response[i].id,
-                    name_category: response[i].name_category,
-                    type: 'category',
-                    children: subcategor,
-                    icon: response[i].icon,
-                });
-        }            
+            if (response[i].active) {
+                this.get_categories.push(
+                    {
+                        id: response[i].id,
+                        name_category: response[i].name_category,
+                        type: 'category',
+                        children: subcategor,
+                        icon: response[i].icon,
+                        active: response[i].active
+                    });
+                console.log(this.get_categories);
+            }
+        }
         this.dataSourceN.data = this.get_categories;
+        // Expand all tree nodes automatically
+        this.treeControlN.expandAll();
     }
 
     createSubcategories(subcate) {
@@ -222,7 +229,7 @@ export class SearchComponent implements OnInit {
             // else {
             //     //   const dialogRef = this.dialog.open(DialogContentProductDiferentStoreDetail, {
             //     //      width: '500px',
-            //     //    });      
+            //     //    });
             //     //   dialogRef.afterClosed().subscribe(result => {
             //     //      console.log(`Dialog result: ${result}`);
             //     //   });
