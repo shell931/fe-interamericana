@@ -5,10 +5,13 @@
     "ng": "ng",
     "start": "export NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && ng build",
-    "build:prod": "export NODE_OPTIONS=--openssl-legacy-provider && ng build --configuration production --aot --base-href \"/interamericana/\"",
+    "build:prod": "npm run generate-sitemap:prod && export NODE_OPTIONS=--openssl-legacy-provider && ng build --configuration production --aot --base-href \"/interamericana/\"",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "generate-sitemap:prod": "node scripts/generate-sitemap.js https://tu-dominio.com /interamericana",
+    "postbuild": "npm run generate-sitemap:prod"
   },
   "private": true,
   "dependencies": {

@@ -1,19 +1,21 @@
 <div class="main-container">
-
-
     <div class="container">
+        <!-- Header principal con SEO -->
+        <header class="page-header mt-4">
+            <h1 class="page-title">{{ getPageTitle() }}</h1>
+            <p class="page-description">{{ getPageDescription() }}</p>
+        </header>
 
         <div class="box-content1">
-
-
-
             <swiper [config]="config" class="slider_home">
                 <div class="swiper-wrapper">
-                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner.jpg" alt="slider1"
-                        class="swiper-slide" />
+                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner.jpg"
+                         alt="Repuestos de carro y autopartes - Interamericana"
+                         class="swiper-slide" />
 
-                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner2.jpg" alt="slider1"
-                        class="swiper-slide" />
+                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner2.jpg"
+                         alt="Escobillas de grafito, rodamientos y farolas para carros"
+                         class="swiper-slide" />
                 </div>
 
                 <div class="swiper-pagination"></div>
@@ -21,30 +23,27 @@
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
             </swiper>
-
-
-
         </div>
         <!-- banner-->
-        <!-- <div class="banners1 banners" fxShow="false" fxHide.gt-sm="false">
+        <!-- <section class="banners1 banners" fxShow="false" fxHide.gt-sm="false" aria-label="Promociones de repuestos automotrices">
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
-                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn1.jpg" alt="image"> </figure>
+                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn1.jpg" alt="Promociones especiales en escobillas de grafito"> </figure>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
-                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn2.jpg" alt="image"> </figure>
+                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn2.jpg" alt="Ofertas en rodamientos para carro"> </figure>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
-                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn3.jpg" alt="image"> </figure>
+                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn3.jpg" alt="Descuentos en farolas y luces para carros"> </figure>
                 </div>
             </div>
-        </div> -->
+        </section> -->
         <!-- /banner-->
 
         <div class="row mt-5">
 
             <!-- Productos destacados-->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <section class="col-lg-12 col-md-12 col-sm-12 col-xs-12" aria-label="Productos destacados">
 
                 <!-- Botón personalizado -->
                 <div class="text-center mb-4">
@@ -56,9 +55,10 @@
                 <div layout="row" layout-wrap>
 
                     <div class="col-lg-12 pl-0">
-
-                        <h3 class="titulo"><span>Productos Destacados</span>
-                        </h3>
+                        <h2 class="titulo">
+                            <span>{{ getSectionTitle() }}</span>
+                        </h2>
+                        <p class="section-description">{{ getSectionDescription() }}</p>
                     </div>
 
                     <div fxLayout="row wrap" fxLayoutAlign="center start">
@@ -69,13 +69,13 @@
 
                                 <a class="p-link link_producto" *ngIf="!card?.id" [routerLink]="[card?.route_product]">
                                     <img class="img_size image_pixeled" mat-card-image [defaultImage]="card?.image"
-                                        [lazyLoad]="card?.image">
+                                        [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)">
                                 </a>
 
                                 <a class="p-link" *ngIf="card?.id"
                                     [routerLink]="['/products', card?.type, card?.id_product]">
                                     <img class="img_size image_pixeled" mat-card-image [src]="card?.image"
-                                        [defaultImage]="card?.image" [lazyLoad]="card?.image">
+                                        [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)">
                                 </a>
                                 <div class="right-block">
                                     <h6 class="titulo_producto"><a *ngIf="product?.id_product"
@@ -130,8 +130,7 @@
 
                 </div>
 
-
-            </div>
+            </section>
             <!-- /Productos destacados-->
 
         </div>

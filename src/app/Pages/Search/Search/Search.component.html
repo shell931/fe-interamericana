@@ -22,7 +22,8 @@
                         <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding class="nav-li">
                             <mat-list-item>
                                 <a (click)="SearchByCategories(node.type,node.id)" class="link-category">
-                                    <img _ngcontent-embryo-seo-pre-c396="" src=" assets/images/icons_category_product/{{node.icon}}" alt="image" class="image-li">{{node.name}}
+                                    <!-- <img _ngcontent-embryo-seo-pre-c396="" src=" assets/images/icons_category_product/{{node.icon}}" alt="image" class="image-li">{{node.name}} -->
+                                    <b style="font-weight: 600 !important;">{{node.name}}</b>
                                 </a>
                                 <div class="mat-tree-node">
                                     <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">

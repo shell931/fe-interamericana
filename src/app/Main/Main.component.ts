@@ -81,12 +81,19 @@ export class MainComponent implements OnInit {
    ) {
 
 
-      title.setTitle('interamericana');
+      title.setTitle('Interamericana - Escobillas de Grafito, Rodamientos, Farolas y Luces para Carro');
 
       meta.addTags([
-         { name: 'author', content: 'The IRON Network' },
-         { name: 'keywords', content: ' angular, angular 2, angular 6, angular 7, angular material, clean, creative, ecommerce, frontend, online store, shop, shopping, store, typescript, ui framework ' },
-         { name: 'description', content: 'Embryo is an E-Commerce angular 7 based template with material design. It also comes with Angular cli. Now you have all the power to maintain your ecommerce site. Responsive design gives your user to use in any modern devices. Clean Code gives you the power to customize the code as per as your requirments. Embryo has all the basics functionality which is required in ecommerce site. Rtl design makes the multi-language support with more easy way.' }
+         { name: 'author', content: 'Interamericana' },
+         { name: 'keywords', content: 'escobillas, escobillas de grafito, escobillas de carbon, rodamientos, luces para carro, farolas, farolas para carros, balastros' },
+         { name: 'description', content: 'Especialistas en escobillas de grafito y carbón, rodamientos, farolas y luces para carro. Encuentra las mejores escobillas en Interamericana. Calidad garantizada y precios competitivos.' },
+         { property: 'og:title', content: 'Interamericana - Escobillas de Grafito y Rodamientos' },
+         { property: 'og:description', content: 'Especialistas en escobillas de grafito, escobillas de carbón y rodamientos. También farolas y luces para carro. Tu tienda de confianza.' },
+         { property: 'og:type', content: 'website' },
+         { property: 'og:locale', content: 'es_ES' },
+         { name: 'twitter:card', content: 'summary_large_image' },
+         { name: 'twitter:title', content: 'Interamericana - Escobillas de Grafito y Rodamientos' },
+         { name: 'twitter:description', content: 'Especialistas en escobillas de grafito, escobillas de carbón y rodamientos. También farolas y luces para carro.' }
       ]);
 
       if (this.embryoService.isDirectionRtl) {

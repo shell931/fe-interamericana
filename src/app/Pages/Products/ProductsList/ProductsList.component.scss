@@ -236,14 +236,31 @@
      margin-right: 5px;
  }
 
- .titulo {
-     font-size: 1.3rem;
-     color: #333;
-     font-weight: 400;
-     text-transform: uppercase;
-     position: relative;
-     margin-bottom: 0;
- }
+.titulo {
+    font-size: 1.3rem;
+    color: #333;
+    font-weight: 400;
+    text-transform: uppercase;
+    position: relative;
+    margin-bottom: 0;
+}
+
+.section-description {
+    text-decoration: none !important;
+    border: none !important;
+    background: none !important;
+    text-align: center;
+    color: #666;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.section-description::before,
+.section-description::after {
+    display: none !important;
+}
 
  .titulo_bott {
      font-size: 1.3rem;
