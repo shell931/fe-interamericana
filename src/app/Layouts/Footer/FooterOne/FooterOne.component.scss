@@ -469,6 +469,11 @@
     text-transform: capitalize;
 }
 
+.kompralofooter .infos-footer ul li.mail,
+.kompralofooter .infos-footer ul li.mail a {
+    text-transform: none;
+}
+
 .kompralofooter .infos-footer ul li a {
     color: #eee;
     transition: all 0.3s ease 0s;
