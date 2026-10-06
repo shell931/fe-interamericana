@@ -1,32 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params }   from '@angular/router';
-import { FormControl, FormGroup, FormBuilder,FormArray, Validators } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData} from 'ngx-toasta';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder,FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-EditProfile',
   templateUrl: './EditProfile.component.html',
-  styleUrls: ['./EditProfile.component.scss']
+  styleUrls: ['./EditProfile.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatCardModule,
+    MatRadioModule
+  ]
 })
 export class EditProfileComponent implements OnInit {
 
-   type         : string;
-   info         : FormGroup;
-   address      : FormGroup;
-   card         : FormGroup;
+   type!: string;
+   info!: UntypedFormGroup;
+   address!: UntypedFormGroup;
+   card!: UntypedFormGroup;
    emailPattern : any = /\S+@\S+\.\S+/;
-   toastOption  : ToastOptions = {
-      title     : "Account Information",
-      msg       : "Your account information updated successfully!",
-      showClose : true,
-      timeout   : 3000,
-      theme     : "material"
-   };
+
 
    constructor(private route: ActivatedRoute,
                private router: Router,
-               private formGroup : FormBuilder,
-               private toastyService: ToastaService) {
+               private formGroup : UntypedFormBuilder,
+               private ToastrService: ToastrService
+             ) {
 
       this.route.params.subscribe(params => {
          this.route.queryParams.forEach(queryParams => {
@@ -54,7 +69,11 @@ export class EditProfileComponent implements OnInit {
    submitProfileInfo() {
       if(this.info.valid){
          this.router.navigate(['/admin-panel/account/profile']).then(()=>{
-           this.toastyService.success(this.toastOption);
+          this.ToastrService.success(
+  "Your account information updated successfully!",
+  "Account Information",
+  { timeOut: 3000, closeButton: true, progressBar: true }
+);
          });
       } else {
          for (let i in this.info.controls) {
@@ -64,3 +83,4 @@ export class EditProfileComponent implements OnInit {
    }
 
 }
+

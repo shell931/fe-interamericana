@@ -94,10 +94,10 @@ export class HomeThreeComponent implements OnInit {
 
    public getProducts() {
       this.embryoService.getProducts().valueChanges()
-         .subscribe(res => this.getProductsResponse(res));
+         .subscribe((res: any) => this.getProductsResponse(res));
    }
 
-   public getProductsResponse(res) {
+   public getProductsResponse(res: any) {
       this.products = res;
       this.allProducts = ((res.men.concat(res.women)).concat(res.gadgets)).concat(res.accessories);
      
@@ -126,7 +126,7 @@ export class HomeThreeComponent implements OnInit {
       }
    }
 
-   public onNewArrivalsSelectedTab(tabIndex) {
+   public onNewArrivalsSelectedTab(tabIndex: any) {
       this.newProductsSliderData = null;
       switch (tabIndex) {
          case 0:
@@ -153,12 +153,13 @@ export class HomeThreeComponent implements OnInit {
       return true;
    }
 
-   public addToCart(value) {
+   public addToCart(value: any) {
       this.embryoService.addToCart(value);
    }
 
-   public addToWishlist(value) {
+   public addToWishlist(value: any) {
       this.embryoService.addToWishlist(value);
    }
 
 }
+

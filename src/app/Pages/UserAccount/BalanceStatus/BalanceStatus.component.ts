@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ApiService } from '../../../Services/api.service';
 import { Invoice, BalanceDetail } from '../../../Models/Invoice';
 import { Router, NavigationEnd } from '@angular/router';
@@ -13,6 +18,15 @@ import { EmbryoService } from '../../../Services/Embryo.service';
 
 @Component({
 	selector: 'app-BalanceStatus',
+	standalone: true,
+	imports: [
+		CommonModule,
+		CurrencyPipe,
+		MatCardModule,
+		MatListModule,
+		MatButtonModule,
+		SweetAlert2Module
+	],
 	templateUrl: './BalanceStatus.component.html',
 	styleUrls: ['./BalanceStatus.component.scss']
 })
@@ -22,7 +36,7 @@ export class BalanceStatusComponent implements OnInit {
 
 	popUpDeleteUserResponse: any;
 	invoiceList: any[] = [];
-	balaDetailGrid: BalanceDetail;
+	balaDetailGrid!: BalanceDetail;
 	balance_store: any;
 	id_bank_account: any;
 	account_number: any;
@@ -31,7 +45,8 @@ export class BalanceStatusComponent implements OnInit {
 	type_account: any;
 	public validate_trans_value: boolean = false;
 
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+	@ViewChild(MatPaginator, { static: false })
+	paginator!: MatPaginator;
 
 	dataSource = new MatTableDataSource<any>(this.invoiceList);
 
@@ -48,10 +63,10 @@ export class BalanceStatusComponent implements OnInit {
 
 	ngOnInit() {
 		const id_store = localStorage.getItem('id-store');
-		this.apiService.GetBalanceAccount(id_store).subscribe(res => this.getBalanceAcountData(res));
+		this.apiService.GetBalanceAccount(id_store).subscribe((res: any) => this.getBalanceAcountData(res));
 	}
 
-	getBalanceAcountData(response) {
+	getBalanceAcountData(response: any) {
 		let myJSONbalance = JSON.stringify(response);
 		let objTrx = JSON.parse(myJSONbalance);
 
@@ -70,7 +85,7 @@ export class BalanceStatusComponent implements OnInit {
 	}
 
 
-	getAllInvoiceData(response) {
+	getAllInvoiceData(response: any) {
 		this.invoiceList = response;
 		this.dataSource = new MatTableDataSource<any>(this.invoiceList);
 		setTimeout(() => {
@@ -118,7 +133,7 @@ export class BalanceStatusComponent implements OnInit {
 	}
 
 
-	getBalanceTransactionDetailData(dataDetailBalance) {
+	getBalanceTransactionDetailData(dataDetailBalance: any) {
 
 		// console.log(dataDetailBalance);
 		// let myObjBalanceDetail;
@@ -146,4 +161,5 @@ export class BalanceStatusComponent implements OnInit {
 
 
 }
+
 

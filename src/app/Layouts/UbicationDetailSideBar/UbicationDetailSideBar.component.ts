@@ -22,8 +22,7 @@ export interface Location {
 @Component({
    selector: 'embryo-UbicationDetailSideBar',
    templateUrl: './UbicationDetailSideBar.component.html',
-   styleUrls: ['./UbicationDetailSideBar.component.scss']
-})
+   styleUrls: ['./UbicationDetailSideBar.component.scss']})
 export class UbicationDetailSideBarComponent implements OnInit {
 
    cartProducts: any;
@@ -43,7 +42,7 @@ export class UbicationDetailSideBarComponent implements OnInit {
       let id_user_front = localStorage.getItem("id_user_front");
       this.get_locations = [];
       this.apiService.FilterLocationsByIdUser(id_user_front).subscribe(
-         response => {
+         (         response: string | any[]) => {
             for (var i = 0; i < response.length; i++) {
                let id = response[i].id;
                let nameci = response[i].nameci;
@@ -73,7 +72,7 @@ export class UbicationDetailSideBarComponent implements OnInit {
             this.alllocationsGrid = this.get_locations;
             console.log(this.alllocationsGrid);
          },
-         error => {
+         (         error: any) => {
             console.log(error)
          }
       );
@@ -82,13 +81,13 @@ export class UbicationDetailSideBarComponent implements OnInit {
 
 
 
-   editLocation(id) {
+   editLocation(id: any) {
       this.router.navigate(['/account/address/edit/' + id]).then(() => {
          window.location.reload();
       });
    }
 
-   predetermined(id) {
+   predetermined(id: any) {
       const id_user_front = localStorage.getItem('id_user_front');
       let myObj_user_client = { "predetermined": "True", "id_user_front": id_user_front };
       const body = JSON.stringify(myObj_user_client);
@@ -105,7 +104,7 @@ export class UbicationDetailSideBarComponent implements OnInit {
       );
    }
 
-   deleteLocation(id) {
+   deleteLocation(id: string) {
       //Open the dialog
       this.apiService.deleteLocationUserDialog(id);
    }
@@ -116,3 +115,4 @@ export class UbicationDetailSideBarComponent implements OnInit {
 
 
 }
+

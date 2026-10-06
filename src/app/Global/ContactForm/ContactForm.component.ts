@@ -1,17 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder,FormArray, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'embryo-ContactForm',
   templateUrl: './ContactForm.component.html',
-  styleUrls: ['./ContactForm.component.scss']
+  styleUrls: ['./ContactForm.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ]
 })
 export class ContactFormComponent implements OnInit {
 
-   contactForm  : FormGroup;
+   contactForm  : UntypedFormGroup;
    emailPattern : any = /\S+@\S+\.\S+/;
 
-   constructor(private formGroup : FormBuilder) { }
+   constructor(private formGroup : UntypedFormBuilder) { }
 
    ngOnInit() {
       this.contactForm = this.formGroup.group({
@@ -35,3 +47,4 @@ export class ContactFormComponent implements OnInit {
    }
 
 }
+

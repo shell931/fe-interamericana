@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router, ActivatedRoute, Params } from '@angular/router';
+import { ReactiveFormsModule, FormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../Services/api.service';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
 
 interface TokenObj {
@@ -19,17 +25,29 @@ interface TokenObj {
 @Component({
     selector: 'embryo-SignIn',
     templateUrl: './CommonSignIn.component.html',
-    styleUrls: ['./CommonSignIn.component.scss']
+    styleUrls: ['./CommonSignIn.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatIconModule
+    ]
 })
 export class CommonSignInComponent implements OnInit {
 
     public show: boolean = false;
-    loginfrontForm: FormGroup;
+    public showPassword: boolean = false;
+    loginfrontForm!: UntypedFormGroup;
     emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
     id_user: any;
 
     constructor(
-        public formBuilder: FormBuilder,
+        public formBuilder: UntypedFormBuilder,
         private router: Router,
         private apiService: ApiService,
     ) { }
@@ -55,7 +73,7 @@ export class CommonSignInComponent implements OnInit {
         if (this.loginfrontForm.valid) {
             this.show = false;            
             this.apiService.loginUser(this.loginfrontForm.value).subscribe(
-                (result: TokenObj) => {                     
+                (result: any) => {                     
                     this.show = false;
                     localStorage.setItem('mr-token-front', result.token);
                     localStorage.setItem('id_type_user', result.type_user);
@@ -72,7 +90,7 @@ export class CommonSignInComponent implements OnInit {
                         window.location.reload();
                     });
                 },
-                error => {
+                (error: any) => {
                     this.show = true;
                     console.log(error)
                 }
@@ -87,4 +105,9 @@ export class CommonSignInComponent implements OnInit {
 
     }
 
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
+    }
+
 }
+

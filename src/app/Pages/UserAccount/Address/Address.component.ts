@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../../Services/api.service';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 
 export interface Location {
     id: number;
@@ -19,6 +25,16 @@ export interface Location {
 
 @Component({
     selector: 'app-Address',
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatListModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatIconModule
+    ],
     templateUrl: './Address.component.html',
     styleUrls: ['./Address.component.scss']
 })
@@ -27,18 +43,17 @@ export class AddressComponent implements OnInit {
     locationsGrid: Location[] = [];
     get_location: Location[] = [];
     pred = "";
-    toastOption: ToastOptions = {
-        title: "Predeterminada",
-        msg: "La ubicación ha quedado predeterminada!",
-        showClose: true,
-        timeout: 3000,
-        theme: "material"
-    };
+    toastOption: any = this.toastyService.success(
+  "La ubicación ha quedado predeterminada!",
+  "Ubicación predeterminada",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
+
 
     constructor(
         public router: Router,
         private apiService: ApiService,
-        private toastyService: ToastaService,
+        private toastyService: ToastrService,
     ) { }
 
     ngOnInit() {
@@ -109,3 +124,4 @@ export class AddressComponent implements OnInit {
     }
 
 }
+

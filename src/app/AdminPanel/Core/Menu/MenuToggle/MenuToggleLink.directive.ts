@@ -51,3 +51,4 @@ export class MenuToggleLinkDirective implements OnInit, OnDestroy {
     this.open = !this.open;
   }
 }
+

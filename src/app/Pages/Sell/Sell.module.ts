@@ -2,20 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SellRoutes } from './Sell.routing';
-import { SellComponent } from './Sell/Sell.component';
-import { SellResponseComponent } from './SellResponse/SellResponse.component';
 
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatTreeModule} from '@angular/material/tree';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+// Temporarily commented out - incompatible with Angular Material 20
+// import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -26,6 +25,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -48,23 +48,20 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
-	bootstrap: [
-		SellComponent,
-		SellResponseComponent
-	  ],
 	imports: [
 		MatTreeModule,
 		CdkTreeModule,
 		NgxPaginationModule,
 		CommonModule,
 		RouterModule.forChild(SellRoutes),
-		FlexLayoutModule,
+		LayoutModule,
 		MatCardModule,
 		MatButtonModule,
 		MatMenuModule,
 		MatToolbarModule,
 		MatIconModule,
 		MatInputModule,
+		MatFormFieldModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
 		MatProgressSpinnerModule,
@@ -89,7 +86,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 		ReactiveFormsModule,
 		NgxMatSelectSearchModule,
 		NgxDropzoneModule,
-		MaterialFileInputModule,
+		// MaterialFileInputModule, // Commented out - incompatible with Angular Material 20
 		NgSelectModule
 	],
 	exports:[
@@ -100,8 +97,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
 	
 	  ],
 	declarations: [	
-		SellComponent,
-		SellResponseComponent
+		// Components are now standalone - removed from declarations
 	]
 })
 export class SellModule { }
+
+

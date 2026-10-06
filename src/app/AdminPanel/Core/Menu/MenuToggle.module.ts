@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MenuToggleAnchorDirective, MenuToggleLinkDirective, MenuToggleDirective } from './MenuToggle';
 
 @NgModule({
-  declarations: [
+  imports: [
     MenuToggleAnchorDirective,
     MenuToggleLinkDirective,
     MenuToggleDirective,
@@ -15,3 +15,4 @@ import { MenuToggleAnchorDirective, MenuToggleLinkDirective, MenuToggleDirective
    ],
 })
 export class MenuToggleModule { }
+

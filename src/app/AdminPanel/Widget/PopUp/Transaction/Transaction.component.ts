@@ -1,13 +1,15 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+
 import { ApiService } from '../../../../Services/api.service';
 import { Observable, of as observableOf, interval, Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { map, take, delay, withLatestFrom, finalize, tap } from 'rxjs/operators';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Transactions } from '../../../../Models/Transactions';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { SweetAlertOptions } from 'sweetalert2';
@@ -15,16 +17,21 @@ import { SweetAlertOptions } from 'sweetalert2';
 @Component({
     selector: 'app-transaction-dialog',
     templateUrl: './Transaction.component.html',
-    styleUrls: ['./Transaction.component.scss']
+    styleUrls: ['./Transaction.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatButtonModule
+    ]
 })
 
 export class TransactionComponent implements OnInit {
 
     alertOpt: SweetAlertOptions = {};
-    data: Transactions;
+    data!: Transactions;
     adminprList: any[] = [];
     adminProductList: any[] = [];
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     dataSource = new MatTableDataSource<any>(this.adminProductList);
     buttdisa = false;
     buttdisacontra = false;
@@ -39,13 +46,13 @@ export class TransactionComponent implements OnInit {
         public dialogRef: MatDialogRef<TransactionComponent>,
         private apiService: ApiService,
         private router: Router,
-        private toastyService: ToastaService,
+        private toastyService: ToastrService,
     ) { }
 
     ngOnInit() {
     }
 
-    anul_transaction(id_tx) {
+    anul_transaction(id_tx: any) {
         this.buttdisa = !this.buttdisa;
         let jsonObjCancel = {
             'id_tx': id_tx
@@ -53,7 +60,7 @@ export class TransactionComponent implements OnInit {
         this.apiService.setCancelTransaction(id_tx, jsonObjCancel).subscribe(res => this.onClose(res));
     }
 
-    contra_c(id_tx){
+    contra_c(id_tx: any){
         this.buttdisacontra = !this.buttdisacontra;
         let jsonObjContra = {
             'id_tx': id_tx
@@ -62,7 +69,7 @@ export class TransactionComponent implements OnInit {
     }
 
 
-    onClose(response) {
+    onClose(response: any) {
         this.failcanceltx = false;
         let myJSON = JSON.stringify(response);
         let obj = JSON.parse(myJSON);
@@ -86,15 +93,15 @@ export class TransactionComponent implements OnInit {
         }
     }
 
-    onCloseContra(response) {
+    onCloseContra(response: any) {
         this.dialogRef.close("yes");
         window.location.reload();
     }
 
 
 
-    MessajeCancelTransaction(msgresp, num_autorizacion, num_recibo, date) {
-        let myObj_transaction = {
+    MessajeCancelTransaction(msgresp: any, num_autorizacion: any, num_recibo: any, date: any) {
+        let myObj_transaction: any = {
             message: "Se realizo la cancelación de la transacción correctamente",
             msgresp: msgresp,
             num_autorizacion: num_autorizacion,
@@ -108,4 +115,5 @@ export class TransactionComponent implements OnInit {
 
 
 }
+
 

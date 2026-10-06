@@ -1,8 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ApiService } from '../../../Services/api.service';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import { Observable, Subscription } from 'rxjs';
@@ -29,15 +38,29 @@ export interface CategoryStore {
 
 @Component({
     selector: 'app-StoreAdmEdit',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AsyncPipe,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatCardModule,
+        MatListModule,
+        NgSelectModule,
+        NgxDropzoneModule
+    ],
     templateUrl: './StoreAdmEdit.component.html',
     styleUrls: ['./StoreAdmEdit.component.scss']
 })
 export class StoreAdmEditComponent implements OnInit {
 
-    public departamentFilterCtrl: FormControl = new FormControl();
-    public citieFilterCtrl: FormControl = new FormControl();
-    public categorystoreCtrl: FormControl = new FormControl();
-    public categorystoreFilterCtrl: FormControl = new FormControl();
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public categorystoreCtrl: UntypedFormControl = new UntypedFormControl();
+    public categorystoreFilterCtrl: UntypedFormControl = new UntypedFormControl();
 
     public show_spinner: boolean = false;
     departamentlist: Departament[] = [];
@@ -68,46 +91,42 @@ export class StoreAdmEditComponent implements OnInit {
     category: any;
     public show_sin_img: boolean = false;
     public show_img: boolean = false;
-    storeForm: FormGroup;
+    storeForm!: UntypedFormGroup;
     emailPattern: any = /\S+@\S+\.\S+/;
     public show: boolean = false;
-    depart$: Observable<Departament[]>;
-    city$: Observable<City[]>;
-    catego$: Observable<CategoryStore[]>;
-    selectedValue;
-    selectedCityValue;
-    selectedCategoryValue;
+    depart$!: Observable<Departament[]>;
+    city$!: Observable<City[]>;
+    catego$!: Observable<CategoryStore[]>;
+    selectedValue: any;
+    selectedCityValue: any;
+    selectedCategoryValue: any;
     storecategorylist: CategoryStore[] = [];
     storecategory: CategoryStore[] = [];
     files: File[] = [];
-    widthMin: Number = 700;
-    heightMin: Number = 700;
-    toastRejectPixelsImg: ToastOptions = {
-        title: "Dimension de imagen",
-        msg: "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
-        showClose: true,
-        timeout: 8000,
-        theme: "material"
-    };
-    toastIconMax: ToastOptions = {
-        title: "Logo comercio",
-        msg: "Subir solo un logo para el comercio!",
-        showClose: true,
-        timeout: 4000,
-        theme: "material"
-    };
+    widthMin = 700;
+    heightMin = 700;
+    toastRejectPixelsImg: any = this.toastyService.warning(
+        "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
+        "Dimension de imagen",
+        { timeOut: 8000, closeButton: true, progressBar: true }
+    );
+    toastIconMax: any = this.toastyService.warning(
+        "Subir solo un logo para el comercio!",
+        "Logo comercio",
+        { timeOut: 4000, closeButton: true, progressBar: true }
+    );
 
     public validate_img: boolean = false;
 
-    public departamentCtrl: FormControl = new FormControl(null, [Validators.required]);
+    public departamentCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
-        private toastyService: ToastaService,
+        private formGroup: UntypedFormBuilder,
+        private toastyService: ToastrService,
         private apiService: ApiService,
-        private _formBuilder: FormBuilder) { }
+        private _formBuilder: UntypedFormBuilder) { }
 
 
 
@@ -126,18 +145,18 @@ export class StoreAdmEditComponent implements OnInit {
             description: ['', [Validators.required]],
             // departmentControl: new FormControl('', [Validators.required]),
             // cityControl: new FormControl('', [Validators.required]),
-            categorystoreCtrl: new FormControl('', [Validators.required]),
-            departamentCtrl: new FormControl('', [Validators.required]),
-            citieCtrl: new FormControl('', [Validators.required]),
+            categorystoreCtrl: new UntypedFormControl('', [Validators.required]),
+            departamentCtrl: new UntypedFormControl('', [Validators.required]),
+            citieCtrl: new UntypedFormControl('', [Validators.required]),
 
         });
 
-        this.apiService.getStoreData(this.id_store).subscribe(res => {
+        this.apiService.getStoreData(this.id_store).subscribe((res: any) => {
             this.getDataStore(res, this.id_store)
-        }, error => console.log(error));
+        }, (error: any) => console.log(error));
     }
 
-    getDataStore(response, id_location) {
+    getDataStore(response: { address: any; description: any; email: any; logo_store: any; manager: any; name_store: any; number_identifier: any; state_store: any; telephone: any; id_departament: any; city_id: any; storecategories: any; logo_store_up: string; }, id_location: any) {
 
         this.address = response.address;
         this.description = response.description;
@@ -152,26 +171,30 @@ export class StoreAdmEditComponent implements OnInit {
         this.id_departament = response.id_departament;
         this.id_city = response.city_id;
         this.id_category = response.storecategories;
-        this.logo_store_save = this.logo_store;
 
         if (this.logo_store) {
             this.show_sin_img = false;
             this.show_img = true;
             this.logo_store = environment.api.baseBucketImageUrl + response.logo_store_up;
+            // Guardar la URL completa para poder restaurarla después
+            this.logo_store_save = response.logo_store_up;
         } else {
             this.show_sin_img = true;
             this.show_img = false;
             this.logo_store = "Sin logo";
+            this.logo_store_save = null;
         }
 
 
-        this.storeForm.get('name_store').setValue(this.name_store)
-        this.storeForm.get('address').setValue(this.address)
-        this.storeForm.get('telephone').setValue(this.telephone)
-        this.storeForm.get('email').setValue(this.email)
-        this.storeForm.get('number_identifier').setValue(this.number_identifier)
-        this.storeForm.get('manager').setValue(this.manager)
-        this.storeForm.get('description').setValue(this.description)
+        this.storeForm.patchValue({
+            name_store: this.name_store,
+            address: this.address,
+            telephone: this.telephone,
+            email: this.email,
+            number_identifier: this.number_identifier,
+            manager: this.manager,
+            description: this.description
+        });
 
         // START ANGULAR MAT SEARCH DEPARTAMENT
         this.departments = [];
@@ -188,7 +211,7 @@ export class StoreAdmEditComponent implements OnInit {
                 this.depart$ = this.getDepartment("", this.departments);
 
             },
-            error => console.log(error)
+            (error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH DEPARTAMENT
 
@@ -227,128 +250,168 @@ export class StoreAdmEditComponent implements OnInit {
     }
 
 
-    setValueDepartmentSelect(departments, id_departmen) {
-        let count;
-        for (var i = 0; i < departments.length; i++) {
-            departments[i].id_departament;
-            if (departments[i].id_departament == id_departmen) {
-                count = i;
-            }
+    setValueDepartmentSelect(departments: Departament[], id_departmen: string) {
+        const foundDepartment = departments.find((dept: Departament) => dept.id_departament === id_departmen);
+        if (foundDepartment) {
+            this.selectedValue = foundDepartment.id_departament;
         }
-        this.selectedValue = departments[count].id_departament;
     }
 
-    getDepartment(term: string = null, algo): Observable<Departament[]> {
+    getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    citieChangeAction(departament) {
+    citieChangeAction(selectedDepartament: any) {
+        // Limpiar la selección de ciudad anterior
         this.selectedCityValue = null;
-        // START ANGULAR MAT SEARCH CITIES
-        let id_dep = departament.id_departament;
+
+        // Limpiar la lista de ciudades anterior
         this.cities = [];
-        this.apiService.getCitiesFrontbyDepartments(id_dep).subscribe(
+        this.citietlist = [];
+        this.city$ = of([]);
+
+        // Si no hay departamento seleccionado, salir
+        if (!selectedDepartament) {
+            return;
+        }
+
+        // Obtener el ID del departamento (puede venir como objeto o string)
+        let id_dep: string;
+        if (typeof selectedDepartament === 'object' && selectedDepartament !== null) {
+            id_dep = selectedDepartament.id_departament;
+        } else {
+            id_dep = selectedDepartament;
+        }
+
+        // Si no tenemos un ID válido, salir
+        if (!id_dep) {
+            return;
+        }
+
+        // START ANGULAR MAT SEARCH CITIES
+        this.apiService.getCitiesFrontbyDepartments(Number(id_dep)).subscribe(
             (data: City[]) => {
                 this.citietlist = data;
+                this.cities = [];
                 for (var i in this.citietlist) {
                     let get_id_citie = this.citietlist[i]['id_city'];
                     let get_citie = this.citietlist[i]['city'];
                     this.cities.push({ city: get_citie, id_city: get_id_citie });
                 }
-                // this.citieCtrl.setValue(this.cities[10]);
                 this.city$ = this.getCity("", this.cities);
             },
-            error => console.log(error)
+            (error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH CITIES
-
     }
 
-    getCity(term: string = null, algo): Observable<City[]> {
+    getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getCategory(term: string = null, algo): Observable<CategoryStore[]> {
+    getCategory(term: string = '', algo: CategoryStore[]): Observable<CategoryStore[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { name_category: string; }) => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    setValueCitiSelect(cities, id_city) {
-        let count;
-        for (var i = 0; i < cities.length; i++) {
-            if (cities[i].id_city == id_city) {
-                count = i;
-            }
+    setValueCitiSelect(cities: City[], id_city: string) {
+        const foundCity = cities.find((city: City) => city.id_city === id_city);
+        if (foundCity) {
+            this.selectedCityValue = foundCity.id_city;
         }
-        this.selectedCityValue = cities[count].id_city;
     }
 
-    setValueCategorySelect(categories, id_category) {
-        let count;
-        for (var i = 0; i < categories.length; i++) {
-            categories[i].id;
-            if (categories[i].id == id_category) {
-                count = i;
-            }
+    setValueCategorySelect(categories: CategoryStore[], id_category: number) {
+        const foundCategory = categories.find((category: CategoryStore) => category.id === id_category);
+        if (foundCategory) {
+            this.selectedCategoryValue = foundCategory.id;
         }
-        this.selectedCategoryValue = categories[count].id;
     }
 
     //START SET EVENT FROM DROPZONE COMPLEMENT
-    selectFile(event) {
+    onSelect(event: any) {
+        console.log('onSelect called with event:', event);
         this.validate_img = false;
-        let index = this.files.length != event.addedFiles ? 0 : this.files.length;
-        console.log(this.files.length);
-        if (this.files.length > 0) {
-            this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
-                this.onValidatePixels(item)
-                    .then((value: boolean) => {
+        if (event && event.addedFiles && Array.isArray(event.addedFiles)) {
+            console.log('Adding files:', event.addedFiles.length);
+            if (this.files.length > 0) {
+                this.toastyService.error(this.toastIconMax);
+                return;
+            }
+
+            // Validar y agregar archivos
+            const firstFile = event.addedFiles[0];
+            if (firstFile) {
+                this.onValidatePixels(firstFile)
+                    .then(value => {
                         if (value) {
-                            this.files.push(item);
+                            this.files.push(firstFile);
+                            // Actualizar la vista previa con la nueva imagen inmediatamente
+                            this.logo_store = URL.createObjectURL(firstFile);
+                            this.show_img = true;
+                            this.show_sin_img = false;
+                            console.log('File added and preview updated');
                         } else {
                             this.validate_img = true;
                             this.toastyService.error(this.toastRejectPixelsImg);
                         }
-
+                    })
+                    .catch(error => {
+                        console.error('Error validating file:', error);
+                        this.validate_img = true;
                     });
-            });
+            }
+        }
+    }
 
+    selectFile(event: any) {
+        this.validate_img = false;
+        // Este método puede usarse como respaldo, pero onSelect es el principal
+        if (event && event.addedFiles && Array.isArray(event.addedFiles)) {
+            this.onSelect(event);
         }
     }
 
 
-    onValidatePixels(file: File) {
-        return new Promise((resolve, reject) => {
+    onValidatePixels(file: File): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
             const Img = new Image();
             Img.src = URL.createObjectURL(file);
-            Img.onload = (e: any) => {
-                const height = e.target.height;
-                const width = e.target.width;
-                if (height >= this.heightMin || width >= this.widthMin) {
-                    resolve(true);
-                }
-                resolve(false);
+            Img.onload = (e: Event) => {
+                const height = Img.height;
+                const width = Img.width;
+                resolve(height >= this.heightMin || width >= this.widthMin);
             };
         });
 
     }
 
-    onRemove(event) {
+    onRemove(event: File) {
         console.log(event);
         this.files.splice(this.files.indexOf(event), 1);
+        // Restaurar la imagen original cuando se elimina el archivo
+        if (this.files.length === 0) {
+            if (this.logo_store_save) {
+                this.logo_store = environment.api.baseBucketImageUrl + this.logo_store_save;
+                this.show_img = true;
+                this.show_sin_img = false;
+            } else {
+                this.logo_store = "Sin logo";
+                this.show_img = false;
+                this.show_sin_img = true;
+            }
+        }
     }
 
     submitStoreInfo() {
@@ -386,14 +449,25 @@ export class StoreAdmEditComponent implements OnInit {
                                 formDataLogo.append('logo_store_up', file);
                                 this.apiService.uploadIconStore(formDataLogo).subscribe(
                                     result => {
-                                        this.router.navigate(['/account/store_adm']).then(() => {
-                                            window.location.reload();
-                                        });
+                                        console.log('Logo uploaded successfully:', result);
+                                        // Esperar un momento para asegurar que el backend termine de procesar
+                                        setTimeout(() => {
+                                            this.show_spinner = false;
+                                            this.toastyService.success('Logo actualizado exitosamente', 'Éxito', { timeOut: 3000 });
+                                            this.router.navigate(['/account/store_adm']).then(() => {
+                                                window.location.reload();
+                                            });
+                                        }, 500);
                                     },
-                                    error => console.log(error)
+                                    error => {
+                                        console.error('Error uploading logo:', error);
+                                        this.toastyService.error('Error al subir el logo. Por favor, inténtalo de nuevo.', 'Error', { timeOut: 5000 });
+                                        this.show_spinner = false;
+                                    }
                                 );
                             }
                         } else {
+                            this.show_spinner = false;
                             this.router.navigate(['/account/store_adm']).then(() => {
                                 window.location.reload();
                             });
@@ -441,14 +515,25 @@ export class StoreAdmEditComponent implements OnInit {
                                     formDataLogo.append('logo_store_up', file);
                                     this.apiService.uploadIconStore(formDataLogo).subscribe(
                                         result => {
-                                            this.router.navigate(['/account/store_adm']).then(() => {
-                                                window.location.reload();
-                                            });
+                                            console.log('Logo uploaded successfully:', result);
+                                            // Esperar un momento para asegurar que el backend termine de procesar
+                                            setTimeout(() => {
+                                                this.show_spinner = false;
+                                                this.toastyService.success('Logo actualizado exitosamente', 'Éxito', { timeOut: 3000 });
+                                                this.router.navigate(['/account/store_adm']).then(() => {
+                                                    window.location.reload();
+                                                });
+                                            }, 500);
                                         },
-                                        error => console.log(error)
+                                        error => {
+                                            console.error('Error uploading logo:', error);
+                                            this.toastyService.error('Error al subir el logo. Por favor, inténtalo de nuevo.', 'Error', { timeOut: 5000 });
+                                            this.show_spinner = false;
+                                        }
                                     );
                                 }
                             } else {
+                                this.show_spinner = false;
                                 this.router.navigate(['/account/store_adm']).then(() => {
                                     window.location.reload();
                                 });
@@ -475,3 +560,4 @@ export class StoreAdmEditComponent implements OnInit {
 
 
 }
+

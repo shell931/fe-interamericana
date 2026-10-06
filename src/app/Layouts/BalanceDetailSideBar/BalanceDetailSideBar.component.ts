@@ -11,8 +11,7 @@ import { Invoice, BalanceDetail } from '../../Models/Invoice';
 @Component({
    selector: 'embryo-BalanceDetailSideBar',
    templateUrl: './BalanceDetailSideBar.component.html',
-   styleUrls: ['./BalanceDetailSideBar.component.scss']
-})
+   styleUrls: ['./BalanceDetailSideBar.component.scss']})
 export class BalanceDetailSideBarComponent implements OnInit {
 
    cartProducts: any;
@@ -84,3 +83,4 @@ export class BalanceDetailSideBarComponent implements OnInit {
 
 
 }
+

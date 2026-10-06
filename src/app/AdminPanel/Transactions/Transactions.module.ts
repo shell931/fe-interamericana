@@ -20,7 +20,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { GlobalModule } from '../../Global/Global.module';
@@ -38,7 +38,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     imports: [
         RouterModule.forChild(AdminProductsRoutes),
         CommonModule,
-        FlexLayoutModule,
+        LayoutModule,
         MatSidenavModule,
         MatIconModule,
         MatCheckboxModule,
@@ -71,3 +71,6 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 })
 export class TransactionsModule { }
+
+
+

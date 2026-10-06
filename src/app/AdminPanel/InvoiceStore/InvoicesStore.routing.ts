@@ -7,3 +7,4 @@ export const InvoicesStoreRoutes: Routes = [
 		component : InvoicesStoreComponent
 	}
 ];
+

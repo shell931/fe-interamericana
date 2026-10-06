@@ -13,3 +13,4 @@ export class DownloadAppSectionComponent implements OnInit {
   }
 
 }
+

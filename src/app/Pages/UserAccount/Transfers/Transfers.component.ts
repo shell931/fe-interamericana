@@ -1,7 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 // import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
 import { Transfer } from '../../../Models/Transfer';
@@ -11,6 +17,18 @@ const { isArray } = Array;
 
 @Component({
 	selector: 'app-Transfers',
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		CurrencyPipe,
+		MatTableModule,
+		MatPaginatorModule,
+		MatCardModule,
+		MatListModule,
+		MatButtonModule,
+		MatIconModule
+	],
 	templateUrl: './Transfers.component.html',
 	styleUrls: ['./Transfers.component.scss']
 })
@@ -119,4 +137,5 @@ export class TransfersComponent implements OnInit {
 
 
 }
+
 

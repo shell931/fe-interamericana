@@ -1,14 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Routes} from '@angular/router';
 
 import { MainComponent } from './Main/Main.component';
-// import { HomeoneComponent } from './Pages/Home/HomeOne/HomeOne.component';
-// import { HomeTwoComponent } from './Pages/Home/HomeTwo/HomeTwo.component';
-// import { HomeThreeComponent } from './Pages/Home/HomeThree/HomeThree.component';
+import { MainWorkingComponent } from './main-working.component';
 import { CartComponent } from './Pages/Cart/Cart.component';
-// import { NotFoundComponent } from './Pages/NotFound/NotFound.component';
-import { StoreFrontModule } from './Pages/StoreFront/StoreFront.module';
+
 
 
 export const AppRoutes : Routes = [
@@ -17,14 +13,20 @@ export const AppRoutes : Routes = [
       redirectTo: 'home',
       pathMatch: 'full',
    },
+
+   {
+      path: 'auth',
+      loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+   },
+   {
+      path: 'admin-panel',
+      loadChildren: () => import('./AdminPanel/admin-panel.module').then(m => m.AdminPanelModule)
+   },
    {
       path : '',
-      component : MainComponent,
+      component : MainComponent, // Componente principal de la aplicación
       children: [
          {
-            // path : 'home',
-            // component : HomeoneComponent
-
             path: 'home',loadChildren: ()=>
             import('./Pages/Products/Products.module').then (m => m.ProductsModule)
          },
@@ -121,3 +123,4 @@ export const AppRoutes : Routes = [
       redirectTo: 'not-found'
    }
 ]
+

@@ -1,14 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { Router } from '@angular/router';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
 import { ApiService } from '../../../Services/api.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Products } from '../../../Models/Products';
 import { environment } from '../../../../../src/environments/environment';
 
@@ -16,37 +22,62 @@ import { environment } from '../../../../../src/environments/environment';
 @Component({
 	selector: 'admin-app-products',
 	templateUrl: './AdminProducts.component.html',
-	styleUrls: ['./AdminProducts.component.scss']
+	styleUrls: ['./AdminProducts.component.scss'],
+	standalone: true,
+	imports: [
+		CommonModule,
+		FormsModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatCardModule,
+		MatButtonModule,
+		MatFormFieldModule,
+		MatInputModule
+	]
 })
 
-export class AdminProductsComponent implements OnInit {
+export class AdminProductsComponent implements OnInit, AfterViewInit {
 
 
 	adminprList: any[] = [];
 	adminProductList: any[] = [];
 	get_pr: any[] = [];
-	productsGrid: Products;
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+	productsGrid: any;
+	@ViewChild(MatPaginator, { static: false })
+	paginator!: MatPaginator; // Definite assignment assertion
 
 	dataSource = new MatTableDataSource<any>(this.adminProductList);
-	displayedColumns: string[] = ['action','name_store', 'created_at', 'product_code', 'name_product', 'namecategory', 'namesubcategory', 'total_price', 'published', 'name_state'];
+	displayedColumns: string[] = ['action','name_store', 'created_at', 'name_state', 'product_code', 'name_product', 'namecategory', 'namesubcategory', 'total_price', 'published'];
 
 	constructor(
 		private apiService: ApiService,
-		public service: AdminPanelServiceService
+		public service: AdminPanelServiceService,
+		private changeDetectorRef: ChangeDetectorRef
 	) { }
 
 	ngOnInit() {
-		this.apiService.getAdminProduct().subscribe(res => this.getProductsData(res));
+	this.apiService.getAdminProduct().subscribe((res: any) => this.getProductsData(res), (error: any) => console.log(error));
 	}
 
-	getProductsData(response) {
+	ngAfterViewInit() {
+		// Asegurar que el paginador esté conectado después de que la vista esté inicializada
+		if (this.paginator && this.dataSource) {
+			this.dataSource.paginator = this.paginator;
+		}
+	}
+
+	getProductsData(response : any) {
 		console.log(response);
 		this.adminprList = response;
 		this.dataSource = new MatTableDataSource<any>(this.adminprList);
+		this.changeDetectorRef.detectChanges();
 		setTimeout(() => {
-			this.dataSource.paginator = this.paginator;
-		}, 0)
+			if (this.paginator) {
+				this.dataSource.paginator = this.paginator;
+				// Forzar actualización del paginador
+				this.changeDetectorRef.detectChanges();
+			}
+		}, 100)
 	}
 
 
@@ -59,19 +90,29 @@ export class AdminProductsComponent implements OnInit {
 	}
 
 
-	onSeeDialog(data) {
-		this.apiService.getProductsConfirmbyId(data.id_product).subscribe(res => this.getProductData(res));
+	onSeeDialog(data : { id_product: any; }) {
+		this.apiService.getProductsConfirmbyId(data.id_product).subscribe((res: any) => this.getProductData(res), (error: any) => console.log(error));
 	}
 
-	getProductData(response) {		
+	getProductData(response: any) {
 		let gallery = response.rel_product;
 		this.get_pr = [];
 		for (var i = 0; i < gallery.length; i++) {
-			let image_route = gallery[i].image;
+			// Verificar si la imagen ya es una URL completa
+			let image_url = gallery[i].image;
+			let image_route = image_url.startsWith('http://') || image_url.startsWith('https://')
+				? image_url  // Ya es una URL completa, usar tal cual
+				: environment.api.baseBucketImageUrl + image_url;  // Es una ruta relativa, concatenar base URL
 			this.get_pr[i] = image_route;
 		}
 
-		let myObj_product;
+	let myObj_product: any;
+		// Verificar si la imagen principal ya es una URL completa
+		let main_image = response.image;
+		let main_image_url = main_image && (main_image.startsWith('http://') || main_image.startsWith('https://'))
+			? main_image
+			: environment.api.baseBucketImageUrl + main_image;
+
 		myObj_product = {
 			availablity: true,
 			brand: response.brand,
@@ -81,7 +122,7 @@ export class AdminProductsComponent implements OnInit {
 			description: response.description_product,
 			discount_price: response.discount_price,
 			id: response.id_product,
-			image: response.image,
+			image: main_image_url,
 			image_gallery: this.get_pr,
 			name: response.name_product,
 			popular: false,
@@ -93,10 +134,11 @@ export class AdminProductsComponent implements OnInit {
 			status: true,
 			type: "accessories",
 		};
-		this.productsGrid = myObj_product;
+	this.productsGrid = myObj_product;
 		console.log(this.productsGrid);
 		this.apiService.PopUpAdminProductsValidate(this.productsGrid);
 	}
 
 
 }
+

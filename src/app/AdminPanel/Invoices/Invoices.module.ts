@@ -10,7 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { InvoicesComponent } from './Invoices/Invoices.component';
 import { InvoiceValidationComponent } from './InvoiceValidation/InvoiceValidation.component';
@@ -32,8 +32,11 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 @NgModule({
-	declarations: [InvoicesComponent, InvoiceValidationComponent, BinnacleSideBarAdmComponent,],
+	declarations: [],
 	imports: [
+		InvoicesComponent,
+		InvoiceValidationComponent,
+		BinnacleSideBarAdmComponent,
 		MatSidenavModule,
 		FormsModule,
 		ReactiveFormsModule,
@@ -45,17 +48,19 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 		CommonModule,
 		MatFormFieldModule,
 		MatInputModule,
-		FlexLayoutModule,
+		LayoutModule,
 		MatPaginatorModule,
 		RouterModule.forChild(InvoicesRoutes),
-		MatExpansionModule,
 		SweetAlert2Module.forRoot(),
+		MatExpansionModule,
 		MatProgressBarModule,
-		MatCheckboxModule,
-		FormsModule
+		MatCheckboxModule
 	],
 	exports: [
 		MatProgressBarModule
 	]
 })
 export class InvoicesModule { }
+
+
+

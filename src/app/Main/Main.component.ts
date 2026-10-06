@@ -1,17 +1,25 @@
-import { HostListener,Component, OnInit, OnChanges, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { HostListener,Component, OnInit, OnChanges, Input, Output, EventEmitter, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
 // import { Observable, of as observableOf, interval, Subscription } from 'rxjs';
 import { map, take, delay, withLatestFrom, finalize, tap } from 'rxjs/operators';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { EmbryoService } from '../Services/Embryo.service';
 // import { MenuItems } from '../Core/menu/menu-items/menu-items';
 import { Directionality } from '@angular/cdk/bidi';
-import { MediaChange } from '@angular/flex-layout';
 import { TranslateService } from '@ngx-translate/core';
 import { Meta, Title } from "@angular/platform-browser";
 // import { ApiService } from '../Services/api.service';
 import { CookieService } from 'ngx-cookie-service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { HeaderOneComponent } from '../Layouts/Header/HeaderOne/HeaderOne.component';
+import { FooterOneComponent } from '../Layouts/Footer/FooterOne/FooterOne.component';
 
 
 export interface Prod {
@@ -32,21 +40,37 @@ export interface InfoProd {
 }
 
 @Component({
-   selector: 'app-main',
-   templateUrl: './Main.component.html',
-   styleUrls: ['./Main.component.scss']
+   selector: 'app-main-admin-panel',
+   templateUrl: './Main.component.html', // Use simple template for testing
+   styleUrls: ['./Main.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      RouterModule,
+      RouterOutlet,
+      MatSidenavModule,
+      MatListModule,
+      MatButtonModule,
+      MatCardModule,
+      MatIconModule,
+      MatToolbarModule,
+      HeaderOneComponent, 
+      FooterOneComponent,
+  
+   ],
+   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class MainComponent implements OnInit {
 
    @Input() cartProducts : any;
    @Input() count        : any;
-   @Input() currency     : string;
+   @Input() currency     : string | undefined;
 
    timer = 0;
    isRtl: any;
    // private _dirChangeSubscription = Subscription.EMPTY;
    currentUrl: any;
-   myControl = new FormControl();
+   myControl = new UntypedFormControl();
 
    get_product: Prod[] = [];
    toggleActive: boolean = false;
@@ -60,7 +84,7 @@ export class MainComponent implements OnInit {
    url = "/products/accessories/118";
 
    // Variables to search
-   products;
+   products: any;
    // startAt = new Subject()
    // endAt = new Subject()
    lastkeypress: number = 0;
@@ -81,19 +105,12 @@ export class MainComponent implements OnInit {
    ) {
 
 
-      title.setTitle('Interamericana - Escobillas de Grafito, Rodamientos, Farolas y Luces para Carro');
+      title.setTitle('Swiftly');
 
       meta.addTags([
-         { name: 'author', content: 'Interamericana' },
-         { name: 'keywords', content: 'escobillas, escobillas de grafito, escobillas de carbon, rodamientos, luces para carro, farolas, farolas para carros, balastros' },
-         { name: 'description', content: 'Especialistas en escobillas de grafito y carbón, rodamientos, farolas y luces para carro. Encuentra las mejores escobillas en Interamericana. Calidad garantizada y precios competitivos.' },
-         { property: 'og:title', content: 'Interamericana - Escobillas de Grafito y Rodamientos' },
-         { property: 'og:description', content: 'Especialistas en escobillas de grafito, escobillas de carbón y rodamientos. También farolas y luces para carro. Tu tienda de confianza.' },
-         { property: 'og:type', content: 'website' },
-         { property: 'og:locale', content: 'es_ES' },
-         { name: 'twitter:card', content: 'summary_large_image' },
-         { name: 'twitter:title', content: 'Interamericana - Escobillas de Grafito y Rodamientos' },
-         { name: 'twitter:description', content: 'Especialistas en escobillas de grafito, escobillas de carbón y rodamientos. También farolas y luces para carro.' }
+         { name: 'author', content: 'The IRON Network' },
+         { name: 'keywords', content: ' angular, angular 2, angular 6, angular 7, angular material, clean, creative, ecommerce, frontend, online store, shop, shopping, store, typescript, ui framework ' },
+         { name: 'description', content: 'Embryo is an E-Commerce angular 7 based template with material design. It also comes with Angular cli. Now you have all the power to maintain your ecommerce site. Responsive design gives your user to use in any modern devices. Clean Code gives you the power to customize the code as per as your requirments. Embryo has all the basics functionality which is required in ecommerce site. Rtl design makes the multi-language support with more easy way.' }
       ]);
 
       if (this.embryoService.isDirectionRtl) {
@@ -157,33 +174,35 @@ export class MainComponent implements OnInit {
     * On window scroll add class header-fixed.
     */
    @HostListener('window:scroll', ['$event'])
-   onScrollEvent($event) {
+   onScrollEvent($event: any) {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const appMain = document.querySelector('app-main');
       if (scrollTop >= 200) {
-         document.querySelector('app-main').classList.add("header-fixed");
+         if (appMain) appMain.classList.add("header-fixed");
       } else {
-         document.querySelector('app-main').classList.remove("header-fixed");
+         if (appMain) appMain.classList.remove("header-fixed");
       }
    }
 
    /**
      *As router outlet will emit an activate event any time a new component is being instantiated.
      */
-   onActivate(e) {
+   onActivate(e: any) {
       window.scroll(0, 0);
    }
 
 
 
    public toggleSearch() {
-      document.querySelector('app-main').classList.toggle('form-open');
+      const appMain = document.querySelector('app-main');
+      if (appMain) appMain.classList.toggle('form-open');
    }
 
    public toggleSidebar() {
       this.embryoService.sidenavOpen = !this.embryoService.sidenavOpen;
    }
 
-   public getPopupResponse(response: any, value: any, type) {
+   public getPopupResponse(response: any, value: any, type: any) {
       if (response) {
          if (type == 'cart') {
             this.embryoService.removeLocalCartProduct(value);
@@ -197,3 +216,4 @@ export class MainComponent implements OnInit {
 
 
 }
+

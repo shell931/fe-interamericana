@@ -1,17 +1,59 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, Pipe, PipeTransform, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, RouterModule } from '@angular/router';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { MatTreeNestedDataSource, MatTreeModule } from '@angular/material/tree';
 import { environment } from '../../../../../src/environments/environment';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { RatingComponent } from '../../../Global/Rating/Rating.component';
+import { AddToCardButtonComponent } from '../../../Global/AddToCardButton/AddToCardButton.component';
 
 const { isArray } = Array;
+
+// FilterPipe definition moved here
+@Pipe({
+    name: 'filter',
+    standalone: true
+})
+export class FilterPipe implements PipeTransform {
+    
+    transform(posts: any[], find: string): any[] {
+        if (!posts) return [];
+        if (!find) return posts;
+        find = find.toLowerCase();
+        return search(posts, find);
+    }
+}
+
+function search(entries: any[], search: string) {
+    search = search.toLowerCase();
+    return entries.filter(function (obj) {
+        const keys: string[] = Object.keys(obj);
+        return keys.some(function (key) {
+            const value = obj[key];
+            if (isArray(value)) {
+                return value.some(v => {
+                    return v.toLowerCase().includes(search);
+                });
+            }
+            else if (!isArray(value)) {
+                return value.toString().toLowerCase().includes(search);
+            }
+        })
+    });
+}
 
 export interface Prod {
     image: string;
@@ -48,12 +90,35 @@ interface ExampleFlatNode {
     expandable: boolean;
     name: string;
     level: number;
+    // Additional fields returned by the transformer — make them optional to keep compatibility
+    id_store?: number;
+    id?: number;
+    name_category?: string;
+    icon?: any;
+    type?: string;
 }
 
 @Component({
     selector: 'app-DetailStorePage',
     templateUrl: './DetailStore.component.html',
-    styleUrls: ['./DetailStore.component.scss']
+    styleUrls: ['./DetailStore.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        MatCardModule,
+        MatListModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatTreeModule,
+        MatPaginatorModule,
+        CurrencyPipe,
+        RatingComponent,
+        AddToCardButtonComponent
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class DetailStoreComponent implements OnInit {
@@ -65,8 +130,8 @@ export class DetailStoreComponent implements OnInit {
             level: level,
             id_store: node.id_store,
             id: node.id,
-            name_category: node.name_category,
-            icon: node.icon,
+            name_category: node.name_category,            
+            icon: node.icon,            
             type: node.type
         };
     }
@@ -74,16 +139,33 @@ export class DetailStoreComponent implements OnInit {
     treeControlN = new FlatTreeControl<ExampleFlatNode>(
         node => node.level, node => node.expandable);
 
-    treeFlattener = new MatTreeFlattener(
-        this._transformer, node => node.level, node => node.expandable, node => node.children);
-    dataSourceN = new MatTreeFlatDataSource(this.treeControlN, this.treeFlattener);
+    treeFlattener: MatTreeFlattener<subcategoryNode, ExampleFlatNode, ExampleFlatNode> = new MatTreeFlattener<subcategoryNode, ExampleFlatNode, ExampleFlatNode>(
+        (node: subcategoryNode, level: number) => {
+            const flat: ExampleFlatNode = {
+                expandable: !!node.children && node.children.length > 0,
+                name: node.name_category,
+                level: level,
+                id_store: node.id_store,
+                id: node.id,
+                name_category: node.name_category,
+                icon: node.icon,
+                type: node.type
+            };
+            return flat;
+        },
+        (node: ExampleFlatNode) => node.level,
+        (node: ExampleFlatNode) => node.expandable,
+        (node: subcategoryNode) => node.children);
+
+    dataSourceN = new MatTreeFlatDataSource<subcategoryNode, ExampleFlatNode>(this.treeControlN, this.treeFlattener);
 
     treeControl = new NestedTreeControl<subcategoryNode>(node => node.children);
     dataSourceTree = new MatTreeNestedDataSource<subcategoryNode>();
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false })
+    paginator!: MatPaginator;
     productsGrid: Prod[] = [];
     dataSource = new MatTableDataSource<Prod>(this.productsGrid);
-    obs: Observable<any>;
+    obs!: Observable<any>;
     id: any;
     storeGrid: any;
     get_product: Prod[] = [];
@@ -92,9 +174,14 @@ export class DetailStoreComponent implements OnInit {
     @Output() addToWishList: EventEmitter<any> = new EventEmitter();
     get_subca: any[] = [];
     get_categories: subcategoryNode[] = [];
-    searchText: any;
+    searchText: string = '';
     p: any;
     name_store: any;
+    product: any; // Add missing property
+    rate: number = 0; // Add missing property
+    i: number = 0; // Add missing property for loop index
+    filteredProducts: Prod[] = []; // Store filtered products
+    allProducts: Prod[] = []; // Store all products
 
     constructor(private route: ActivatedRoute,
         private router: Router,
@@ -112,26 +199,28 @@ export class DetailStoreComponent implements OnInit {
         })
         localStorage.removeItem("type_cate_subcate");
         localStorage.removeItem("id_category_prod");
-        this.apiService.getStoreData(this.id).subscribe(res => this.getStoreData(res));
+        this.apiService.getStoreData(this.id).subscribe((res: any) => this.getStoreData(res));
         // this.apiService.getViewProductsWithoutAuth().subscribe(res => this.getProductData(res,this.id));
-        this.apiService.getProductStoresbyStoreid(this.id).subscribe(res => this.getProductData(res, this.id));
-        this.apiService.getCategoriesStore(this.id).subscribe(res => this.getCategoriesMenu(res, this.id));
+        this.apiService.getProductStoresbyStoreid(this.id).subscribe((res: any) => this.getProductData(res, this.id));
+        this.apiService.getCategoriesStore(this.id).subscribe((res: any) => this.getCategoriesMenu(res, this.id));
     }
 
 
-    SearchStoreCategories(type, id_store, id){
+    SearchStoreCategories(type: string, id_store: any, id: string | null){
         localStorage.removeItem("id_category_prod");
         localStorage.removeItem("type_cate_subcate");
-        localStorage.setItem('id_category_prod', id);
+        localStorage.setItem('id_category_prod', id!);
         localStorage.setItem('type_cate_subcate', type);
+        // Limpiar búsqueda al cambiar de categoría
+        this.searchText = '';
         if (type == "category") {
-            this.apiService.getProductsbyCategorybyStore(id, id_store).subscribe(res => this.getProductData(res, id_store));
+            this.apiService.getProductsbyCategorybyStore(id, id_store).subscribe((res: any) => this.getProductData(res, id_store));
         } else {
-            this.apiService.getProductsbySubcategorybyStore(id, id_store).subscribe(res => this.getProductData(res, id_store));
-        }
+            this.apiService.getProductsbySubcategorybyStore(id, id_store).subscribe((res: any) => this.getProductData(res, id_store));
+        }    
     }
 
-    getCategoriesMenu(response, id_store) {
+    getCategoriesMenu(response: string | any[], id_store: any) {        
         this.get_categories = [];
         for (var i = 0; i < response.length; i++) {
             let subcategor = this.createSubcategories(response[i].rel_categories, id_store);
@@ -144,20 +233,12 @@ export class DetailStoreComponent implements OnInit {
                     type: 'category',
                     children: subcategor,
                 });
-        }
+        }            
         this.dataSourceTree.data = this.get_categories;
         this.dataSourceN.data = this.get_categories;
-        // Ensure categories tree is always expanded by default
-        setTimeout(() => {
-            try {
-                this.treeControlN.expandAll();
-            } catch (error) {
-                // no-op if expandAll is unavailable
-            }
-        });
     }
 
-    createSubcategories(subcate, id_store) {
+    createSubcategories(subcate: string | any[], id_store: any) {
         this.get_subca = [];
         for (var i = 0; i < subcate.length; i++) {
             this.get_subca.push(
@@ -172,7 +253,7 @@ export class DetailStoreComponent implements OnInit {
         return this.get_subca;
     }
 
-    getStoreData(response) {
+    getStoreData(response: { logo_store: any; name_store: any; state_store: any; }) {
 
         let myObj_store;
         myObj_store = {
@@ -184,8 +265,8 @@ export class DetailStoreComponent implements OnInit {
         this.storeGrid = myObj_store;
     }
 
-    getProductData(response, store_id) {
-        this.get_product = [];
+    getProductData(response: string | any[], store_id: any) {    
+        this.get_product = [];    
         for (var i = 0; i < response.length; i++) {
             let get_image = environment.api.baseBucketImageUrl + response[i].image;
             let get_name_product = response[i].name_product;
@@ -213,12 +294,73 @@ export class DetailStoreComponent implements OnInit {
         }
 
         this.productsGrid = this.get_product;
-        this.dataSource = new MatTableDataSource<Prod>(this.productsGrid);
+        this.allProducts = [...this.get_product]; // Store all products
+        this.filteredProducts = [...this.get_product]; // Initialize filtered products
+        this.dataSource = new MatTableDataSource<Prod>(this.filteredProducts);
         this.changeDetectorRef.detectChanges();
         this.dataSource.paginator = this.paginator;
         this.obs = this.dataSource.connect();
+    }
 
+    /**
+     * Aplica el filtro de búsqueda a los productos
+     */
+    applyFilter(): void {
+        try {
+            // Verificar que hay productos
+            if (!this.allProducts || !Array.isArray(this.allProducts) || this.allProducts.length === 0) {
+                this.filteredProducts = [];
+                this.dataSource.data = [];
+                this.updatePaginator();
+                return;
+            }
+            
+            // Obtener el texto de búsqueda de forma segura
+            const searchValue = (this.searchText || '').trim().toLowerCase();
+            
+            // Si no hay texto, mostrar todos los productos
+            if (!searchValue) {
+                this.filteredProducts = [...this.allProducts];
+            } else {
+                // Filtrar por nombre, marca o código de producto
+                this.filteredProducts = this.allProducts.filter(product => {
+                    if (!product) return false;
+                    
+                    // Convertir a string antes de toLowerCase
+                    const name = String(product.name || '').toLowerCase();
+                    const brand = String(product.brand || '').toLowerCase();
+                    const productCode = String(product.product_code || '').toLowerCase();
+                    
+                    return name.includes(searchValue) || 
+                           brand.includes(searchValue) || 
+                           productCode.includes(searchValue);
+                });
+            }
+            
+            // Actualizar el dataSource con los productos filtrados
+            this.dataSource.data = this.filteredProducts;
+            this.updatePaginator();
+        } catch (error) {
+            console.error('Error en applyFilter:', error);
+            // En caso de error, mostrar todos los productos
+            if (this.allProducts && Array.isArray(this.allProducts)) {
+                this.filteredProducts = [...this.allProducts];
+                this.dataSource.data = this.filteredProducts;
+                this.updatePaginator();
+            }
+        }
+    }
 
+    /**
+     * Actualiza el paginator
+     */
+    updatePaginator(): void {
+        setTimeout(() => {
+            if (this.paginator && this.dataSource) {
+                this.dataSource.paginator = this.paginator;
+            }
+            this.changeDetectorRef.detectChanges();
+        }, 0);
     }
 
 
@@ -226,9 +368,9 @@ export class DetailStoreComponent implements OnInit {
         this.loaded = true;
     }
 
-    public checkCartAlready(singleProduct) {
-        let products = JSON.parse(localStorage.getItem("cart_item")) || [];
-        if (!products.some((item) => item.name == singleProduct.name)) {
+    public checkCartAlready(singleProduct: { name: any; }) {
+        let products = JSON.parse(localStorage.getItem("cart_item")!) || [];
+        if (!products.some((item: { name: any; }) => item.name == singleProduct.name)) {
             return true;
         }
     }
@@ -248,7 +390,7 @@ export class DetailStoreComponent implements OnInit {
             "route_product": value.route_product
         };
 
-        let products = JSON.parse(localStorage.getItem("cart_item")) || [];
+    let products = JSON.parse(localStorage.getItem("cart_item") || '[]') || [];
         if (products.length > 0) {
 
             this.embryoService.addToCart(myObj_product);
@@ -265,7 +407,7 @@ export class DetailStoreComponent implements OnInit {
             // else {
             //     //   const dialogRef = this.dialog.open(DialogContentProductDiferentStoreDetail, {
             //     //      width: '500px',
-            //     //    });
+            //     //    });      
             //     //   dialogRef.afterClosed().subscribe(result => {
             //     //      console.log(`Dialog result: ${result}`);
             //     //   });
@@ -276,132 +418,8 @@ export class DetailStoreComponent implements OnInit {
 
     }
 
-    public productAddToWishlist(value: any) {
+    public productAddToWishlist(value: any, index?: any) {
         this.embryoService.addToWishlist(value);
     }
 
-}
-
-// CLASS TO FILTER AND PAGINATE
-@Pipe({
-    name: 'filter'
-})
-export class FilterPipe implements PipeTransform {
-
-    get_product: Prod[] = [];
-    productsGrid: any;
-    id: any;
-
-    constructor(private route: ActivatedRoute,
-        private router: Router,
-        public embryoService: EmbryoService,
-        private apiService: ApiService,
-        private changeDetectorRef: ChangeDetectorRef
-    ) { }
-
-    transform(posts: Card[], find: string): Card[] {
-        this.route.params.subscribe(res => {
-            this.id = res.id;
-        })
-
-        let id_category_prod = localStorage.getItem('id_category_prod');
-        let type_cate_subcate = localStorage.getItem('type_cate_subcate');
-
-        if (type_cate_subcate == "category") {
-            this.apiService.getProductsbyCategorybyStore(id_category_prod, this.id).subscribe(res => this.getProductData(res, posts, find, this.id));
-        } else if(type_cate_subcate == "subcategory") {
-            this.apiService.getProductsbySubcategorybyStore(id_category_prod, this.id).subscribe(res => this.getProductData(res, posts, find, this.id));
-        }else{
-            this.apiService.getProductStoresbyStoreid(this.id).subscribe(res => this.getProductData(res, posts, find, this.id));
-        }
-
-        if (!posts) return [];
-        if (!find) return posts;
-        find = find.toLowerCase();
-        return search(this.productsGrid, find);
-    }
-
-    getProductData(response, posts, find, store_id) {
-        this.get_product = [];
-        for (var i = 0; i < response.length; i++) {
-            let get_image = environment.api.baseBucketImageUrl + response[i].image;
-            let get_name_product = response[i].name_product;
-            let get_total_price = response[i].total_price;
-            let get_produc_code = response[i].product_code;
-            let get_brand = response[i].brand;
-            let get_product_code = response[i].product_code;
-            let get_discount_price = response[i].discount_price;
-            let get_id_product = response[i].id_product;
-            let get_id_store = response[i].store;
-            let get_availability = response[i].availability;
-            this.get_product.push({
-                image: get_image,
-                name: get_name_product,
-                price: get_total_price,
-                produc_code: get_produc_code,
-                brand: get_brand,
-                product_code: get_product_code,
-                id_product: get_id_product,
-                id_store: get_id_store,
-                availability: get_availability,
-                route_product: '/products/accessories/' + get_id_product,
-                descriptions: ['row1', 'row2'],
-                store_id: store_id
-            });
-        }
-        this.productsGrid = this.get_product;
-    }
-
-
-    getProductDataCate(response, posts, find, store_id) {
-        this.get_product = [];
-        for (var i = 0; i < response.length; i++) {
-            let get_image = environment.api.baseBucketImageUrl + response[i].image;
-            let get_name_product = response[i].name_product;
-            let get_total_price = response[i].total_price;
-            let get_produc_code = response[i].product_code;
-            let get_brand = response[i].brand;
-            let get_product_code = response[i].product_code;
-            let get_discount_price = response[i].discount_price;
-            let get_id_product = response[i].id_product;
-            let get_id_store = response[i].store;
-            let get_availability = response[i].availability;
-            this.get_product.push({
-                image: get_image,
-                name: get_name_product,
-                price: get_total_price,
-                produc_code: get_produc_code,
-                brand: get_brand,
-                product_code: get_product_code,
-                id_product: get_id_product,
-                id_store: get_id_store,
-                route_product: '/products/accessories/' + get_id_product,
-                descriptions: ['row1', 'row2'],
-                store_id: store_id,
-                availability : get_availability,
-            });
-        }
-        this.productsGrid = this.get_product;
-    }
-
-
-}
-
-
-function search(entries: any[], search: string) {
-    search = search.toLowerCase();
-    return entries.filter(function (obj) {
-        const keys: string[] = Object.keys(obj);
-        return keys.some(function (key) {
-            const value = obj[key];
-            if (isArray(value)) {
-                return value.some(v => {
-                    return v.toLowerCase().includes(search);
-                });
-            }
-            else if (!isArray(value)) {
-                return value.toString().toLowerCase().includes(search);
-            }
-        })
-    });
 }

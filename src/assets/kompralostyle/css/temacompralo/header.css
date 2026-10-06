@@ -252,7 +252,7 @@
  [1] BLOCK HEADER
  ==============================================*/
 .kompraloheader {
-  background-color: #fff;
+  background-color: #f8f9fa !important;
   /*=====SEARCH ======*/
   /*BLOCK CART*/
   /*MENU MEGA*/
@@ -399,11 +399,11 @@
 
   .kompraloheader .header-bottom {
     clear: both;
-    background-color: #212121; }
+    background-color: #e9ecef !important; }
 
     .header-bottom.dark  {
       clear: both;
-      background-color: #343434 !important; }
+      background-color: #e9ecef !important; }
 
   .kompraloheader #sosearchpro .search {
     position: relative;
@@ -634,3 +634,30 @@
       -moz-transition: all 0.2s ease-in-out 0s;
       -webkit-transition: all 0.2s ease-in-out 0s;
       top: 54px; } }
+
+/* FORCE LOGO SIZE AND COLOR OVERRIDES */
+.kompraloheader img,
+.kompraloheader .logo img,
+.kompraloheader .logoimg,
+.kompraloheader embryo-applogo img,
+.kompraloheader .navbar-logo img,
+.kompraloheader .logo-site img {
+  max-height: 25px !important;
+  height: auto !important;
+  width: auto !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Mobile logo adjustments */
+@media (max-width: 768px) {
+  .kompraloheader img,
+  .kompraloheader .logo img,
+  .kompraloheader .logoimg,
+  .kompraloheader embryo-applogo img {
+    max-height: 20px !important;
+  }
+}

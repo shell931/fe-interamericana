@@ -122,18 +122,18 @@
 
 
    <ng-template #gridtype>
-      <div fxLayout="row" fxLayoutGap="9px" [style.margin-top]="'12px'" align="center">
+      <div class="flex-row" fxLayoutGap="9px" [style.margin-top]="'12px'" align="center">
          <mat-card class="mat1 class_grid">
             <div class="container">
                <div>
                   <mat-toolbar class="style_toolbar">
-                     <mat-form-field style="width: 100%" floatLabel='never'>
+                     <mat-form-field style="width: 100%">
                         <input matInput [(ngModel)]="searchText" placeholder="Busca producto" autocomplete="off">
                      </mat-form-field>
                   </mat-toolbar>
                   <div fxLayout="row wrap" fxLayoutAlign="none" class="col-gap div_produc">
                      <mat-card class="example-card card_store_prod"
-                        *ngFor="let card of obs | async | filter : searchText | paginate: { itemsPerPage: 12, currentPage: p }  ">
+                        *ngFor="let card of obs | async">
 
                         <a class="p-link" *ngIf="card?.id" [routerLink]="['/products', card?.type, card?.id_product]">
                            <!-- <img class="img_size" width="300" height="300" mat-card-image [src]="card?.image" alt="Photo"> -->

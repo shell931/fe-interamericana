@@ -1,9 +1,15 @@
 import { Component, OnInit ,EventEmitter,Output,Input } from '@angular/core';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'TopsideMenu',
   templateUrl: './TopsideMenu.component.html',
-  styleUrls: ['./TopsideMenu.component.scss']
+  styleUrls: ['./TopsideMenu.component.scss'],
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule]
 })
 export class TopsideMenuComponent implements OnInit {
 

@@ -6,16 +6,16 @@ import { delay, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ApiService } from '../../../Services/api.service';
 import { EmbryoService } from '../../../Services/Embryo.service';
-
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { take, takeUntil } from 'rxjs/operators';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
+
+// Angular imports for standalone component
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 // models
 import { CategoryStore } from '../../../Models/CategoryStore';
 import { SocietyType } from '../../../Models/SocietyType';
@@ -31,10 +31,11 @@ interface TokenObj {
     token: string;
     user_id: string;
     type_user: string;
-    non_field_errors: string;
+    non_field_errors?: string;
     id_store: string;
     personal_name: string;
     user_email: string;
+    [key: string]: any;  // Allow for additional properties
 }
 
 export interface Identifiers {
@@ -45,26 +46,34 @@ export interface Identifiers {
 
 @Component({
     selector: 'app-DataProtection',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatProgressSpinnerModule
+    ],
     templateUrl: './DataProtection.component.html',
     styleUrls: ['./DataProtection.component.scss']
 })
 
 export class DataProtectionComponent implements OnInit {
 
-    category$: Observable<CategoryStore[]>;
-    society$: Observable<SocietyType[]>;
-    depart$: Observable<Departament[]>;
-    city$: Observable<City[]>;
-    bank$: Observable<Bank[]>;
-    account_type$: Observable<TypeAccount[]>;
+    category$!: Observable<CategoryStore[]>;
+    society$!: Observable<SocietyType[]>;
+    depart$!: Observable<Departament[]>;
+    city$!: Observable<City[]>;
+    bank$!: Observable<Bank[]>;
+    account_type$!: Observable<TypeAccount[]>;
     selectedPersonId = '5a15b13c36e7a7f00cf0d7cb';
     cam_com_docu: any;
     doc_identi_docu: any;
     rut_docu: any;
     bank_certification_docu: any;
-    widthMin: Number = 700;
-    heightMin: Number = 700;
-    registerForm: FormGroup;
+    widthMin = 700;
+    heightMin = 700;
+    registerForm!: UntypedFormGroup;
     emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
     storecategorylist: CategoryStore[] = [];
     storecategory: CategoryStore[] = [];
@@ -79,11 +88,11 @@ export class DataProtectionComponent implements OnInit {
     typeaccountlist: TypeAccount[] = [];
     typeaccounts: TypeAccount[] = [];
     files_identifier_doc: File[] = [];
-    selectedFiles_identifier_doc: FileList;
+    selectedFiles_identifier_doc!: FileList;
     files_rut: File[] = [];
-    selectedFiles_rut: FileList;
+    selectedFiles_rut!: FileList;
     files_cam_com: File[] = [];
-    selectedFiles_cam_com: FileList;
+    selectedFiles_cam_com!: FileList;
     variable: any[] = [];
     name: any;
     selectedCity: any;
@@ -94,61 +103,57 @@ export class DataProtectionComponent implements OnInit {
     public validate_user: boolean = false;
     identifierstlist: Identifiers[] = [];
     identifiers: Identifiers[] = [];
-    identifier$: Observable<Identifiers[]>;
+    identifier$!: Observable<Identifiers[]>;
     selectIdentifiers: any;
 
     public show: boolean = false;
     public show_spinner: boolean = false;
-    toastIconMax: ToastOptions = {
-        title: "Logo comercio",
-        msg: "Subir solo un logo para el comercio!",
-        showClose: true,
-        timeout: 4000,
-        theme: "material"
-    };
-    toastRejectPixelsImg: ToastOptions = {
-        title: "Dimension de imagen",
-        msg: "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
-        showClose: true,
-        timeout: 8000,
-        theme: "material"
-    };
+       toastIconMax: any = this.toastyService.warning(
+  "Subir solo un logo para el comercio!",
+  "Logo comercio",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
+    toastRejectPixelsImg: any = this.toastyService.error(
+  "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
+  "Dimension de imagen",
+  { timeOut: 8000, closeButton: true, progressBar: true }
+);
 
-    public identifiersFilterCtrl: FormControl = new FormControl();
+    public identifiersFilterCtrl: UntypedFormControl = new UntypedFormControl();
     private _onDestroy = new Subject<void>();
     // START ANGULAR MAT SEARCH CATEGORY STORE
-    public categorystoreCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public categorystoreFilterCtrl: FormControl = new FormControl();
-    public filteredcategorystore: CategoryStore[];
+    public categorystoreCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public categorystoreFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public filteredcategorystore!: CategoryStore[];
     // END ANGULAR MAT SEARCH CATEGORY STORE
     // START ANGULAR MAT SEARCH SOCIETY TYPE
-    public societytypeCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public societytypeFilterCtrl: FormControl = new FormControl();
+    public societytypeCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public societytypeFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH SOCIETY TYPE
     // START ANGULAR MAT SEARCH BANK
-    public bankCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public bankFilterCtrl: FormControl = new FormControl();
+    public bankCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public bankFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH BANK
 
     // START ANGULAR MAT SEARCH BANK
-    public typeaccountCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public typeaccountFilterCtrl: FormControl = new FormControl();
+    public typeaccountCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public typeaccountFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH BANK
 
     // END ANGULAR MAT SEARCH DEPARTMENT AND CITIES
-    public departamentCtrll: FormControl = new FormControl(null, [Validators.required]);
-    public departamentFilterCtrl: FormControl = new FormControl();
-    public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieFilterCtrl: FormControl = new FormControl();
+    public departamentCtrll: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH DEPARTMENT AND CITIES
 
     constructor(private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
+        private formGroup: UntypedFormBuilder,
         public embryoService: EmbryoService,
         private apiService: ApiService,
         private changeDetectorRef: ChangeDetectorRef,
-        private toastyService: ToastaService,
+        private toastyService: ToastrService,
     ) { }
 
     ngOnInit() {
@@ -260,24 +265,24 @@ export class DataProtectionComponent implements OnInit {
                 postal_code: ['', [Validators.required]],
                 doc_identi: ['', [Validators.required]],
                 rut: ['', [Validators.required]],
-                cam_com: new FormControl('', [Validators.required]),
+                cam_com: new UntypedFormControl('', [Validators.required]),
                 responsible: ['', [Validators.required]],
                 account_number: ['', [Validators.required]],
-                bankCtrl: new FormControl('', [Validators.required]),
-                typeaccountCtrl: new FormControl('', [Validators.required]),
-                bank_certification: new FormControl('', [Validators.required]),
-                check_legal_docs: new FormControl('', [(control) => {
+                bankCtrl: new UntypedFormControl('', [Validators.required]),
+                typeaccountCtrl: new UntypedFormControl('', [Validators.required]),
+                bank_certification: new UntypedFormControl('', [Validators.required]),
+                check_legal_docs: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                check_aprube_terms_conds: new FormControl('', [(control) => {
+                check_aprube_terms_conds: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                categorystoreCtrl: new FormControl('', [Validators.required]),
-                societytypeCtrl: new FormControl('', [Validators.required]),
-                departamentCtrll: new FormControl('', [Validators.required]),
-                citieCtrl: new FormControl('', [Validators.required]),
+                categorystoreCtrl: new UntypedFormControl('', [Validators.required]),
+                societytypeCtrl: new UntypedFormControl('', [Validators.required]),
+                departamentCtrll: new UntypedFormControl('', [Validators.required]),
+                citieCtrl: new UntypedFormControl('', [Validators.required]),
             });
 
         } else {
@@ -288,7 +293,7 @@ export class DataProtectionComponent implements OnInit {
                 email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
                 password: ['', [Validators.required]],
                 number_identifier_person: ['', [Validators.required]],
-                identifiersCtrl: new FormControl('', [Validators.required]),
+                identifiersCtrl: new UntypedFormControl('', [Validators.required]),
                 name_store: ['', [Validators.required]],
                 name_legal: ['', [Validators.required]],
                 phone: ['', [Validators.required]],
@@ -301,89 +306,89 @@ export class DataProtectionComponent implements OnInit {
                 postal_code: ['', [Validators.required]],
                 doc_identi: ['', [Validators.required]],
                 rut: ['', [Validators.required]],
-                cam_com: new FormControl('', [Validators.required]),
+                cam_com: new UntypedFormControl('', [Validators.required]),
                 responsible: ['', [Validators.required]],
                 account_number: ['', [Validators.required]],
-                bankCtrl: new FormControl('', [Validators.required]),
-                typeaccountCtrl: new FormControl('', [Validators.required]),
-                bank_certification: new FormControl('', [Validators.required]),
-                check_legal_docs: new FormControl('', [(control) => {
+                bankCtrl: new UntypedFormControl('', [Validators.required]),
+                typeaccountCtrl: new UntypedFormControl('', [Validators.required]),
+                bank_certification: new UntypedFormControl('', [Validators.required]),
+                check_legal_docs: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                check_aprube_terms_conds: new FormControl('', [(control) => {
+                check_aprube_terms_conds: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                categorystoreCtrl: new FormControl('', [Validators.required]),
-                societytypeCtrl: new FormControl('', [Validators.required]),
-                departamentCtrll: new FormControl('', [Validators.required]),
-                citieCtrl: new FormControl('', [Validators.required]),
+                categorystoreCtrl: new UntypedFormControl('', [Validators.required]),
+                societytypeCtrl: new UntypedFormControl('', [Validators.required]),
+                departamentCtrll: new UntypedFormControl('', [Validators.required]),
+                citieCtrl: new UntypedFormControl('', [Validators.required]),
             });
         }
 
 
     }
 
-    getIdentifiers(term: string = null, algo): Observable<Identifiers[]> {
+    getIdentifiers(term: string = '', algo: Identifiers[]): Observable<Identifiers[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { type_identifier: string; }) => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
 
-    getCategories(term: string = null, algo): Observable<CategoryStore[]> {
+    getCategories(term: string = '', algo: CategoryStore[]): Observable<CategoryStore[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { name_category: string; }) => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getSocietyType(term: string = null, algo): Observable<SocietyType[]> {
+    getSocietyType(term: string = '', algo: SocietyType[]): Observable<SocietyType[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.society_type.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { society_type: string; }) => x.society_type.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getDepartment(term: string = null, algo): Observable<Departament[]> {
+    getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getCity(term: string = null, algo): Observable<City[]> {
+    getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getBank(term: string = null, algo): Observable<Bank[]> {
+    getBank(term: string = '', algo: Bank[]): Observable<Bank[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.bank.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { bank: string; }) => x.bank.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getTypeAccount(term: string = null, algo): Observable<TypeAccount[]> {
+    getTypeAccount(term: string = '', algo: TypeAccount[]): Observable<TypeAccount[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.type_account.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { type_account: string; }) => x.type_account.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
 
-    citieChangeAction(departament) {
+    citieChangeAction(departament: any) {
         // START ANGULAR MAT SEARCH CITIES
         let get_data_dep = departament;
         let id_dep = get_data_dep.id_departament;
@@ -411,86 +416,83 @@ export class DataProtectionComponent implements OnInit {
     }
 
     //START SET EVENT FROM DROPZONE COMPLEMENT
-    selectFile(event) {
-        let index = this.files_identifier_doc.length != event.addedFiles ? 0 : this.files_identifier_doc.length;
+    selectFile(event: { addedFiles: File[]; }) {
         console.log(this.files_identifier_doc.length);
         if (this.files_identifier_doc.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
-                this.onValidatePixels(item)
-                    .then((value: boolean) => {
-                        if (value) {
-                            this.files_identifier_doc.push(item);
-                        } else {
-                            this.toastyService.error(this.toastRejectPixelsImg);
-                        }
-
-                    });
-            });
-
+            return;
         }
+        
+        Promise.all(event.addedFiles.map(item => 
+            this.onValidatePixels(item)
+                .then(value => {
+                    if (value) {
+                        this.files_identifier_doc.push(item);
+                    } else {
+                        this.toastyService.error(this.toastRejectPixelsImg);
+                    }
+                })
+        )).catch(error => console.error('Error validating files:', error));
     }
 
-    selectFileRut(event) {
-        let index = this.files_rut.length != event.addedFiles ? 0 : this.files_rut.length;
+    selectFileRut(event: { addedFiles: File[]; }) {
         console.log(this.files_rut.length);
         if (this.files_rut.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
-                this.onValidatePixels(item)
-                    .then((value: boolean) => {
-                        if (value) {
-                            this.files_rut.push(item);
-                        } else {
-                            this.toastyService.error(this.toastRejectPixelsImg);
-                        }
-                    });
-            });
-
+            return;
         }
+        
+        Promise.all(event.addedFiles.map((item: any) =>
+            this.onValidatePixels(item)
+                .then(value => {
+                    if (value) {
+                        this.files_rut.push(item);
+                    } else {
+                        this.toastyService.error(this.toastRejectPixelsImg);
+                    }
+                })
+        )).catch(error => console.error('Error validating files:', error));
     }
 
-    selectFileCamcom(event) {
-        let index = this.files_cam_com.length != event.addedFiles ? 0 : this.files_cam_com.length;
+    selectFileCamcom(event: { addedFiles: File[]; }) {
         console.log(this.files_cam_com.length);
         if (this.files_cam_com.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
-                this.onValidatePixels(item)
-                    .then((value: boolean) => {
-                        if (value) {
-                            this.files_cam_com.push(item);
-                        } else {
-                            this.toastyService.error(this.toastRejectPixelsImg);
-                        }
-                    });
-            });
-
+            return;
         }
+        
+        Promise.all(event.addedFiles.map(item => 
+            this.onValidatePixels(item)
+                .then(value => {
+                    if (value) {
+                        this.files_cam_com.push(item);
+                    } else {
+                        this.toastyService.error(this.toastRejectPixelsImg);
+                    }
+                })
+        )).catch(error => console.error('Error validating files:', error));
     }
 
 
-    onValidatePixels(file: File) {
-        return new Promise((resolve, reject) => {
+    onValidatePixels(file: File): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
             const Img = new Image();
             Img.src = URL.createObjectURL(file);
-            Img.onload = (e: any) => {
-                console.log(e);
-                const height = e.target.height;
-                const width = e.path[0].width;
-                if (height >= this.heightMin || width >= this.widthMin) {
-                    resolve(true);
-                }
+            Img.onload = () => {
+                const height = Img.height;
+                const width = Img.width;
+                resolve(height >= this.heightMin || width >= this.widthMin);
+                URL.revokeObjectURL(Img.src); // Clean up the object URL
+            };
+            Img.onerror = () => {
+                URL.revokeObjectURL(Img.src);
                 resolve(false);
             };
         });
 
     }
 
-    onRemove(event) {
+    onRemove(event: File) {
         console.log(event);
         this.files_identifier_doc.splice(this.files_identifier_doc.indexOf(event), 1);
     }
@@ -532,7 +534,8 @@ export class DataProtectionComponent implements OnInit {
             if (this.show == true) {
                 email = registerForm.email;
             } else {
-                email = localStorage.getItem('user_email');
+                const storedEmail = localStorage.getItem('user_email');
+                email = storedEmail || "";
             }
             myObj_MemberShip = {
                 "logo_store_up": "some_value",
@@ -555,7 +558,7 @@ export class DataProtectionComponent implements OnInit {
             if (this.show == true) {
 
                 this.apiService.ValidateUserExist(registerForm.email).subscribe(
-                    result => {
+                    (                    result: boolean) => {
                         console.log(result);
                         if (result == true) {
                             this.validate_user = true;
@@ -616,22 +619,26 @@ export class DataProtectionComponent implements OnInit {
                                                                     this.apiService.registerUserFront(myObj_user_client).subscribe(
                                                                         result => {
                                                                             myObj_login = { "username": registerForm.email, "password": registerForm.password }
-                                                                            this.apiService.loginUser(myObj_login).subscribe(
-                                                                                (result_login: TokenObj) => {
-                                                                                    let user_id = result_login["user_id"];
-                                                                                    localStorage.setItem('mr-token-front', result_login.token);
-                                                                                    localStorage.setItem('id_user_front', result_login.user_id);
-                                                                                    localStorage.setItem('id_type_user', result_login.type_user);
-                                                                                    localStorage.setItem('personal_name', result_login.personal_name);
-                                                                                    localStorage.setItem('user_email', result_login.user_email);
-                                                                                    localStorage.setItem('id-store', result_login.id_store);
+                                                                            this.apiService.loginUser(myObj_login).subscribe
+                                                                                                                    ({
+                                                                                next: (result_login: any) => {
+                                                                                    const tokenData = result_login as TokenObj;
+                                                                                    let user_id = tokenData.user_id;
+                                                                                    localStorage.setItem('mr-token-front', tokenData.token);
+                                                                                    localStorage.setItem('id_user_front', tokenData.user_id);
+                                                                                    localStorage.setItem('id_type_user', tokenData.type_user);
+                                                                                    localStorage.setItem('personal_name', tokenData.personal_name);
+                                                                                    localStorage.setItem('user_email', tokenData.user_email);
+                                                                                    localStorage.setItem('id-store', tokenData.id_store);
                                                                                     this.router.navigate(['/sell/response']).then(() => {
                                                                                         this.show_spinner = false;
                                                                                         window.location.reload();
                                                                                     });
                                                                                 },
-                                                                                error => console.log(error)
-                                                                            );
+                                                                                error: (err: Error) => {
+                                                                                    console.error(err);
+                                                                                }
+                                                                            });
                                                                         },
                                                                         error => console.log(error)
                                                                     );
@@ -653,7 +660,7 @@ export class DataProtectionComponent implements OnInit {
 
                         }
                     },
-                    error =>
+                    (error: any) =>
                         console.log(error)
                 );
             } else {
@@ -736,3 +743,4 @@ export class DataProtectionComponent implements OnInit {
     }
 
 }
+

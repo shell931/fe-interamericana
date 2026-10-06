@@ -1,21 +1,20 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Invoice } from '../../../../Models/Invoice';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
    selector: 'Binnacle-dialog',
    templateUrl: './Binnacle.component.html',
-   styleUrls: ['./Binnacle.component.scss']
-})
+   styleUrls: ['./Binnacle.component.scss']})
 
 export class BinnacleComponent implements OnInit {
 
@@ -42,7 +41,7 @@ export class BinnacleComponent implements OnInit {
       public dialogRef: MatDialogRef<BinnacleComponent>,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
+      private toastyService: ToastrService,
       private formGroup: FormBuilder,
    ) { }
 
@@ -81,4 +80,5 @@ export class BinnacleComponent implements OnInit {
    }
 
 }
+
 

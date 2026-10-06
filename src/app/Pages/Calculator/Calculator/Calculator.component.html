@@ -1,110 +1,147 @@
-<div class="container mt-5" fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80"
-     fxLayoutAlign="center center">
-  <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80">
-    <mat-card class="cardpage">
-      <h3 class="titulo"><span>{{calculateData?.title}}</span></h3>
-      <div class="row mb-4 mt-1">
-        <div class="col-md">
-          <p class="pt-2">Calcula fácilmente la tarifa de una venta. Solo ingresa el valor de la compra, haz clic en
-            "Calcular tarifa" y !listo!.</p>
+<div class="calculator-container">
+  <div class="calculator-wrapper">
+    <mat-card class="calculator-card">
+      <!-- Compact Header -->
+      <div class="calculator-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <i class="fa fa-calculator"></i>
+          </div>
+          <div class="header-text">
+            <h2 class="calculator-title">{{calculateData?.title}}</h2>
+            <p class="calculator-description">Calcula fácilmente la tarifa de una venta</p>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md">
-          <p class="title-bg text-white font-bold rounded p-2 h5 text-center">Digite el Valor de Compra</p>
-          <form (ngSubmit)='calculate()' [formGroup]='form' novalidate class="form">
-            <div class="form-row">
-              <p class="col-md-4 mt-2">Valor de la venta</p>
-              <input class="text-center form-control h5 font-bold col-md-8" prefix="$" formControlName='amount' mask="separator" thousandSeparator="."  type="text" placeholder="Ingrese valor" />
-              <div class="alert  alert-danger" *ngIf="form.get('amount').hasError('required') && form.get('amount').touched">
+
+      <!-- Main Content -->
+      <div class="calculator-content">
+        <!-- Form Section -->
+        <div class="form-section">
+          <div class="form-header">
+            <i class="fa fa-edit"></i>
+            <h3>Valores de Entrada</h3>
+          </div>
+          
+          <form (ngSubmit)='calculate()' [formGroup]='form' novalidate class="calculator-form">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fa fa-dollar-sign"></i>
+                Valor de la venta
+              </label>
+              <div class="input-group">
+                <span class="input-prefix">$</span>
+                <input 
+                  class="form-input" 
+                  formControlName='amount' 
+                  mask="separator" 
+                  thousandSeparator="."  
+                  type="text" 
+                  placeholder="Ingrese valor" 
+                />
+              </div>
+              <div class="error-message" *ngIf="form.get('amount').hasError('required') && form.get('amount').touched">
+                <i class="fa fa-exclamation-circle"></i>
                 El valor es requerido
               </div>
             </div>
-            <div class="form-row">
-              <p class="col-md-4 mt-2">Iva de la venta %</p>
-              <input class="text-center form-control h5 font-bold col-md-8" suffix="%" formControlName='vatPercentage' mask="separator" thousandSeparator="."  type="text" placeholder="Ingrese valor" />
-              <div class="alert  alert-danger" *ngIf="form.get('vatPercentage').hasError('required') && form.get('vatPercentage').touched">
+
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fa fa-percentage"></i>
+                IVA de la venta (%)
+              </label>
+              <div class="input-group">
+                <input 
+                  class="form-input" 
+                  formControlName='vatPercentage' 
+                  mask="separator" 
+                  thousandSeparator="."  
+                  type="text" 
+                  placeholder="Ingrese porcentaje" 
+                />
+                <span class="input-suffix">%</span>
+              </div>
+              <div class="error-message" *ngIf="form.get('vatPercentage').hasError('required') && form.get('vatPercentage').touched">
+                <i class="fa fa-exclamation-circle"></i>
                 El porcentaje es requerido
               </div>
             </div>
-            <div class="text-center">
-              <button mat-raised-button color="accent" [disabled]='form.invalid' class="mt-2 h6 font-bold">CALCULAR TARIFA</button>
+
+            <div class="form-actions">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                [disabled]='form.invalid' 
+                class="calculate-button"
+              >
+                <i class="fa fa-calculator"></i>
+                CALCULAR TARIFA
+              </button>
             </div>
           </form>
 
-          <div class="mt-4 border rounded p-2">
-            <div class="row">
-              <div class="col-8 text-left">
-                Base gravable:
-              </div>
-              <div class="col-4 text-right">
-                {{calculateData?.taxableBase | currency : 'USD' : 'symbol' : '1.0-0'}}
-              </div>
+          <!-- Summary Section -->
+          <div class="summary-section" *ngIf="hasCalculated">
+            <div class="summary-header">
+              <i class="fa fa-chart-line"></i>
+              <h4>Resumen de Cálculo</h4>
             </div>
-            <div class="row mt-2">
-              <div class="col-8 text-left">
-                IVA:
+            <div class="summary-items">
+              <div class="summary-item">
+                <span class="summary-label">Base gravable:</span>
+                <span class="summary-value">{{calculateData?.taxableBase | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
               </div>
-              <div class="col-4 text-right">
-                {{calculateData?.vat | currency : 'USD' : 'symbol' : '1.0-0'}}
+              <div class="summary-item">
+                <span class="summary-label">IVA:</span>
+                <span class="summary-value">{{calculateData?.vat | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
               </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-8 text-left">
-                Valor total (Valor venta + IVA):
-              </div>
-              <div class="col-4 text-right">
-                {{(calculateData?.taxableBase + calculateData?.vat) | currency : 'USD' : 'symbol' : '1.0-0'}}
+              <div class="summary-item total">
+                <span class="summary-label">Valor total (Venta + IVA):</span>
+                <span class="summary-value">{{(calculateData?.taxableBase + calculateData?.vat) | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md">
-          <img src="assets/images/calculator/calculator.png" class="img-fluid" alt="">
-        </div>
       </div>
-      <div class="row">
-        <div class="col-md mb-3">
+
+      <!-- Results Section -->
+      <div class="results-section" *ngIf="hasCalculated">
+        <div class="cards-grid">
           <app-card-calculator
-            title="Descuentos Kómpralo"
+            title="Descuentos Swiftly"
             [items]="itemsKompralo"
             [footer]="footerCommissions"
           ></app-card-calculator>
-        </div>
-        <div class="col-md mb-3">
           <app-card-calculator
             title="Retenciones"
             [items]="itemsWithHoldings"
             [footer]="footerWithHoldings"
           ></app-card-calculator>
         </div>
-      </div>
-      <div class="row justify-content-center mt-1">
-        <div class="col-10 col-md-6">
-          <div class="row third-title-bg rounded py-1 mb-1">
-            <div class="col-8 font-bold text-md">
-              Total Retenciones y Comisiones:
+
+        <div class="totals-section">
+          <div class="total-item secondary">
+            <div class="total-content">
+              <i class="fa fa-receipt"></i>
+              <span>Total Retenciones y Comisiones:</span>
             </div>
-            <div class="col-4 text-right text-md">
-              {{calculateData?.totalWithholdingCommissions | currency : 'USD' : 'symbol' : '1.0-0'}}
+            <span class="summary-value">{{calculateData?.totalWithholdingCommissions | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+          </div>
+
+          <div class="total-item primary">
+            <div class="total-content">
+              <i class="fa fa-money-bill-wave"></i>
+              <span>*TOTAL A TRANSFERIR:</span>
             </div>
+            <span class="summary-value">{{calculateData?.totalTransfer | currency: 'USD' : 'symbol' : '1.0-0'}}</span>
           </div>
         </div>
-      </div>
-      <div class="row justify-content-center mt-2">
-        <div class="col-10 col-md-7">
-          <div class="row title-bg rounded">
-            <div class="col-8 h5 text-white m-0 py-3 px-2 font-bold">
-              *TOTAL A TRANSFERIR:
-            </div>
-            <div class="col-4 text-right h5 text-white m-0 py-3 px-2 font-bold">
-              {{calculateData?.totalTransfer | currency: 'USD' : 'symbol' : '1.0-0'}}
-            </div>
-          </div>
+
+        <div class="disclaimer">
+          <i class="fa fa-info-circle"></i>
+          <small>*Este valor es por transacción, no incluye costo de transferencia más IVA.</small>
         </div>
-      </div>
-      <div class="row justify-content-center mt-2">
-        <small>*Este valor es por transacción, no incluye costo de transferencia más IVA.</small>
       </div>
     </mat-card>
   </div>

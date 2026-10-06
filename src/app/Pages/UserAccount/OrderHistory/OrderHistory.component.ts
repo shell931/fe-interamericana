@@ -1,4 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../../Services/api.service';
 import { InvoiceUser } from '../../../Models/Invoice';
 import { MatPaginator } from '@angular/material/paginator';
@@ -14,15 +19,24 @@ const order_history = [
 
 @Component({
 	selector: 'app-OrderHistory',
+	standalone: true,
+	imports: [
+		CommonModule,
+		CurrencyPipe,
+		MatTableModule,
+		MatPaginatorModule,
+		MatCardModule,
+		MatButtonModule
+	],
 	templateUrl: './OrderHistory.component.html',
 	styleUrls: ['./OrderHistory.component.scss']
 })
 export class OrderHistoryComponent implements OnInit {
 
 	invoiceList: any[] = [];
-	invDetailGrid: InvoiceUser;
+	invDetailGrid: any;
 
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+	@ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
 	dataSource = new MatTableDataSource<any>(this.invoiceList);
 
@@ -33,15 +47,25 @@ export class OrderHistoryComponent implements OnInit {
 		private apiService: ApiService,
 	) { }
 
+	// Getter para obtener los datos paginados para la vista móvil
+	get paginatedData(): any[] {
+		if (!this.paginator || !this.dataSource) {
+			return this.dataSource?.data || [];
+		}
+		const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+		const endIndex = startIndex + this.paginator.pageSize;
+		return this.dataSource.filteredData.slice(startIndex, endIndex);
+	}
+
 	ngOnInit() {
 
 		const id_user_front = localStorage.getItem('id_user_front');
-		this.apiService.ListInvoicesByUser(id_user_front).subscribe(res => this.getAllInvoiceUserData(res));
+		this.apiService.ListInvoicesByUser(id_user_front).subscribe((res: any) => this.getAllInvoiceUserData(res));
 
 	}
 
 
-	getAllInvoiceUserData(response) {
+	getAllInvoiceUserData(response: any) {
 		console.log(response);
 
 		this.invoiceList = response;
@@ -52,15 +76,15 @@ export class OrderHistoryComponent implements OnInit {
 	}
 
 
-	onSeeDialog(data) {
-		this.apiService.getInvoiceUserDetail(data.reference).subscribe(dataDetailInvoice => this.getInvoiceDetailData(dataDetailInvoice, data));
+	onSeeDialog(data: any) {
+		this.apiService.getInvoiceUserDetail(data.reference).subscribe((dataDetailInvoice: any) => this.getInvoiceDetailData(dataDetailInvoice, data));
 	}
 
 
-	getInvoiceDetailData(dataDetailInvoice, dataInvoice) {
+	getInvoiceDetailData(dataDetailInvoice: any, dataInvoice: any) {
 		let myObj_invoice;
 		myObj_invoice = {
-			adress: dataInvoice.adress,
+			address: dataInvoice.address ?? dataInvoice.adress,
 			created_at: dataInvoice.created_at,
 			departament: dataInvoice.depart,
 			email: dataInvoice.email,
@@ -86,8 +110,8 @@ export class OrderHistoryComponent implements OnInit {
 
 
 
-		this.invDetailGrid = myObj_invoice;
-		this.apiService.PopUpInvoiceDetailUsr(this.invDetailGrid);
+	this.invDetailGrid = myObj_invoice as any;
+	this.apiService.PopUpInvoiceDetailUsr(this.invDetailGrid);
 	}
 
 	applyFilter(filterValue: string) {
@@ -99,3 +123,4 @@ export class OrderHistoryComponent implements OnInit {
 
 
 }
+

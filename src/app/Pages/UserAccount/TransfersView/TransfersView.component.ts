@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 // import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { TransfersDetailSidebarComponent } from '../../../Layouts/TransfersDetailSidebar/TransfersDetailSidebar.component';
 import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
 import { Transfer } from '../../../Models/Transfer';
@@ -13,6 +16,13 @@ import { EmbryoService } from '../../../Services/Embryo.service';
 
 @Component({
 	selector: 'app-TransfersView',
+	standalone: true,
+	imports: [
+		CommonModule,
+		CurrencyPipe,
+		MatSidenavModule,
+		TransfersDetailSidebarComponent
+	],
 	templateUrl: './TransfersView.component.html',
 	styleUrls: ['./TransfersView.component.scss']
 })
@@ -95,4 +105,5 @@ export class TransfersViewComponent implements OnInit {
 	}
 
 }
+
 

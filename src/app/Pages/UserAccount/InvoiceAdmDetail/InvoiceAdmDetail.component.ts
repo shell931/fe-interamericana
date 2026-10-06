@@ -1,13 +1,19 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 // import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+// import { MaterialFileInputModule } from 'ngx-material-file-input'; // Temporarily disabled - missing dependency
 import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
-import { element } from 'protractor';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { environment } from '../../../../../src/environments/environment';
 
 const { isArray } = Array;
@@ -16,6 +22,18 @@ const { isArray } = Array;
 
 @Component({
 	selector: 'app-InvoiceAdmDetail',
+	standalone: true,
+	imports: [
+		CommonModule,
+		CurrencyPipe,
+		ReactiveFormsModule,
+		FormsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatIconModule,
+		MatButtonModule
+		// MaterialFileInputModule // Temporarily disabled - missing dependency
+	],
 	templateUrl: './InvoiceAdmDetail.component.html',
 	styleUrls: ['./InvoiceAdmDetail.component.scss']
 })
@@ -25,10 +43,11 @@ export class InvoiceAdmDetailComponent implements OnInit {
 
 	popUpDeleteUserResponse: any;
 	invoiceList: any[] = [];
-	invDetailGrid: Invoice;
+	invDetailGrid!: Invoice;
 
 
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+	@ViewChild(MatPaginator, { static: false })
+	paginator!: MatPaginator;
 
 	dataSource = new MatTableDataSource<any>(this.invoiceList);
 
@@ -82,7 +101,7 @@ export class InvoiceAdmDetailComponent implements OnInit {
 	type_service: any;
 	adminprList: any[] = [];
 	cam_com: any;
-	ShippmentForm: FormGroup;
+	ShippmentForm!: UntypedFormGroup;
 	img_product_rout: any;
 
 	public show: boolean = false;
@@ -95,7 +114,7 @@ export class InvoiceAdmDetailComponent implements OnInit {
 		public embryoService: EmbryoService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private formGroup: FormBuilder,
+		private formGroup: UntypedFormBuilder,
 	) { }
 
 	ngOnInit() {
@@ -105,13 +124,13 @@ export class InvoiceAdmDetailComponent implements OnInit {
 		})
 
 		this.apiService.ListInvoicesById(this.id).subscribe(
-			dataHeaderInvoice => {
-				this.apiService.getInvoiceDetail(this.id).subscribe(dataDetailInvoice => this.getInvoiceDetailData(dataDetailInvoice, dataHeaderInvoice));
+			(			dataHeaderInvoice: any) => {
+				this.apiService.getInvoiceDetail(this.id).subscribe((dataDetailInvoice: any) => this.getInvoiceDetailData(dataDetailInvoice, dataHeaderInvoice));
 			},
-			error => console.log(error)
+			(			error: any) => console.log(error)
 		);
 		this.ShippmentForm = this.formGroup.group({
-			cam_com: new FormControl('', [Validators.required]),
+			cam_com: new UntypedFormControl('', [Validators.required]),
 		});
 
 		this.embryoService.binnacleSidenavOpen = false;
@@ -120,7 +139,7 @@ export class InvoiceAdmDetailComponent implements OnInit {
 
 
 
-	getInvoiceDetailData(dataDetailInvoice, dataInvoice) {
+	getInvoiceDetailData(dataDetailInvoice: any[], dataInvoice: { adress: any; created_at: any; departament: any; email: any; first_name_client: any; id_store_id: any; id: any; name_client: any; name_state: any; name_store: any; nameci: any; number_identifier: any; paymentmethod: any; phone: any; reference: any; reference_invoice: any; state_id: any; total_price: any; percentage_sale: any; val_percentage_sale: any; percentage_commision_payment: any; val_percentage_commision_payment: any; percentage_rete_ica: any; val_percentage_rete_ica: any; percentage_rete_fuente: any; val_percentage_rete_fuente: any; percentage_commision_tax: any; val_percentage_commision_tax: any; total_balance: any; transaction_id: any; type_identifier: any; user_id: any; num_aprob: any; quot: any; brand: any; cod_reply: any; messaje_reply: any; num_recibo: any; type_service_id: any; type_service: any; }) {
 		this.adress = dataInvoice.adress;
 		this.created_at = dataInvoice.created_at;
 		this.departament = dataInvoice.departament;
@@ -232,4 +251,5 @@ export class InvoiceAdmDetailComponent implements OnInit {
 
 
 }
+
 

@@ -1,102 +1,112 @@
 <div class="inner-container">
     <div class="final-receipt-page section-gap">
         <div class="account-info">
-
-            <div fxLayout="row wrap" class="col-gap mx-0">
-                <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="15" fxFlex.lg="15" fxFlex.xl="15" class="user-nav-list">
-                    <mat-list role="list">
-                        <mat-list-item role="listitem">
-                            <a [routerLink]="['/account/profile']" routerLinkActive="tab-active">
-                                <span>
-                                    <i class="material-icons">account_circle</i>Tu información
-                                </span>
-                            </a>
-                        </mat-list-item>
-                        <mat-list-item role="listitem">
-                            <a [routerLink]="['/account/order-history']" routerLinkActive="tab-active">
-                                <i class="material-icons">history</i>
-                                <span>Compras</span>
-                            </a>
-                        </mat-list-item>
-                        <mat-list-item role="listitem">
-                            <a [routerLink]="['/account/address']" routerLinkActive="tab-active">
-                                <i class="material-icons">location_on</i>
-                                <span>Ubicaciones</span>
-                            </a>
-                        </mat-list-item>
-
-                        <mat-list-item role="listitem">
-                            <a [routerLink]="['/account/cards']" routerLinkActive="tab-active">
-                                <i class="material-icons">credit_card</i>
-                                <span>Tarjetas guardadas</span>
-                            </a>
-                        </mat-list-item>
-
-
-                        <mat-list-item role="listitem" *ngIf="show_store_pr">
-                            <a [routerLink]="['/account/store_adm']" routerLinkActive="tab-active">
-                                <i class="material-icons">account_balance</i>
-                                <span>Tu tienda</span>
-                            </a>
-                        </mat-list-item>
-
-                        <mat-list-item role="listitem" *ngIf="show_store_pr">
-                            <a [routerLink]="['/account/product_adm']" routerLinkActive="tab-active">
-                                <i class="material-icons">add_shopping_cart</i>
-                                <span>Productos</span>
-                            </a>
-                        </mat-list-item>
-
-                        <mat-list-item role="listitem" *ngIf="show_store_pr">
-                            <a [routerLink]="['/account/invoice_adm']" routerLinkActive="tab-active">
-                                <i class="material-icons">fact_check</i>
-                                <span>Facturas</span>
-                                <span matBadge="{{number_invoice_inprocces}}" matBadgeOverlap="false"></span>
-                            </a>
-                        </mat-list-item>
-
-                        <mat-list-item role="listitem" *ngIf="show_store_pr">
-                            <a [routerLink]="['/account/balance_status']" routerLinkActive="tab-active">
-                                <i class="material-icons">paid</i>
-                                <span>Saldo</span>
-                            </a>
-                        </mat-list-item>
-
-                        <mat-list-item role="listitem" *ngIf="show_store_pr">
-                            <a [routerLink]="['/account/transfers_view']" routerLinkActive="tab-active">
-                                <i class="material-icons">assignment</i>
-                                <span>Transferencias</span>
-                            </a>
-                        </mat-list-item>
-
-                        <!-- <mat-list-item role="listitem" *ngIf="show_store_pr">
-                            <a (click)="RouteAssitedSelling()" routerLinkActive="tab-active">
-                                <i class="material-icons">link</i>
-                                <span>Compra asistida</span>
-                            </a>
-                        </mat-list-item> -->
-
-                    </mat-list>
-                </div>
-                <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="85" fxFlex.lg="85" fxFlex.xl="85"
-                    class="user-content-wrapper">
-                    <div class="tab-container">
-                        <div class="user-info">
-                            <!-- <div fxLayoutAlign="flex-start"> -->
-                            <div class="login-user-img">
-                                <!-- <img src="assets/images/user-4.jpg" width="70" alt="Active User"> -->
-                            </div>
-                            <div class="bienvenida">
-                                <b>Hola, {{name}}</b>
-                                <p style="margin-left: 10px;">{{email}}</p>
-                            </div>
-                            <!-- </div> -->
-                        </div>
-                        <router-outlet></router-outlet>
+            <!-- User Info Header -->
+            <div class="user-info-header">
+                <div class="user-info">
+                    <div class="login-user-img"></div>
+                    <div class="bienvenida">
+                        <b>Hola, {{name}}</b>
+                        <p>{{email}}</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Horizontal Navigation Menu -->
+            <div class="horizontal-nav">
+                <!-- Mobile Menu Toggle Button -->
+                <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" type="button">
+                    <i class="material-icons">{{isMobileMenuOpen ? 'close' : 'menu'}}</i>
+                    <span>Menú</span>
+                </button>
+
+                <!-- Desktop Navigation -->
+                <div class="nav-container desktop-nav">
+                    <a [routerLink]="['/account/profile']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">account_circle</i>
+                        <span>Tu información</span>
+                    </a>
+                    <a [routerLink]="['/account/order-history']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">history</i>
+                        <span>Compras</span>
+                    </a>
+                    <a [routerLink]="['/account/address']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">location_on</i>
+                        <span>Ubicaciones</span>
+                    </a>
+                    <a [routerLink]="['/account/cards']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">credit_card</i>
+                        <span>Tarjetas</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/store_adm']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">account_balance</i>
+                        <span>Tu tienda</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/product_adm']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">add_shopping_cart</i>
+                        <span>Productos</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/invoice_adm']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">fact_check</i>
+                        <span>Facturas</span>
+                        <span class="badge" *ngIf="number_invoice_inprocces > 0">{{number_invoice_inprocces}}</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/balance_status']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">paid</i>
+                        <span>Saldo</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/transfers_view']" routerLinkActive="nav-active" class="nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">assignment</i>
+                        <span>Transferencias</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Dropdown Menu -->
+                <div class="mobile-nav-dropdown" [class.open]="isMobileMenuOpen">
+                    <a [routerLink]="['/account/profile']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">account_circle</i>
+                        <span>Tu información</span>
+                    </a>
+                    <a [routerLink]="['/account/order-history']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">history</i>
+                        <span>Compras</span>
+                    </a>
+                    <a [routerLink]="['/account/address']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">location_on</i>
+                        <span>Ubicaciones</span>
+                    </a>
+                    <a [routerLink]="['/account/cards']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">credit_card</i>
+                        <span>Tarjetas</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/store_adm']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">account_balance</i>
+                        <span>Tu tienda</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/product_adm']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">add_shopping_cart</i>
+                        <span>Productos</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/invoice_adm']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">fact_check</i>
+                        <span>Facturas</span>
+                        <span class="badge" *ngIf="number_invoice_inprocces > 0">{{number_invoice_inprocces}}</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/balance_status']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">paid</i>
+                        <span>Saldo</span>
+                    </a>
+                    <a *ngIf="show_store_pr" [routerLink]="['/account/transfers_view']" routerLinkActive="nav-active" class="mobile-nav-item" (click)="closeMobileMenu()">
+                        <i class="material-icons">assignment</i>
+                        <span>Transferencias</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <router-outlet></router-outlet>
+            </div>
         </div>
     </div>
 </div>

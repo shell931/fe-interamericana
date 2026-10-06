@@ -1,27 +1,29 @@
 
-import {interval as observableInterval} from 'rxjs';
-
-import {map} from 'rxjs/operators';
-
+import { interval as observableInterval, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Component, ElementRef, OnInit, OnDestroy, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'embryo-TimerCountDown',
 	templateUrl: './TimerCountDown.component.html',
 	styleUrls: ['./TimerCountDown.component.scss'],
+	standalone: true,
+	imports: [
+		CommonModule
+	]
 })
 
 export class TimerCountDownComponent implements OnInit, OnDestroy {
 
    @Input() dateTime : any;
 
-   private future: Date;
-   private futureString: string;
-   private diff: number;
-   private $counter: Observable<number>;
-   private subscription: Subscription;
-   private message: string;
+   private future!: Date;
+   private futureString: string = '';
+   private diff: number = 0;
+   private $counter!: Observable<number>;
+   private subscription!: Subscription;
+   private message: string = '';
 
    hours : any;
    minutes : any;
@@ -29,7 +31,7 @@ export class TimerCountDownComponent implements OnInit, OnDestroy {
 
    constructor() {}
 
-   dhms(t) 
+   dhms(t: number) 
    {
       if(t && t > 0)
       {
@@ -74,7 +76,9 @@ export class TimerCountDownComponent implements OnInit, OnDestroy {
          this.hours = '00';
          this.minutes = '00';
          this.seconds = '00';
-         this.subscription.unsubscribe();
+         if (this.subscription) {
+            this.subscription.unsubscribe();
+         }
       }
    }
 
@@ -89,12 +93,13 @@ export class TimerCountDownComponent implements OnInit, OnDestroy {
             return x;
          }));
 
-         this.subscription = this.$counter.subscribe((x) => this.dhms(this.diff));
+         this.subscription = this.$counter.subscribe((x: number) => this.dhms(this.diff));
       }
    }
 
    ngOnDestroy(): void 
    {
-      this.subscription.unsubscribe();
+      if (this.subscription) { this.subscription.unsubscribe(); }
    }
 }
+

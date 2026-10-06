@@ -3,63 +3,93 @@ import { AdminPanelServiceService } from '../../Service/AdminPanelService.servic
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { SelectionModel } from '@angular/cdk/collections';
 import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
-import { DomSanitizer } from '@angular/platform-browser';
+import { InvoiceData } from '../../../Models/InvoiceData';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../../../src/environments/environment';
 import { EmbryoService } from '../../../Services/Embryo.service';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
+import { BinnacleSideBarAdmComponent } from '../../Shared/BinnacleSideBarAdm/BinnacleSideBarAdm.component';
 
 @Component({
     selector: 'app-invoiceValidation',
     templateUrl: './InvoiceValidation.component.html',
-    styleUrls: ['./InvoiceValidation.component.scss']
+    styleUrls: ['./InvoiceValidation.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatExpansionModule,
+        MatFormFieldModule,
+        MatSidenavModule,
+        MatCardModule,
+        MatProgressBarModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatBadgeModule,
+        BinnacleSideBarAdmComponent,
+        CurrencyPipe
+    ]
 })
 
 export class InvoiceValidationComponent implements OnInit {
-
-
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    id_invoice: any;
-    invDetailGrid: Invoice;
-    adress: Invoice;
-    created_at: Invoice;
-    departament: Invoice;
-    email: Invoice;
-    first_name_client: Invoice;
-    id_store_id: Invoice;
-    id: Invoice;
-    name_client: Invoice;
-    name_state: Invoice;
-    name_store: Invoice;
-    nameci: Invoice;
-    number_identifier: Invoice;
-    paymentmethod: Invoice;
-    phone: Invoice;
-    reference: Invoice;
-    reference_invoice: Invoice;
-    state_id: string;
-    total_price: Invoice;
-    percentage_sale: Invoice;
-    val_percentage_sale: Invoice;
-    percentage_commision_payment: Invoice;
-    val_percentage_commision_payment: Invoice;
-    percentage_rete_ica: Invoice;
-    val_percentage_rete_ica: Invoice;
-    percentage_rete_fuente: Invoice;
-    val_percentage_rete_fuente: Invoice;
-    val_percentage_rete_iva: Invoice;
-    getBinnacleFalse: Invoice;
-    percentage_commision_tax: Invoice;
-    val_percentage_commision_tax: Invoice;
-    total_balance: Invoice;
-    transaction_id: Invoice;
-    type_identifier: Invoice;
-    user_id: Invoice;
-    invoice_detail: Invoice;
-    shipping_voucher: any;
-    letter_received: any;
+    @ViewChild(MatPaginator, { static: false })
+    paginator!: MatPaginator;
+    selection = new SelectionModel<InvoiceData>(true, []);
+    displayedColumns: string[] = [];
+    dataSource = new MatTableDataSource<InvoiceData>();
+    id_invoice!: string;
+    invDetailGrid!: any;
+    adress!: string;
+    created_at!: string;
+    departament!: string;
+    email!: string;
+    first_name_client!: string;
+    id_store_id!: number;
+    id!: number;
+    name_client!: string;
+    name_state!: string;
+    name_store!: string;
+    nameci!: string;
+    number_identifier!: string;
+    paymentmethod!: string;
+    phone!: string;
+    reference!: string;
+    reference_invoice!: string;
+    state_id!: string;
+    total_price!: number;
+    percentage_sale!: number;
+    val_percentage_sale!: number;
+    percentage_commision_payment!: number;
+    val_percentage_commision_payment!: number;
+    percentage_rete_ica!: number;
+    val_percentage_rete_ica!: number;
+    percentage_rete_fuente!: number;
+    val_percentage_rete_fuente!: number;
+    val_percentage_rete_iva!: number;
+    getBinnacleFalse!: boolean;
+    percentage_commision_tax!: number;
+    val_percentage_commision_tax!: number;
+    total_balance!: number;
+    transaction_id!: string;
+    type_identifier!: string;
+    user_id!: number;
+    invoice_detail!: any;
+    shipping_voucher!: SafeResourceUrl;
+    letter_received!: SafeResourceUrl;
     panelOpenState = false;
-    img_product_rout: any;
+    img_product_rout!: string;
     type_service_id: any;
     type_service: any;
     quot: any;
@@ -99,29 +129,36 @@ export class InvoiceValidationComponent implements OnInit {
         public embryoService: EmbryoService,
     ) { }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.addBodyClass();
-        this.route.params.subscribe(res => {
-            this.id_invoice = res.id_invoice;
-        })
+        this.route.params.subscribe((res: Params) => {
+            if (res['id_invoice']) {
+                this.id_invoice = res['id_invoice'];
+            }
+        });
         this.apiService.ListInvoicesById(this.id_invoice).subscribe(
-            dataHeaderInvoice => {
-                this.apiService.getInvoiceDetail(this.id_invoice).subscribe(dataDetailInvoice => this.getInvoiceDetailData(dataDetailInvoice, dataHeaderInvoice));
+            (dataHeaderInvoice: InvoiceData) => {
+                this.apiService.getInvoiceDetail(this.id_invoice).subscribe(
+                    (dataDetailInvoice: any) => this.getInvoiceDetailData(dataDetailInvoice, dataHeaderInvoice)
+                );
             },
-            error => console.log(error)
+            (error: Error) => console.error('Error loading invoice:', error)
         );
         localStorage.removeItem("id_invoice_popup");
-        let id_invoice_popup = localStorage.setItem('id_invoice_popup', this.id_invoice);
+        localStorage.setItem('id_invoice_popup', this.id_invoice);
 
     }
 
     addBodyClass() {
         window.addEventListener('load', function () {
-            document.querySelector('body').classList.add("loaded")
+            const bodyElement = document.querySelector('body');
+            if (bodyElement) {
+                bodyElement.classList.add("loaded");
+            }
         });
     }
 
-    getInvoiceDetailData(dataDetailInvoice, dataInvoice) {
+    getInvoiceDetailData(dataDetailInvoice: any, dataInvoice: InvoiceData): void {
 
         this.adress = dataInvoice.adress;
         this.created_at = dataInvoice.created_at;
@@ -208,12 +245,12 @@ export class InvoiceValidationComponent implements OnInit {
 
     }
 
-    onChangeCheckCallControll(id) {
+    onChangeCheckCallControll(id: number) {
         let check_validate = 1;
         this.apiService.getCheckValidation(id, check_validate).subscribe(
-            result => {
+            (result: boolean) => {
                 console.log(result);
-                let myObj_check;
+                let myObj_check: {check: boolean};
                 if (result == false) {
                     console.log("entra 1");
                     myObj_check = {
@@ -237,18 +274,18 @@ export class InvoiceValidationComponent implements OnInit {
                 );
 
             },
-            error => console.log(error)
+            (            error: any) => console.log(error)
         );
     }
 
 
-    onChangeCheckRecord(id) {
+    onChangeCheckRecord(id: number) {
 
         let check_validate = 2;
         this.apiService.getCheckValidation(id, check_validate).subscribe(
-            result => {
+            (result: boolean) => {
                 console.log(result);
-                let myObj_check;
+                let myObj_check: {check: boolean};
                 if (result == false) {
                     myObj_check = {
                         "check": true,
@@ -269,19 +306,19 @@ export class InvoiceValidationComponent implements OnInit {
                 );
 
             },
-            error => console.log(error)
+            (            error: any) => console.log(error)
         );
 
     }
 
 
 
-    onChangeCheckVoucherSend(id) {
+    onChangeCheckVoucherSend(id: number) {
         let check_validate = 3;
         this.apiService.getCheckValidation(id, check_validate).subscribe(
-            result => {
+            (result: boolean) => {
                 console.log(result);
-                let myObj_check;
+                let myObj_check: {check: boolean};
                 if (result == false) {
                     myObj_check = {
                         "check": true,
@@ -293,18 +330,18 @@ export class InvoiceValidationComponent implements OnInit {
                 }
 
                 this.apiService.UpdateCheckShipmentInvoice(myObj_check, id).subscribe(
-                    result => {
+                    (result: unknown) => {
                         window.location.reload();
                         // this.CheckedRecord = true;
                         // this.numberCheck = 75;
                         // this.confitionCheckRecord = true;
                     },
-                    error => console.log(error)
+                    (error: unknown) => console.log(error)
                 );
 
 
             },
-            error => console.log(error)
+            (            error: any) => console.log(error)
         );
 
 
@@ -313,14 +350,14 @@ export class InvoiceValidationComponent implements OnInit {
 
     }
 
-    onChangeCheckLetterCon($event: Event, id) {
+    onChangeCheckLetterCon($event: MatCheckboxChange, id: number) {
         this.messaje_vali_progress = false;
         if (this.CheckedCallControl != false && this.CheckedRecord && this.CheckedVoucherSend) {
             let check_validate = 4;
             this.apiService.getCheckValidation(id, check_validate).subscribe(
-                result => {
+                (result: boolean) => {
                     console.log(result);
-                    let myObj_check;
+                    let myObj_check: {check: boolean};
                     if (result == false) {
                         myObj_check = {
                             "check": true,
@@ -331,17 +368,17 @@ export class InvoiceValidationComponent implements OnInit {
                         };
                     }
                     this.apiService.UpdateCheckFinalyInvoice(myObj_check, id).subscribe(
-                        result => {
+                        (result: unknown) => {
                             window.location.reload();
                             // this.CheckedRecord = true;
                             // this.numberCheck = 100;
                             // this.confitionCheckRecord = true;
                         },
-                        error => console.log(error)
+                        (error: unknown) => console.log(error)
                     );
 
                 },
-                error => console.log(error)
+                (error: any) => console.log(error)
             );
 
         } else {
@@ -358,7 +395,7 @@ export class InvoiceValidationComponent implements OnInit {
     // @param  {Number} num2 The second number
     // @return {Number}      The total of the two numbers
 
-    ChangeStatusSend(id) {
+    ChangeStatusSend(id: number) {
         let myObj_store = {
             "state": "4",
             "external_state": "5",
@@ -371,14 +408,14 @@ export class InvoiceValidationComponent implements OnInit {
         );
     }
 
-    onSeeDialog(id) {
+    onSeeDialog(id: number) {
         localStorage.removeItem("messajes");   				        
         const id_store = localStorage.getItem('id-store');
 		localStorage.removeItem("id_invoice_popup");        
 		localStorage.setItem('id_invoice_popup',this.id_invoice);	
         let id_invoice = this.id_invoice
         this.apiService.getBinnacle(id_invoice, 'adm').subscribe( 
-            result => {
+            (result: { result: number; data: any }) => {
 
                 if (result.result == 200) { 
                     let myJSONinvDetail = JSON.stringify(result.data);				
@@ -386,10 +423,10 @@ export class InvoiceValidationComponent implements OnInit {
                     this.embryoService.binnacleSidenavAdmOpen = !this.embryoService.binnacleSidenavAdmOpen;
     
                     this.apiService.ListInvoicesById(this.id_invoice).subscribe(
-                        dataHeaderInvoice => {
-                            this.apiService.getInvoiceDetail(this.id_invoice).subscribe(dataDetailInvoice => this.getInvoiceDetailData(dataDetailInvoice, dataHeaderInvoice));
+                        (dataHeaderInvoice: any) => {
+                            this.apiService.getInvoiceDetail(this.id_invoice).subscribe((dataDetailInvoice: any) => this.getInvoiceDetailData(dataDetailInvoice, dataHeaderInvoice));
                         },
-                        error => console.log(error)
+                        (error: any) => console.log(error)
                     );
                 } else {
                     console.log("Null");

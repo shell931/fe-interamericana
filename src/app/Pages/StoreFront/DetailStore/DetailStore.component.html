@@ -1,116 +1,142 @@
-<!-- <div class="container">
-    <embryo-ProductStoreGrid [currency]="embryoService?.currency" [products]="productsGrid"
-        (addToCart)="addToCart($event)" (addToWishList)="addToWishList($event)" gridThree=true>
-    </embryo-ProductStoreGrid>
-</div> -->
-
-
-<div class="container-fluid" style="max-width: 80%; margin: 0 auto;">
-    <div class="row mt-5 backgroundstyle">
-        <div class="col-lg-2 col-sm-12 col-xs-12 pad_t">
-            <div class="banner_tienda">
-                <!-- <h3 class="titulo mb-5"><b style="font-weight: 600 !important;"> {{name_store}}</b></h3> -->
+<div class="store-page-container">
+    <div class="store-layout">
+        <!-- Sidebar -->
+        <aside class="store-sidebar">
+            <!-- Store Header -->
+            <div class="store-header">
+                <h1 class="store-title">{{name_store}}</h1>
             </div>
-            <mat-card class="mat_categories">
-                <!-- <b style="font-weight: 600 !important;">Categorias:</b> -->
-                <mat-list role="list">
-                    <mat-tree [dataSource]="dataSourceN" [treeControl]="treeControlN" class="example-tree">
-                        <!-- This is the tree node template for leaf nodes -->
-                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="nav-li" matTreeNodePaddingIndent="0">
-                            <!-- use a disabled button to provide padding for tree leaf -->
-                            <mat-list-item>
-                                <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="link-category" style="    font-size: 13px;">
-                                    {{node.name}}
-                                </a>
-                                <button mat-icon-button disabled></button>
-                            </mat-list-item>
-                        </mat-tree-node>
-                        <!-- This is the tree node template for expandable nodes -->
-                        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding class="nav-li">
-                            <mat-list-item>
-                                <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="link-category">
-                                    <!-- <img _ngcontent-embryo-seo-pre-c396="" src=" assets/images/icons_category_product/{{node.icon}}" alt="image" class="image-li">{{node.name}} -->
-                                    <b style="font-weight: 600 !important;">{{node.name}}</b>
-                                </a>
-                                <!-- <mat-icon>home</mat-icon> {{node.name}} -->
-                                <div class="mat-tree-node">
-                                    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-                                        <mat-icon class="mat-icon-rtl-mirror icon_arrow_forward_ios">
-                                            {{treeControlN.isExpanded(node) ? 'expand_less' : 'expand_more'}}
-                                        </mat-icon>
-                                    </button>
-                                </div>
+            
+            <!-- Categories Filter -->
+            <div class="categories-filter">
+                <h3 class="filter-title">Categorías</h3>
+                <mat-tree [dataSource]="dataSourceN" [treeControl]="treeControlN" class="category-tree">
+                    <!-- Leaf nodes -->
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="category-item">
+                        <mat-list-item>
+                            <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
+                                <span class="category-text">{{node.name}}</span>
+                            </a>
+                        </mat-list-item>
+                    </mat-tree-node>
+                    
+                    <!-- Expandable nodes -->
+                    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding class="category-item">
+                        <mat-list-item>
+                            <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
+                                <span class="category-text">{{node.name}}</span>
+                            </a>
+                        </mat-list-item>
+                    </mat-tree-node>
+                </mat-tree>
+            </div>
+        </aside>
 
-                            </mat-list-item>
-                        </mat-tree-node>
-                    </mat-tree>
-                </mat-list>
-
-            </mat-card>
-        </div>
-
-                 <div class="col-lg-10 col-sm-12 col-xs-12 pad_t">
-
-            <!-- <mat-toolbar class=""> -->
-            <!-- <mat-form-field style="width: 100%" floatLabel='never'> -->
-            <div class="buttonIn">
-                <input class="inputsearch" matInput [(ngModel)]="searchText" placeholder="BUSCAR EN {{name_store}}" autocomplete="off" type="search">
-                <button class="btn btn-primary button-search class_search" type="submit" tabindex="-1">
-                    <span class="mat-button-wrapper">
-                        <i class="fa fa-search"></i>
-                    </span></button>
+        <!-- Main Content -->
+        <main class="store-main">
+            <br>
+            <!-- Search Bar -->
+            <div class="search-section">
+                <div class="search-container">
+                    <form class="search-form" (ngSubmit)="applyFilter()">
+                        <input 
+                            class="search-input" 
+                            matInput 
+                            [(ngModel)]="searchText" 
+                            (ngModelChange)="applyFilter()"
+                            (input)="applyFilter()"
+                            (keyup.enter)="applyFilter()"
+                            [placeholder]="'Buscar en ' + name_store" 
+                            autocomplete="off" 
+                            type="search"
+                            name="searchInput">
+                    </form>
+                </div>
             </div>
 
-            <!-- </mat-form-field> -->
-            <!-- </mat-toolbar> -->
-            <div fxLayout="row wrap" fxLayoutAlign="none" class="col-gap div_produc">
-
-
-                <mat-card class="example-card card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="33%" *ngFor="let card of obs | async | filter : searchText | paginate: { itemsPerPage: 15, currentPage: p }  ">
-                    <mat-card-content class="product-content producto_destacado relative">
-                        <a class="p-link link_producto" *ngIf="!card?.id" [routerLink]="[card?.route_product]">
-                            <!-- <img class="img_size" mat-card-image [defaultImage]="card?.image" [lazyLoad]="card?.image"> -->
-                            <img class="img_size image_pixeled" width="626" height="800" mat-card-image [src]="card?.image" [ngClass]="{ transparent: !loaded }" (load)="onLoad()" alt="Photo">
-                        </a>
-                        <a class="p-link" *ngIf="card?.id" [routerLink]="['/products', card?.type, card?.id_product]">
-                            <img class="img_size image_pixeled" mat-card-image [src]="card?.image" [defaultImage]="card?.image" [lazyLoad]="card?.image">
-                        </a>
-                        <div class="right-block">
-                            <h6 class="titulo_producto"><a *ngIf="product?.id_product" [routerLink]="['/products', card?.type, card?.id_product]" class="title-link">{{card?.name}}</a> </h6>
-                            <h6 class="titulo_producto"><a *ngIf="!product?.id_product" [routerLink]="['/products/accessories/card?.id_product']" class="title-link">{{card?.name}}</a> </h6>
-                            <p class="price price-container-custom">
-                                <span class="price-new price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
-                            </p>
-                            <div class="rating-star">
+            <!-- Products Grid -->
+            <div class="products-section">
+                <div class="products-grid">
+                    <div class="product-card" *ngFor="let card of obs | async; let i = index">
+                        <!-- Product Image -->
+                        <div class="product-image-container">
+                            <a *ngIf="card?.route_product && card?.id_product" class="product-image-link" [routerLink]="card?.route_product">
+                                <img 
+                                    class="product-image" 
+                                    [src]="card?.image" 
+                                    [alt]="card?.name"
+                                    [ngClass]="{ transparent: !loaded }" 
+                                    (load)="onLoad()">
+                            </a>
+                            <div *ngIf="!card?.route_product || !card?.id_product" class="product-image-link">
+                                <img 
+                                    class="product-image" 
+                                    [src]="card?.image" 
+                                    [alt]="card?.name"
+                                    [ngClass]="{ transparent: !loaded }" 
+                                    (load)="onLoad()">
+                            </div>
+                            
+                            <!-- Wishlist Button -->
+                            <button 
+                                (click)="productAddToWishlist(card, i+'-wishlist')" 
+                                class="wishlist-button" 
+                                title="Añadir a lista de deseos">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Product Info -->
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <a *ngIf="card?.route_product && card?.id_product" [routerLink]="card?.route_product" class="product-link">{{card?.name}}</a>
+                                <span *ngIf="!card?.route_product || !card?.id_product" class="product-name-text">{{card?.name}}</span>
+                            </h3>
+                            
+                            <!-- Price -->
+                            <div class="product-price">
+                                <span class="current-price">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                                <span class="payment-info">
+                                    <img class="payment-cards" src="assets/images/tarjetas.png" alt="payment methods">
+                                </span>
+                            </div>
+                            
+                            <!-- Rating -->
+                            <div class="product-rating">
                                 <embryo-Rating [rate]="card.rating"></embryo-Rating>
                             </div>
-                            <button (click)="productAddToWishlist(card, i+'-wishlist')" type="button" class="wishlist btn-button" title="Añadir a lista de deseos"><i
-                                    class="fa fa-heart-o"></i>
-                            </button>
-                            <div class="btn_comprar" *ngIf="checkCartAlready(card)">
-                                <embryo-AddToCardButton [product]="product" (addToCart)="addToCartProduct($event)">
-                                </embryo-AddToCardButton>
-                                <ng-container *ngIf="card">
-                                    <button mat-fab (click)="addToCartProduct(card)" class="btn-button"><i
-                                            class="fa fa-cart-plus" aria-hidden="true"></i></button>
-                                </ng-container>
+                            
+                            <!-- Action Buttons -->
+                            <div class="product-actions">
+                                <div *ngIf="checkCartAlready(card)" class="action-buttons">
+                                    <embryo-AddToCardButton [product]="card" (addToCart)="addToCartProduct($event)">
+                                    </embryo-AddToCardButton>
+                                    <button class="add-to-cart-btn" (click)="addToCartProduct(card)">
+                                        <i class="fa fa-cart-plus"></i>
+                                        Agregar
+                                    </button>
+                                </div>
+                                
+                                <div *ngIf="!checkCartAlready(card) && card?.route_product && card?.id_product" class="action-buttons">
+                                    <button class="view-product-btn" [routerLink]="card?.route_product">
+                                        <i class="fa fa-eye"></i>
+                                        Ver producto
+                                    </button>
+                                </div>
                             </div>
-                            <div class="btn_comprar" *ngIf="!checkCartAlready(card)">
-                                <button class="btn-button" mat-fab *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]"><i class="fa fa-eye"
-                                        aria-hidden="true"></i> </button>
-                                <button class="btn-button" mat-fab *ngIf="!card?.id_product" [routerLink]="[card?.route_product]"><i class="fa fa-eye" aria-hidden="true"></i>
-                                </button>
+                            
+                            <!-- Delivery Info -->
+                            <div class="delivery-info">
+                                <img src="assets/images/shipping-fast-solid.svg" alt="shipping">
+                                <span>Envío gratis</span>
                             </div>
-                            <span class="deliveryicon">
-                                <img src="assets/images/shipping-fast-solid.svg" /> Envío a todo el país</span>
                         </div>
-                    </mat-card-content>
-                </mat-card>
-
+                    </div>
+                </div>
+                
+                <!-- Paginator -->
+                <mat-paginator [pageSizeOptions]="[15, 25, 50, 100]"></mat-paginator>
             </div>
-            <mat-paginator [pageSizeOptions]="[15, 15, 25, 100]"></mat-paginator>
-        </div>
-
+        </main>
     </div>
-
 </div>

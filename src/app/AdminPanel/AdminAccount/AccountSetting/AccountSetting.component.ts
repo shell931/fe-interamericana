@@ -1,10 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-account-setting',
   templateUrl: './AccountSetting.component.html',
-  styleUrls: ['./AccountSetting.component.scss']
+  styleUrls: ['./AccountSetting.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatFormFieldModule,
+    MatSelectModule
+  ]
 })
 export class AccountSettingComponent implements OnInit {
 	
@@ -42,3 +59,4 @@ export class AccountSettingComponent implements OnInit {
                     ()  => this.popUpDeleteUserResponse)
    }
 }
+

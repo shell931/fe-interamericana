@@ -1,23 +1,38 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
    selector: 'app-InvoicesStore',
    templateUrl: './InvoicesStore.component.html',
-   styleUrls: ['./InvoicesStore.component.scss']
+   styleUrls: ['./InvoicesStore.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatCardModule,
+      MatFormFieldModule,
+      MatInputModule,
+      CurrencyPipe
+   ]
 })
 
 export class InvoicesStoreComponent implements OnInit {
 
    popUpDeleteUserResponse: any;
    invoiceList: any[] = [];
-   invDetailGrid: Invoice;
+   invDetailGrid: Partial<Invoice> = {};
 
-   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+   @ViewChild(MatPaginator, { static: false })
+   paginator!: MatPaginator;
 
    dataSource = new MatTableDataSource<any>(this.invoiceList);
 
@@ -30,11 +45,11 @@ export class InvoicesStoreComponent implements OnInit {
 
    ngOnInit() {      
       const id_store = localStorage.getItem('id-store');
-      this.apiService.ListInvoicesByStore(id_store).subscribe(res => this.getAllInvoiceData(res));
+      this.apiService.ListInvoicesByStore(id_store).subscribe((res: any) => this.getAllInvoiceData(res));
    }
 
 
-   getAllInvoiceData(response) {
+   getAllInvoiceData(response : any) {
       this.invoiceList = response;
       this.dataSource = new MatTableDataSource<any>(this.invoiceList);
       setTimeout(() => {
@@ -44,13 +59,13 @@ export class InvoicesStoreComponent implements OnInit {
 
 
 
-   onSeeDialog(data) {
+   onSeeDialog(data: any) {
       console.log(data.id);      
-      this.apiService.getInvoiceDetail(data.id).subscribe(dataDetailInvoice => this.getInvoiceDetailData(dataDetailInvoice, data));
+      this.apiService.getInvoiceDetail(data.id).subscribe((dataDetailInvoice: any) => this.getInvoiceDetailData(dataDetailInvoice, data));
    }
 
 
-   getInvoiceDetailData(dataDetailInvoice, dataInvoice) {      
+   getInvoiceDetailData(dataDetailInvoice: any, dataInvoice: { adress: any; created_at: any; departament: any; email: any; first_name_client: any; id_store_id: any; id: any; name_client: any; name_state: any; name_store: any; nameci: any; number_identifier: any; paymentmethod: any; phone: any; reference: any; reference_invoice: any; state_id: any; total_price: any; transaction_id: any; type_identifier: any; user_id: any; }) {      
       let myObj_invoice;
       myObj_invoice = {
          adress: dataInvoice.adress,
@@ -89,3 +104,4 @@ export class InvoicesStoreComponent implements OnInit {
       }
    }
 }
+

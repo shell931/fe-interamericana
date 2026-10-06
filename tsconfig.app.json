@@ -3,11 +3,13 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": ["node"],
+    "skipLibCheck": true
   },
   "files": [
     "src/main.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+    "src/jit-compiler-polyfill.ts"
   ],
   "include": [
     "src/**/*.d.ts"

@@ -1,6 +1,6 @@
 <div [dir]="layout" id="main-app" class="app">
     <mat-sidenav-container class="" style="margin-left: 0px;">
-        <mat-sidenav #sidenav [(mode)]="coreService.sidenavMode" [(opened)]="coreService.sidenavOpen" class="sidebar-area">
+        <mat-sidenav #sidenav [mode]="sidenavMode" [(opened)]="coreService.sidenavOpen" class="sidebar-area">
             <app-side-bar></app-side-bar>
         </mat-sidenav>
         <app-header-component></app-header-component>
@@ -13,5 +13,5 @@
 
 
 
-    <ngx-toasta></ngx-toasta>
+    <!-- <ngx-toasta></ngx-toasta> -->
 </div>

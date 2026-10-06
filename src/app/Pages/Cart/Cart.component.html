@@ -1,77 +1,117 @@
-<div class="cart-page" *ngIf="(embryoService.localStorageCartProducts && embryoService.localStorageCartProducts.length>0); else elseBlock">
-    <div class="container" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80">
+<div class="cart-page"
+    *ngIf="(embryoService.localStorageCartProducts && embryoService.localStorageCartProducts.length>0); else elseBlock">
+    <div class="container">
+        <div class="cart-header">
+            <h1 class="cart-title">Tu Carrito</h1>
+            <div class="cart-count">{{embryoService.localStorageCartProducts.length}} productos</div>
+        </div>
 
-        <div class="mt-5 mb-5">
-            <mat-card class="cartbg">
-                <div class="cart-wrapper">
-                    <div class="cart-shop-list mb-1 text-center">
-                        <div fxLayout='row wrap' fxLayoutAlign="start center" class="cart-item" *ngFor="let product of embryoService.localStorageCartProducts">
-                            <div fxFlex.xs="30" fxFlex.sm="30" fxFlex.md="10" fxFlex.lg="20" fxFlex.xl="20" class="cart-product-image">
-                                <div class="cart-item-thumb">
-                                    <a href="javascript:void(0)" class="p-link">
-                                        <img class="img_edit" [src]="product.image" alt="cart image">
-                                    </a>
-                                </div>
-                            </div>
-                            <div fxFlex.xs="70" fxFlex.sm="70" fxFlex.md="90" fxFlex.lg="80" fxFlex.xl="80">
-                                <div fxLayout='row wrap' fxLayoutAlign="center center" class="cart-product-info">
-                                    <div fxFlex.xs="100" fxFlex.sm="40" fxFlex.md="30" fxFlex.lg="40" fxFlex.xl="40">
-                                        <div class="cart-item-price" align="left">
+        <div class="cart-content">
+            <div class="products-section">
+                <div class="cart-table-header">
+                    <div class="col-product">Producto</div>
+                    <div class="col-price">Precio</div>
+                    <div class="col-quantity">Cantidad</div>
+                    <div class="col-total">Total</div>
+                    <div class="col-remove"></div>
+                </div>
 
-                                            <p>{{product?.name}}</p>
-                                            <span>{{ calculateProductSinglePrice(product, getQuantityValue(product)) |
-                                                             currency : 'USD' : 'symbol' : '1.0-0'}}</span>
-                                        </div>
-                                    </div>
+                <div class="product-card" *ngFor="let product of embryoService.localStorageCartProducts; let i = index">
 
-                                    <div>
-                                        <div class="quantity-control">
-                                            <button type="button" (click)="decrement(product)">-</button>
-                                            <input type="text" [value]="getQuantityValue(product)" readonly>
-                                            <button type="button" (click)="increment(product)">+</button>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="cart-item-price card-delete">
-                                            <a href="javascript:void(0)" class="accent-color remove-cart" (click)="removeProduct(product)"><span class="material-icons" style="font-size: 20px !important;">delete</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="product-col-main">
+                        <div class="product-image-container">
+                            <img class="product-image" [src]="product.image" [alt]="product.name" loading="lazy">
                         </div>
                     </div>
-                    <div class="cart-total" fxLayout='row wrap' fxLayoutAlign="flex-end">
-                        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="40" fxFlex.lg="40" fxFlex.xl="40">
-                            <div>
-                                <!-- <p>Subtotal</p><span fxFlex></span> {{calculateTotalPrice() | currency:embryoService?.currency}} -->
-                            </div>
-                            <div>
-                                <!-- <p>Shipping..</p><span fxFlex></span> {{embryoService.shipping | currency:embryoService?.currency}} -->
-                            </div>
-                            <div>
-                                <!-- <p>Tax(GST)</p><span fxFlex></span> {{embryoService.tax | currency:embryoService?.currency}} -->
-                            </div>
-                            <div class="mb-2">
-                                <h4>Total</h4><span fxFlex></span>
-                                <h4> {{getTotalPrice() | currency : 'USD' : 'symbol' : '1.0-0'}}</h4>
-                            </div>
-                            <div> <span fxFlex></span><button mat-raised-button color="accent" (click)="updateLocalCartProduct()">Continuar</button></div>
+
+                    <div class="product-info">
+                        <h3 class="product-name">{{product?.name}}</h3>
+                        <span class="unit-price mobile-only">{{product.price | currency : 'USD' : 'symbol' :
+                            '1.0-0'}}</span>
+                    </div>
+
+                    <div class="product-col-price desktop-only">
+                        <span>{{product.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                    </div>
+
+                    <div class="product-col-quantity">
+                        <div class="quantity-controls"
+                            [class.updating]="updatingProductId === (product.id_product || product.id)">
+                            <button type="button" class="qty-btn minus" (click)="decrement(product)"
+                                [disabled]="getQuantityValue(product) <= 1 || isUpdating">
+                                <span>−</span>
+                            </button>
+                            <span class="qty-display">
+                                <span *ngIf="updatingProductId === (product.id_product || product.id)"
+                                    class="loading-spinner"></span>
+                                <span
+                                    *ngIf="updatingProductId !== (product.id_product || product.id)">{{getQuantityValue(product)}}</span>
+                            </span>
+                            <button type="button" class="qty-btn plus" (click)="increment(product)"
+                                [disabled]="getQuantityValue(product) >= 10 || isUpdating">
+                                <span>+</span>
+                            </button>
                         </div>
+                    </div>
+
+                    <div class="product-col-total desktop-only">
+                        <span>{{ calculateProductSinglePrice(product, getQuantityValue(product)) | currency : 'USD' :
+                            'symbol' : '1.0-0'}}</span>
+                    </div>
+
+                    <div class="product-col-total-mobile mobile-only">
+                        <span>{{ calculateProductSinglePrice(product, getQuantityValue(product)) | currency : 'USD' :
+                            'symbol' : '1.0-0'}}</span>
+                    </div>
+
+                    <div class="product-col-remove">
+                        <button type="button" class="remove-btn" (click)="removeProduct(product)">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-            </mat-card>
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-details">
+                    <div class="summary-row total-row">
+                        <span class="label">Total a pagar</span>
+                        <span class="total-amount">{{getTotalPrice() | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                    </div>
+                </div>
+
+                <button class="pay-button" (click)="updateLocalCartProduct()">
+                    <div class="pay-button-content">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z">
+                            </path>
+                        </svg>
+                        <span>Pagar {{getTotalPrice() | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                    </div>
+                    <div class="pay-button-security">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z">
+                            </path>
+                        </svg>
+                        <span>Pago seguro</span>
+                    </div>
+                </button>
+            </div>
         </div>
-
-
     </div>
 </div>
-
 <ng-template #elseBlock>
-    <div class="section-gap-lg text-center" align="center">
-        <div class="mb-4">
-            <img src="assets/images/empty-cart.png" height="128" width="128" alt="cart-empty">
+    <div class="empty-cart-state">
+        <div class="empty-cart-content">
+            <h2 class="empty-cart-title">Tu carrito está vacío</h2>
         </div>
-        <h4> Your Shopping Bag is empty.</h4>
-        <a href="javascript:void(0)" class="primary-color" [routerLink]="['/']">Go for Shopping</a>
     </div>
 </ng-template>

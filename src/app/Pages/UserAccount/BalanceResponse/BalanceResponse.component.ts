@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
 import { Router, NavigationEnd } from '@angular/router';
@@ -11,6 +14,13 @@ const { isArray } = Array;
 
 @Component({
 	selector: 'app-BalanceResponse',
+	standalone: true,
+	imports: [
+		CommonModule,
+		CurrencyPipe,
+		MatCardModule,
+		MatListModule
+	],
 	templateUrl: './BalanceResponse.component.html',
 	styleUrls: ['./BalanceResponse.component.scss']
 })
@@ -60,4 +70,5 @@ export class BalanceResponseComponent implements OnInit {
 	}
 
 }
+
 

@@ -82,3 +82,4 @@ export class HomePageThreeSliderComponent implements OnInit, OnChanges {
    }
 
 }
+

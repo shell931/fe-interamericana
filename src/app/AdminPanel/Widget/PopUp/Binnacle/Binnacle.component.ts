@@ -1,53 +1,59 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
-import { delay } from 'rxjs/operators';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from '../../../../Services/api.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import { Invoice } from '../../../../Models/Invoice';
+import { CommonModule, DatePipe, AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { UntypedFormGroup, UntypedFormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../../environments/environment';
-import { Observable } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
    selector: 'Binnacle-dialog',
    templateUrl: './Binnacle.component.html',
-   styleUrls: ['./Binnacle.component.scss']
+   styleUrls: ['./Binnacle.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule, 
+      MatCardModule, 
+      MatButtonModule, 
+      ReactiveFormsModule, 
+      MatFormFieldModule, 
+      MatInputModule,
+      DatePipe,
+      AsyncPipe
+   ]
 })
-
 export class BinnacleComponent implements OnInit {
 
-   // data: Invoice;
-   data: Observable<any>;
+   data: any;
    gallery: string;
    adminprList: any[] = [];
    adminProductList: any[] = [];
    total: any;
    img_product_rout: any;
    cam_com: any;
-   ShippmentForm: FormGroup;
+   ShippmentForm: UntypedFormGroup;
    id_invoice: any;
    p:any;
    public show: boolean = false;
 
-   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-
-   dataSource = new MatTableDataSource<any>(this.adminProductList);
-   displayedColumns: string[] = ['name_product'];
-   public observation = new FormControl('', Validators.required);
-   public newForm = new FormGroup({
+   public observation = new UntypedFormControl('', Validators.required);
+   public newForm = new UntypedFormGroup({
       observation: this.observation,
     });
    constructor(
       public dialogRef: MatDialogRef<BinnacleComponent>,
+      @Inject(MAT_DIALOG_DATA) public dialogData: any,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
-      private formGroup: FormBuilder,
-   ) { }
+      private toastyService: ToastrService,
+   ) {
+      this.data = this.dialogData;
+    }
 
    ngOnInit() {
 
@@ -58,10 +64,9 @@ export class BinnacleComponent implements OnInit {
       this.adminprList = obj.invoice_detail;
       
       this.img_product_rout = environment.api.baseBucketImageUrl;
-      // this.total = obj.total_price
 
-      this.ShippmentForm = this.formGroup.group({
-         cam_com: new FormControl('', [Validators.required]),
+      this.ShippmentForm = new UntypedFormGroup({
+         cam_com: new UntypedFormControl('', [Validators.required]),
       });
 
    }
@@ -92,4 +97,5 @@ export class BinnacleComponent implements OnInit {
    }
 
 }
+
 

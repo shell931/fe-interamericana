@@ -21,7 +21,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditProductComponent } from './EditProduct/EditProduct.component';
 import { AddProductComponent } from './AddProduct/AddProduct.component';
@@ -37,10 +37,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
-   declarations: [ProductsComponent, EditProductComponent, AddProductComponent, FilterPipe],
+   declarations: [FilterPipe],
    imports: [
+      ProductsComponent,
+      EditProductComponent,
+      AddProductComponent,
       CommonModule,
-      FlexLayoutModule,
+      LayoutModule,
       MatSidenavModule,
       MatIconModule,
       MatCheckboxModule,
@@ -75,3 +78,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 })
 export class ProductsModule { }
+
+
+

@@ -5,7 +5,7 @@
     </div>
 </div>
 
-<perfect-scrollbar class="m-0 p-0 invoice-popup">
+<cdk-virtual-scroll-viewport class="m-0 p-0 invoice-popup" style="height: 600px;">
 
     <!-- <button *ngIf="data.state_id === '1'" mat-raised-button color="accent" (click)="ChangeStatusSend(data)"
         class="mb-3">Cambiar a enviado</button> -->
@@ -143,11 +143,11 @@
     </div>
 
     <div class="py-1">
-        <div fxLayout="row wrap" fxLayoutAlign="start center" class="col-gap">
+        <div class="fx-layout-row-wrap fx-layout-align-start-center col-gap">
             <div *ngFor="let item of data.image_gallery">
                 <img width="626" height="800" class="img_size" src="{{ item }}" alt="cart Image">
             </div>
-            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" class="size_card">
+            <div class="fx-flex-xs-100 fx-flex-sm-100 fx-flex-md-100 fx-flex-lg-100 fx-flex-xl-100 size_card">
                 <div class="text-right">
                     <div class="table-responsive-x">
                         <table class="mb-3">
@@ -193,4 +193,4 @@
     </div>
 
 
-</perfect-scrollbar>
+</cdk-virtual-scroll-viewport>

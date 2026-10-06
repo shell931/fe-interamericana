@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 
@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Transactions } from '../../../../Models/Transactions';
 
 @Component({
@@ -25,7 +25,7 @@ export class TransactionResponseComponent implements OnInit {
       public dialogRef: MatDialogRef<TransactionResponseComponent>,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
+      private toastyService: ToastrService,
    ) { }
 
    ngOnInit() {
@@ -33,4 +33,5 @@ export class TransactionResponseComponent implements OnInit {
 
 
 }
+
 

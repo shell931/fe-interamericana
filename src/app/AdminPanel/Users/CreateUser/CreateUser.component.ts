@@ -1,18 +1,22 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import { ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiService } from '../../../Services/api.service';
-import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
-
-
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export interface Group {
     id: string;
@@ -27,19 +31,33 @@ export interface Store {
 @Component({
     selector: 'app-EditProfile',
     templateUrl: './CreateUser.component.html',
-    styleUrls: ['./CreateUser.component.scss']
+    styleUrls: ['./CreateUser.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        NgSelectModule,
+        AsyncPipe
+    ]
 })
 
 export class CreateUserComponent implements OnInit {
 
 
-    @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+    @ViewChild('singleSelect', { static: true })
+    singleSelect!: MatSelect;
     private _onDestroy = new Subject<void>();
 
     // START ANGULAR MAT SEARCH GROPUS    
     /** control for the selected bank */
-    public groupCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public groupFilterCtrl: FormControl = new FormControl();
+    public groupCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public groupFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH GROPUS
 
 
@@ -51,29 +69,27 @@ export class CreateUserComponent implements OnInit {
     public show: boolean = false;
     public show_fail_us: boolean = false;
     selectedUserType: any;
-    group$: Observable<Group[]>;
+    group$!: Observable<Group[]>;
 
-    public tip_usuario: FormControl = new FormControl(null, [Validators.required]);
+    public tip_usuario: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
 
-    userForm: FormGroup;
+    userForm!: UntypedFormGroup;
     emailPattern: any = /\S+@\S+\.\S+/;
-    toastOption: ToastOptions = {
-        title: "Usuario creado",
-        msg: "El usuario ha sido creado en el sistema!",
-        showClose: true,
-        timeout: 4000,
-        theme: "material"
-    };
+    toastOption: any = this.toastyService.success(
+  "El usuario ha sido creado en el sistema!",
+  "Usuario creado",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
     formBuilder: any;
     selectedGroup: any;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
-        private toastyService: ToastaService,
+        private formGroup: UntypedFormBuilder,
+        private toastyService: ToastrService,
         private apiService: ApiService,
-        private _formBuilder: FormBuilder) { }
+        private _formBuilder: UntypedFormBuilder) { }
 
 
     grouplist: Group[] = [];
@@ -113,7 +129,7 @@ export class CreateUserComponent implements OnInit {
     }
 
 
-    getGroups(term: string = null, algo): Observable<Group[]> {
+    getGroups(term: string = '', algo): Observable<Group[]> {
         let items = algo;
         if (term) {
             items = items.filter(x => x.name.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
@@ -210,5 +226,6 @@ export class CreateUserComponent implements OnInit {
     }
 
 }
+
 
 

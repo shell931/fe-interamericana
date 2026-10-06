@@ -1,7 +1,7 @@
 <div class=" ">
     <div class="col-gap div_produc mb-5 ">
-        <mat-card style=" overflow-y: auto" class="scrollable-content example-card | async | paginate: { itemsPerPage: 5, currentPage: p }" *ngFor="let item of data">
-            <mat-card-content>
+        <mat-card style=" overflow-y: auto" class="scrollable-content example-card" *ngFor="let item of data | async; let i = index">
+            <mat-card-content *ngIf="i < 5">
                 <p><b>{{item.user_id}} - {{item.created_at | date :'short'}}</b></p>
                 <p>{{item.observation}}</p>
 

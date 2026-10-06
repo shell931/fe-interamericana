@@ -1,13 +1,23 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, RouterModule } from '@angular/router';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { MatTreeNestedDataSource, MatTreeModule } from '@angular/material/tree';
 import { environment } from '../../../../../src/environments/environment';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+// import { NgxPaginationModule } from 'ngx-pagination'; // Temporarily disabled for standalone compatibility
 
 const { isArray } = Array;
 
@@ -50,6 +60,21 @@ export interface Store {
 
 @Component({
     selector: 'app-StoreListCategoriesPage',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatPaginatorModule,
+        MatTreeModule
+    ],
     templateUrl: './StoreListCategories.component.html',
     styleUrls: ['./StoreListCategories.component.scss']
 })
@@ -73,8 +98,31 @@ export class StoreListCategoriesComponent implements OnInit {
     storeGrid: Store[] = [];
     obsStore: Observable<any>;
     dataSourceStore = new MatTableDataSource<Store>(this.storeGrid);
-    searchText:any;
-    p:any;
+    searchText: any;
+    p: any;
+    isCategoriesOpen: boolean = false;
+
+    toggleCategories() {
+        this.isCategoriesOpen = !this.isCategoriesOpen;
+    }
+
+    /** Navigate when a category is selected from mobile dropdown */
+    onCategoryMobile(categoryId: number | string) {
+        if (!categoryId) return;
+        try {
+            this.router.navigate(['/storelist/searchstorebycategories', categoryId]);
+        } catch (e) {
+            console.error('Navigation error on mobile category select', e);
+        }
+    }
+
+    /** Close categories dropdown when a category is clicked (mobile) */
+    onCategoryClick() {
+        // Close dropdown on mobile when category is selected
+        if (window.innerWidth <= 768) {
+            this.isCategoriesOpen = false;
+        }
+    }
 
     constructor(private route: ActivatedRoute,
         private router: Router,
@@ -83,12 +131,17 @@ export class StoreListCategoriesComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef
     ) { }
 
-    ngOnInit() {        
+    ngOnInit() {
 
         this.route.params.subscribe(res => {
             this.id = res.id;
+            // Cargar tiendas filtradas por categoría si hay un id
+            if (this.id) {
+                this.apiService.getStoreWithoutAuthbyIdCategory(this.id).subscribe(res => this.getStoreData(res));
+            } else {
+                this.apiService.getStoreWithoutAuth().subscribe(res => this.getStoreData(res));
+            }
         })
-        this.apiService.getStoreWithoutAuth().subscribe(res => this.getStoreData(res));
         this.apiService.getStoreCategories().subscribe(res => this.getCategoriesMenu(res, this.id));
     }
 
@@ -107,10 +160,10 @@ export class StoreListCategoriesComponent implements OnInit {
 
         this.dataSourceTree.data = this.get_categories;
 
-        
+
     }
 
- 
+
 
     // createSubcategories(subcate, id_store) {
     //     this.get_subca = [];
@@ -153,11 +206,67 @@ export class StoreListCategoriesComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
         this.dataSourceStore.paginator = this.paginator;
         this.obsStore = this.dataSourceStore.connect();
+        // Aplicar filtro si hay texto de búsqueda
+        if (this.searchText) {
+            this.applyFilter();
+        }
     }
 
     public onLoad() {
         this.loaded = true;
-     }
+    }
+
+    trackByStoreId(index: number, item: Store): any {
+        return item?.id_store || index;
+    }
+
+    /**
+     * Aplica el filtro de búsqueda a las tiendas
+     */
+    applyFilter(): void {
+        try {
+            // Verificar que hay tiendas
+            if (!this.storeGrid || !Array.isArray(this.storeGrid) || this.storeGrid.length === 0) {
+                this.dataSourceStore.data = [];
+                this.dataSourceStore.paginator = this.paginator;
+                this.obsStore = this.dataSourceStore.connect();
+                return;
+            }
+
+            // Obtener el texto de búsqueda de forma segura
+            const searchValue = (this.searchText || '').trim().toLowerCase();
+
+            // Si no hay texto, mostrar todas
+            if (!searchValue) {
+                this.dataSourceStore.data = this.storeGrid;
+            } else {
+                // Filtrar por nombre, descripción o estado
+                const filtered = this.storeGrid.filter(store => {
+                    if (!store) return false;
+
+                    // Convertir a string antes de toLowerCase
+                    const name = String(store.name_store || '').toLowerCase();
+                    const desc = String(store.description || '').toLowerCase();
+                    const state = String(store.state_store || '').toLowerCase();
+                    const city = String(store.city || '').toLowerCase();
+
+                    return name.includes(searchValue) ||
+                        desc.includes(searchValue) ||
+                        state.includes(searchValue) ||
+                        city.includes(searchValue);
+                });
+
+                this.dataSourceStore.data = filtered;
+            }
+
+            // Actualizar el paginador
+            this.dataSourceStore.paginator = this.paginator;
+            this.obsStore = this.dataSourceStore.connect();
+            this.changeDetectorRef.detectChanges();
+        } catch (error) {
+            console.error('Error applying filter:', error);
+        }
+    }
 
 
 }
@@ -224,7 +333,7 @@ export class StoreListCategoriesComponent implements OnInit {
 //         this.dataSourceStore.paginator = this.paginator;
 //         this.obsStore = this.dataSourceStore.connect();
 //     }
-    
+
 // }
 
 
@@ -247,3 +356,4 @@ function search(entries: any[], search: string) {
         })
     });
 }
+

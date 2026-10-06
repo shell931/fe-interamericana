@@ -28,6 +28,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { HeaderOneComponent } from '../Layouts/Header/HeaderOne/HeaderOne.component';
 
 
 const routes: Routes = [
@@ -41,9 +42,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    // MatSidenavModule,
+    MatSidenavModule,
     MatListModule,    
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatMenuModule,
@@ -68,7 +68,8 @@ const routes: Routes = [
     MatGridListModule,
     ReactiveFormsModule,
     MatAutocompleteModule, 
-    FormsModule
+    FormsModule,
+    HeaderOneComponent
   ],
   exports: [
     RouterModule,
@@ -81,3 +82,4 @@ const routes: Routes = [
 
 })
 export class MainModule { }
+

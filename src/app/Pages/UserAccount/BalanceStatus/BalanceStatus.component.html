@@ -1,140 +1,63 @@
-<mat-card>
-    <div fxLayout="row wrap" class="col-gap">
-        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100">
-            <mat-list>
-                <div class="dash-title mb-2 ml-3" align="center">
-
-                    <b>Consulta tu saldo disponible, verifica la cuenta bancaria de destino y solicita tu dinero.</b>
-
-                    <div class="mt-3">
-                        <h1 class="title_balance"><b>Saldo disponible</b></h1>
-                        <h1 class="title_balance"><b>{{balance_store|currency : 'USD' : 'symbol' : '1.0-0'}} COP</b></h1>
-                        <a (click)="abstract()">Resumen</a>
-                    </div>
-
-
-                    <div align="center" class="mt-3">
-                        <p class="black_subtitle">Se enviara a la siguiente cuenta bancaría:</p>
-                        <p><b>Número de cuenta:</b> {{account_number}}</p>
-                        <p><b>Encargado:</b> {{responsible}}</p>
-                        <p><b>Banco:</b>{{name_bank}}</p>
-                        <p><b>Tipo de cuenta:</b>{{type_account}}</p>
-                    </div>
-
-                    <div>
-                        <swal #deleteSwal title="Solicitud de transferencia" text="Esta seguro de realizar esta solicitud de transferencia" [showCancelButton]="true" [focusCancel]="true" (confirm)="setTransferRequest()">
-                        </swal>
-                        <button mat-raised-button color="primary" [swal]="deleteSwal">Solicitar
-                            transferencia</button>
-                    </div>
-                    <div class="mt-2" *ngIf="validate_trans_value">
-                        <label style="color:red">
-                            Valor no admitido para realizar una solicitud de transferencia
-                        </label>
-                    </div>
-                </div>
-                <!-- <mat-card class="m-3">
-                        <div fxLayout="row wrap">
-                            <div fxFlex.gt-md="600px" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
-                                <mat-form-field class="w-100">
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </mat-card>
-                    <ng-container *ngIf="invoiceList && invoiceList.length>0; else elseBlock">
-                        <div fxLayout="column">
-                            <mat-card>
-                                <div class="table-responsive-x">
-                                    <table mat-table [dataSource]="dataSource" class="w-100 table-scroll-wrap">
-
-                                        <ng-container matColumnDef="action">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef><span
-                                                    class="material-icons-outlined">
-                                                    settings
-                                                </span>
-                                            </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element;let i = index;">
-                                                <button mat-icon-button (click)="onSeeDialog(element)" color="primary">
-                                                    <i class="material-icons">remove_red_eye</i>
-                                                </button>
-                                            </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="reference_invoice">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Referencia inv
-                                            </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                {{element.reference_invoice}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="created_at">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Fecha </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                {{element.created_at}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="name_state">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Estado </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                <div *ngIf="element.state_id === '1'" class="class_aprobed">
-                                                    {{element.name_state}}</div>
-                                                <div *ngIf="element.state_id === '2'" class="class_reject">
-                                                    {{element.name_state}}</div>
-                                                <div *ngIf="element.state_id === '3'" class="class_platform">
-                                                    {{element.name_state}}</div>
-                                                <div *ngIf="element.state_id === '4'" class="class_reject">
-                                                    {{element.name_state}}</div>
-                                                <div *ngIf="element.state_id === '5'" class="class_reject">
-                                                    {{element.name_state}}</div>
-                                                <div *ngIf="element.state_id === '6'" class="class_reject">
-                                                    {{element.name_state}}</div>
-                                                <div *ngIf="element.state_id === '7'" class="class_reject">
-                                                    {{element.name_state}}</div>
-                                            </td>
-                                        </ng-container>
-
-
-                                        <ng-container matColumnDef="number_identifier">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Identificación
-                                            </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                {{element.number_identifier}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="paymentmethod">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Metodo pago
-                                            </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                {{element.paymentmethod}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="reference">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Referencia trx
-                                            </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                {{element.reference}} </td>
-                                        </ng-container>
-
-                                        <ng-container matColumnDef="total_price">
-                                            <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> Total </th>
-                                            <td class="px-3 text-nowrap" mat-cell *matCellDef="let element">
-                                                {{element.total_price|currency}}
-                                            </td>
-                                        </ng-container>
-                                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                                    </table>
-                                </div>
-                                <mat-paginator [pageSizeOptions]="[15, 30, 45, 60]"></mat-paginator>
-                            </mat-card>
-                        </div>
-                    </ng-container>
-                    <ng-template #elseBlock>
-                        <h5 class="ml-5">No data found</h5>
-                    </ng-template> -->
-
-            </mat-list>
+<div class="balance-container">
+    <div class="balance-header">
+        <div class="header-content">
+            <b>Consulta tu saldo disponible</b>
+            <span class="balance-status">Verifica la cuenta bancaria de destino y solicita tu dinero</span>
         </div>
     </div>
-</mat-card>
+
+    <div class="balance-content">
+        <!-- Saldo Principal -->
+        <div class="balance-card">
+            <div class="balance-info">
+                <div class="balance-amount">
+                    <h1 class="balance-title">Saldo disponible</h1>
+                    <h1 class="balance-value">{{balance_store|currency : 'USD' : 'symbol' : '1.0-0'}} COP</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Bancaria -->
+        <div class="bank-info-card">
+            <div class="bank-info-header">
+                <h3>Información de cuenta bancaria</h3>
+                <p>Se enviará a la siguiente cuenta bancaria:</p>
+            </div>
+            <div class="bank-details">
+                <div class="bank-detail-item">
+                    <label>Número de cuenta</label>
+                    <span>{{account_number}}</span>
+                </div>
+                <div class="bank-detail-item">
+                    <label>Encargado</label>
+                    <span>{{responsible}}</span>
+                </div>
+                <div class="bank-detail-item">
+                    <label>Banco</label>
+                    <span>{{name_bank}}</span>
+                </div>
+                <div class="bank-detail-item">
+                    <label>Tipo de cuenta</label>
+                    <span>{{type_account}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acción de Transferencia -->
+        <div class="transfer-section">
+            <div class="transfer-actions">
+                <swal #deleteSwal title="Solicitud de transferencia" text="¿Está seguro de realizar esta solicitud de transferencia?" [showCancelButton]="true" [focusCancel]="true" (confirm)="setTransferRequest()">
+                </swal>
+                <button class="transfer-btn" [swal]="deleteSwal">
+                    <i class="material-icons">account_balance</i>
+                    Solicitar transferencia
+                </button>
+            </div>
+            
+            <div class="transfer-error" *ngIf="validate_trans_value">
+                <i class="material-icons">error</i>
+                <span>Valor no admitido para realizar una solicitud de transferencia</span>
+            </div>
+        </div>
+    </div>
+</div>

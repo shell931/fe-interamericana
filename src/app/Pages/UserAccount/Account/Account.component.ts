@@ -1,9 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { MatListModule } from '@angular/material/list';
+import { MatBadgeModule } from '@angular/material/badge';
 import { ApiService } from '../../../Services/api.service';
 
 @Component({
     selector: 'app-Account',
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatListModule,
+        MatBadgeModule
+    ],
     templateUrl: './Account.component.html',
     styleUrls: ['./Account.component.scss']
 })
@@ -13,6 +23,7 @@ export class AccountComponent implements OnInit {
     name = '';
     number_invoice_inprocces: any;
     public show_store_pr: boolean = false;
+    public isMobileMenuOpen: boolean = false;
 
     constructor(
         public router: Router,
@@ -55,6 +66,13 @@ export class AccountComponent implements OnInit {
             );
         }
 
+        // Close mobile menu on route change
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.closeMobileMenu();
+            }
+        });
+
     }
 
     getDataUser(response) {
@@ -68,4 +86,13 @@ export class AccountComponent implements OnInit {
        });
      }
 
+    toggleMobileMenu() {
+        this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    }
+
+    closeMobileMenu() {
+        this.isMobileMenuOpen = false;
+    }
+
 }
+

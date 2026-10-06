@@ -1,14 +1,29 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { ApiService } from '../../../Services/api.service';
 
 
 @Component({
    selector: 'app-users',
    templateUrl: './Users.component.html',
-   styleUrls: ['./Users.component.scss']
+   styleUrls: ['./Users.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      RouterModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatButtonModule,
+      MatIconModule,
+      MatCardModule
+   ]
 })
 
 export class UsersComponent implements OnInit {
@@ -18,7 +33,7 @@ export class UsersComponent implements OnInit {
 
    userList: any[] = [];
 
-   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
    dataSource = new MatTableDataSource<any>(this.userList);
 
@@ -32,12 +47,12 @@ export class UsersComponent implements OnInit {
    ngOnInit() {
       //this.service.getInvoiceContent().valueChanges().subscribe(res => this.getInvoiceData(res));
       console.log("entrando a index")
-      this.apiService.getUsers().subscribe(res => this.getUserData(res));
+      this.apiService.getUsers().subscribe((res: any) => this.getUserData(res));
 
 
    }
 
-   getUserData(response) {
+   getUserData(response: any[]) {
       // console.log(response);
       this.userList = response;
       this.dataSource = new MatTableDataSource<any>(this.userList);
@@ -47,7 +62,7 @@ export class UsersComponent implements OnInit {
    }
 
    //getInvoiceData method is used to get the invoice list data.
-   getInvoiceData(response) {
+   getInvoiceData(response: any[]) {
       console.log(response);
       this.invoiceList = response;
       this.dataSource = new MatTableDataSource<any>(this.invoiceList);
@@ -83,7 +98,7 @@ export class UsersComponent implements OnInit {
    //    this.service.seeList();
    // }
 
-   editUser(id_user){
+   editUser(id_user: any){
       console.log(id_user);
       
    }
@@ -97,3 +112,4 @@ export class UsersComponent implements OnInit {
       }
    }
 }
+

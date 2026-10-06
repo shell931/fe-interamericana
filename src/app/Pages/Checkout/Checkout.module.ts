@@ -32,12 +32,11 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { CardModule } from 'ngx-card/ngx-card';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import { CheckoutRoutes } from './Checkout.routing';
 import { PaymentComponent } from './Payment/Payment.component';
 import { SigninComponent } from './Signin/Signin.component';
-import { FinalReceiptComponent } from './FinalReceipt/FinalReceipt.component';
-import { FinalReceiptFailComponent } from './FinalReceiptFail/FinalReceiptFail.component';
+// FinalReceiptComponent and FinalReceiptFailComponent are now standalone
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { GlobalModule } from '../../Global/Global.module';
@@ -49,7 +48,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
    imports: [
       CommonModule,
       MatButtonModule,
-      FlexLayoutModule,
+      LayoutModule,
       MatCardModule,
       MatMenuModule,
       MatToolbarModule,
@@ -82,10 +81,15 @@ import { NgSelectModule } from '@ng-select/ng-select';
       NgSelectModule
    ],
    declarations: [
-      PaymentComponent,
-      SigninComponent,
-      FinalReceiptComponent,
-      FinalReceiptFailComponent
+      // FinalReceiptComponent and FinalReceiptFailComponent are now standalone
+   ],
+   exports: [
+      CommonModule,
+      MatCardModule,
+      RouterModule
+      // FinalReceiptComponent and FinalReceiptFailComponent are now standalone
    ]
 })
 export class CheckoutModule { }
+
+

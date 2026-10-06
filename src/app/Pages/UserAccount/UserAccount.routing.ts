@@ -31,100 +31,100 @@ import { GridProductComponent } from './GridProduct/GridProduct.component';
 export const UserAccountRoutes : Routes = [
    {
       path : '',
-      component : AccountComponent,
+      loadComponent: () => import('./Account/Account.component').then(m => m.AccountComponent),
       children: [ 
          {
             path: 'profile',
-            component: ProfileComponent
+            loadComponent: () => import('./Profile/Profile.component').then(m => m.ProfileComponent)
          },
          { 
             path: 'cards', 
-            component: CardsComponent 
+            loadComponent: () => import('./Cards/Cards.component').then(m => m.CardsComponent)
          },
          { 
             path: 'address', 
-            component: AddressComponent 
+            loadComponent: () => import('./Address/Address.component').then(m => m.AddressComponent)
          },
 
          { 
             path: 'product_adm', 
-            component: ProductsAdm 
+            loadComponent: () => import('./ProductsAdm/ProductsAdm.component').then(m => m.ProductsAdm)
          },
 
          { 
             path: 'invoice_adm', 
-            component: InvoiceAdmComponent 
+            loadComponent: () => import('./InvoiceAdm/InvoiceAdm.component').then(m => m.InvoiceAdmComponent)
          },
          { 
             path: 'invoice_adm/detail/:id', 
-            component: InvoiceAdmDetailComponent 
+            loadComponent: () => import('./InvoiceAdmDetail/InvoiceAdmDetail.component').then(m => m.InvoiceAdmDetailComponent)
          },
          
          { 
             path: 'transfers_view', 
-            component: TransfersComponent 
+            loadComponent: () => import('./Transfers/Transfers.component').then(m => m.TransfersComponent)
          },
 
          { 
             path: 'transfers_view/view/:id', 
-            component: TransfersViewComponent 
+            loadComponent: () => import('./TransfersView/TransfersView.component').then(m => m.TransfersViewComponent)
          },
 
          { 
             path: 'assisted_selling', 
-            component: AssistedSellingComponent 
+            loadComponent: () => import('./AssistedSelling/AssistedSelling.component').then(m => m.AssistedSellingComponent)
          },
 
       
          { 
             path: 'balance_status', 
-            component: BalanceStatusComponent 
+            loadComponent: () => import('./BalanceStatus/BalanceStatus.component').then(m => m.BalanceStatusComponent)
          },
          { 
             path: 'balance_response', 
-            component: BalanceResponseComponent 
+            loadComponent: () => import('./BalanceResponse/BalanceResponse.component').then(m => m.BalanceResponseComponent)
          },
          
          { 
             path: 'product_create', 
-            component: ProductsCreateAdmComponent 
+            loadComponent: () => import('./ProductsCreateAdm/ProductsCreateAdm.component').then(m => m.ProductsCreateAdmComponent)
          },
 
          { 
             path: 'product_adm/edit/:id_product', 
-            component: ProductEditAdmComponent 
+            loadComponent: () => import('./ProductEditAdm/ProductEditAdm.component').then(m => m.ProductEditAdmComponent)
          },
          
          { 
             path: 'store_adm', 
-            component: StoreAdmComponent 
+            loadComponent: () => import('./StoreAdm/StoreAdm.component').then(m => m.StoreAdmComponent)
          },
 
          { 
             path: 'store_adm/edit/:id_store', 
-            component: StoreAdmEditComponent 
+            loadComponent: () => import('./StoreAdmEdit/StoreAdmEdit.component').then(m => m.StoreAdmEditComponent)
          },
 
          { 
             path: 'address/edit/:id', 
-            component: AddressEditComponent 
+            loadComponent: () => import('./AddressEdit/AddressEdit.component').then(m => m.AddressEditComponent)
          },
          { 
             path: 'address/create', 
-            component: AddressCreateComponent 
+            loadComponent: () => import('./AddressCreate/AddressCreate.component').then(m => m.AddressCreateComponent)
          },
          
          { 
             path: 'order-history', 
-            component: OrderHistoryComponent 
+            loadComponent: () => import('./OrderHistory/OrderHistory.component').then(m => m.OrderHistoryComponent)
          },
          {
             path: 'profile/edit',
-            component: EditProfileComponent
+            loadComponent: () => import('./EditProfile/EditProfile.component').then(m => m.EditProfileComponent)
          },
          {
             path: 'grid-product',
-            component: GridProductComponent
+            loadComponent: () => import('./GridProduct/GridProduct.component').then(m => m.GridProductComponent)
          }
       ]
    }

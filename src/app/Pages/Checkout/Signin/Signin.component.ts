@@ -1,8 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 import { EmbryoService } from '../../../Services/Embryo.service';
+import { CommonSignInComponent } from '../../../Global/CommonSignIn/CommonSignIn.component';
 
 @Component({
   selector: 'app-Signin',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    RouterModule,
+    MatCardModule,
+    CommonSignInComponent
+  ],
   templateUrl: './Signin.component.html',
   styleUrls: ['./Signin.component.scss']
 })
@@ -34,3 +46,4 @@ export class SigninComponent implements OnInit {
    }
 
 }
+

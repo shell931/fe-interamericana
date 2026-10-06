@@ -1,21 +1,35 @@
 import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { filter } from 'rxjs/operators';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 import { EmbryoService } from '../../Services/Embryo.service';
 
 @Component({
     selector: 'embryo-Cart',
     templateUrl: './Cart.component.html',
-    styleUrls: ['./Cart.component.scss']
+    styleUrls: ['./Cart.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        CurrencyPipe
+    ]
 })
 export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
     products: any;
     quantityArray: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     popupResponse: any;
+    isLoading = false;
+    isUpdating = false;
+    updatingProductId: string | null = null;
+    showDeleteDialog = false;
+    productToDelete: any = null;
 
     constructor(public embryoService: EmbryoService,
         private router: Router,
@@ -25,7 +39,7 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
         // Suscribirse a eventos de navegación
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)
-        ).subscribe((event: NavigationEnd) => {
+    ).subscribe((event: NavigationEnd) => {
             if (event.url === '/cart' || event.urlAfterRedirects === '/cart') {
                 this.forceScrollToTop();
             }
@@ -34,6 +48,13 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
     ngOnInit() {
         this.forceScrollToTop();
+        
+        // Listener para tecla Escape
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && this.showDeleteDialog) {
+                this.closeDeleteDialog();
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -75,25 +96,28 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
     }
 
     public removeProduct(value: any) {
-        let message = "Are you sure you want to delete this product?";
-        this.embryoService.confirmationPopup(message).
-            subscribe(res => { this.popupResponse = res },
-                err => console.log(err),
-                () => this.getPopupResponse(this.popupResponse, value)
-            );
+        this.productToDelete = value;
+        this.showDeleteDialog = true;
     }
 
-    public getPopupResponse(response, value) {
-        if (response) {
-            this.embryoService.removeLocalCartProduct(value);
+    public confirmDelete() {
+        if (this.productToDelete) {
+            this.embryoService.removeLocalCartProduct(this.productToDelete);
+            this.closeDeleteDialog();
             // Hacer scroll al inicio después de eliminar un producto
             setTimeout(() => {
                 this.forceScrollToTop();
-            }, 600); // Esperar a que termine la animación del toast
+            }, 300);
         }
     }
 
-    public calculateProductSinglePrice(product, value: any) {
+    public closeDeleteDialog() {
+        this.showDeleteDialog = false;
+        this.productToDelete = null;
+        this.cdRef.detectChanges();
+    }
+
+    public calculateProductSinglePrice(product: any, value: any) {
         let price = 0;
         product.quantity = value;
         price = product.price * value;
@@ -134,7 +158,7 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
         });
     }
 
-    public getQuantityValue(product) {
+    public getQuantityValue(product: any) {
 
 
         // return product.canti
@@ -146,22 +170,50 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
         }
     }
 
-    public increment(product) {
-        console.log("entrandoo....");
+    public increment(product: any) {
+        if (this.isUpdating) return;
+        
+        this.isUpdating = true;
+        this.updatingProductId = product.id_product || product.id;
+        
         if (!product.quantity) product.quantity = 1;
         if (product.quantity < 10) {
             product.quantity++;
             this.embryoService.updateAllLocalCartProduct(this.embryoService.localStorageCartProducts);
+            
+            // Add visual feedback
+            setTimeout(() => {
+                this.isUpdating = false;
+                this.updatingProductId = null;
+                this.cdRef.detectChanges();
+            }, 300);
+        } else {
+            this.isUpdating = false;
+            this.updatingProductId = null;
         }
     }
 
-    public decrement(product) {
-        console.log("entrandoo....");
+    public decrement(product: any) {
+        if (this.isUpdating) return;
+        
+        this.isUpdating = true;
+        this.updatingProductId = product.id_product || product.id;
 
         if (!product.quantity) product.quantity = 1;
         if (product.quantity > 1) {
             product.quantity--;
             this.embryoService.updateAllLocalCartProduct(this.embryoService.localStorageCartProducts);
+            
+            // Add visual feedback
+            setTimeout(() => {
+                this.isUpdating = false;
+                this.updatingProductId = null;
+                this.cdRef.detectChanges();
+            }, 300);
+        } else {
+            this.isUpdating = false;
+            this.updatingProductId = null;
         }
     }
 }
+

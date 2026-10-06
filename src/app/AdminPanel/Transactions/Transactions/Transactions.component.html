@@ -4,21 +4,25 @@
             <h2><b>Administración de transacciones</b></h2>
             <div class="buttonIn">
                 <input class="inputsearch" matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar" autocomplete="off" type="search">
-                <button class="btn btn-primary button-search class_search" type="submit" tabindex="-1">
-                    <span class="mat-button-wrapper">
-                        <i class="fa fa-search"></i>
-                    </span></button>
             </div>
 
 
             <div class="row mt-3">
                 <div class="col-md-4">
                     <label for=""> <b>Fecha desde</b></label>
-                    <input id="dateInit" name="dateInit" [(ngModel)]="dateInit" class="form-control" type="text" class="form-control" bsDatepicker [(bsValue)]="newVar" value="{{ newVar | date:'yyyy/MM/dd' }}">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput [matDatepicker]="picker1" [(ngModel)]="dateInit" name="dateInit" placeholder="Seleccionar fecha">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <label for=""> <b>Fecha hasta</b></label>
-                    <input id="dateEnd" name="dateEnd" [(ngModel)]="dateEnd" class="form-control" type="text" bsDatepicker class="form-control" [(bsValue)]="newVarE" value="{{ newVarE | date:'yyyy/MM/dd' }}">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput [matDatepicker]="picker2" [(ngModel)]="dateEnd" name="dateEnd" placeholder="Seleccionar fecha">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
                 </div>
                 <div class="col-md-4" style="margin-top: 20px;">
                     <button class="btn btn-primary button-search class_search" (click)="downloadExcel()">Descargar</button>
@@ -71,7 +75,7 @@
 
                     <ng-container matColumnDef="created_at">
                         <th class="px-3 text-nowrap" mat-header-cell *matHeaderCellDef> <b class="title_table">Fecha</b> </th>
-                        <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+                        <td class="px-3 text-nowrap" mat-cell *matCellDef="let element"> {{element.created_at | date:'dd/MM/yyyy HH:mm'}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="quot">
@@ -114,7 +118,12 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             </div>
-            <mat-paginator [pageSizeOptions]="[15, 30, 45, 60]"></mat-paginator>
+            <mat-paginator 
+                #paginator
+                [length]="dataSource.data.length"
+                [pageSize]="15"
+                [pageSizeOptions]="[15, 30, 45, 60]">
+            </mat-paginator>
 
         </mat-card>
     </div>

@@ -12,3 +12,4 @@ export const InvoicesRoutes: Routes = [
 		component: InvoiceValidationComponent
 	},
 ];
+

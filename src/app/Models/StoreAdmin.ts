@@ -32,3 +32,4 @@ export interface StoreBankAccount {
     store_name_legal: string,
     typeaccount: string,
 }
+

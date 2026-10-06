@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { EmbryoService } from '../../Services/Embryo.service';
 import { ApiService } from '../../Services/api.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Invoice, BalanceDetail } from '../../Models/Invoice';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
 
 export interface Observacions {
@@ -14,6 +16,12 @@ export interface Observacions {
 
 @Component({
    selector: 'embryo-BinnacleSideBar',
+   standalone: true,
+   imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule
+   ],
    templateUrl: './BinnacleSideBar.component.html',
    styleUrls: ['./BinnacleSideBar.component.scss']
 })
@@ -28,8 +36,8 @@ export class BinnacleSideBarComponent implements OnInit {
 
    public show: boolean = false;
 
-   public obser = new FormControl('', Validators.required);
-   public newForm = new FormGroup({
+   public obser = new UntypedFormControl('', Validators.required);
+   public newForm = new UntypedFormGroup({
       obser: this.obser,
    });
 
@@ -60,16 +68,20 @@ export class BinnacleSideBarComponent implements OnInit {
    }
 
    getData() {      
-      let mes = localStorage.getItem('messajes');
-      let obj = JSON.parse(mes); 
-      if(obj){
+      const mes = localStorage.getItem('messajes');
+      if (!mes) return null;
+      try {
+         const obj = JSON.parse(mes);
          return obj;
-      }   
+      } catch (e) {
+         console.log('binnacle parse failed', e);
+         return null;
+      }
    }
 
    sendBinnacle() {
       this.show = false;
-      var observation = (document.getElementById("message") as HTMLInputElement).value
+      var observation = this.newForm.get('obser')?.value || '';
       if (observation != "") {
          const id_store = localStorage.getItem('id-store');
          let type = "st"
@@ -84,14 +96,14 @@ export class BinnacleSideBarComponent implements OnInit {
          this.apiService.createBinnacle(myObjCreateBinnacle).subscribe(
             result => {
                let id_invoice = localStorage.getItem('id_invoice_popup');
-               this.apiService.getBinnacle(id_invoice, 'st').subscribe(
-                  result => {
-                     localStorage.removeItem("messajes");
-                     let myJSONinvDetail = JSON.stringify(result.data);
-                     localStorage.setItem('messajes', myJSONinvDetail);
-                     this.getData()
-                  }
-               );
+                  this.apiService.getBinnacle(id_invoice as string, 'st').subscribe(
+                    (result: { data: unknown }) => {
+                      localStorage.removeItem("messajes");
+                      const myJSONinvDetail: string = JSON.stringify(result.data);
+                      localStorage.setItem('messajes', myJSONinvDetail);
+                      this.getData();
+                    }
+                  );
             }
          );
       } else {
@@ -101,3 +113,4 @@ export class BinnacleSideBarComponent implements OnInit {
 
 
 }
+

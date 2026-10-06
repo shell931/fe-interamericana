@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -46,3 +46,4 @@ export class FailTransactionGatewayComponent implements OnInit {
       );
    }
 }
+

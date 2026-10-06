@@ -1,6 +1,6 @@
-import { NgModule }       from '@angular/core'; 
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA }       from '@angular/core'; 
 import { RouterModule }   from '@angular/router';
-import { CommonModule }   from '@angular/common';
+import { CommonModule, CurrencyPipe }   from '@angular/common';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -29,11 +29,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { NgSelectModule } from '@ng-select/ng-select';
-
 import { GlobalModule } from '../Global/Global.module';
+import { ImgZoomComponent } from '../Global/ImgZoom/ImgZoom.component';
 // import { ProductGridComponent, DialogContentProductDiferentStore } from './Grid/ProductGrid/ProductGrid.component';
 // import { ProductStoreGridComponent } from './Grid/ProductStoreGrid/ProductStoreGrid.component';
 // import { Grid3Component } from './Grid/Grid3/Grid3.component';
@@ -50,7 +47,6 @@ import { BarRatingModule } from "ngx-bar-rating";
       CommonModule,
       RouterModule,
       MatButtonModule, 
-      FlexLayoutModule,
       MatCardModule, 
       MatMenuModule, 
       MatToolbarModule, 
@@ -75,28 +71,31 @@ import { BarRatingModule } from "ngx-bar-rating";
       MatDialogModule,
       MatGridListModule,
       GlobalModule,
-      NgSelectModule,
       FormsModule
+   ],
+   providers: [
+      CurrencyPipe
    ],
    declarations: [
       // ProductGridComponent,
       // DialogContentProductDiferentStore,
-      DialogContentProductDiferentStoreDetail,
+      // DialogContentProductDiferentStoreDetail, // Temporarily commented - Angular thinks it's standalone
       // Grid3Component,
       // ReviewComponent,
-      ShopDetailsComponent,
+      // ShopDetailsComponent, // Temporarily commented - Angular thinks it's standalone
       // ProductStoreGridComponent
    ],
    // entryComponents: [DialogContentProductDiferentStore, DialogContentProductDiferentStoreDetail],
    exports: [
       // ProductGridComponent,
-      // DialogContentProductDiferentStore,
-      DialogContentProductDiferentStoreDetail,
+      // DialogContentProductDiferentStoreDetail, // Temporarily commented - Angular thinks it's standalone
       // Grid3Component,
       // ReviewComponent,
-      ShopDetailsComponent,
+      // ShopDetailsComponent, // Temporarily commented - Angular thinks it's standalone
       MatPaginatorModule, 
       // ProductStoreGridComponent
-   ]
+   ],
+   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TemplatesModule {}
+

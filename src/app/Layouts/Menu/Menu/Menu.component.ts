@@ -17,11 +17,10 @@ import { MenuItems } from '../../../Core/menu/menu-items/menu-items';
         animate('225ms cubic-bezier(0.4,0.0,0.2,1)')
       ),
     ])
-  ]
-})
+  ]})
 export class MenuComponent implements OnInit {
 
-  expanded: boolean;
+  expanded: boolean = false;
 
   constructor(public menuItems: MenuItems, public router: Router, public translate: TranslateService) {
   }
@@ -50,3 +49,4 @@ export class MenuComponent implements OnInit {
   }
 
 }
+

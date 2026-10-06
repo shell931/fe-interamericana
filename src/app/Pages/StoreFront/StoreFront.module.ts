@@ -9,7 +9,7 @@ import { FilterPipe } from './DetailStore/DetailStore.component';
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatTreeModule} from '@angular/material/tree';
 
@@ -51,7 +51,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 		NgxPaginationModule,
 		CommonModule,
 		RouterModule.forChild(DetailStoreRoutes),
-		FlexLayoutModule,
+		LayoutModule,
 		MatCardModule,
 		MatButtonModule,
 		MatMenuModule,
@@ -91,3 +91,5 @@ import {OverlayModule} from '@angular/cdk/overlay';
 	]
 })
 export class StoreFrontModule { }
+
+

@@ -1,25 +1,49 @@
-<div class="home-main-banner mb-5">
-    <div class="container">
-        <div fxLayout='row wrap' fxLayoutGap="0px">
-            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="63" fxFlex.xl="63">
-                <div class="home-slider">
-                    <embryo-HomePageOneSlider [isRTL]="embryoService.isDirectionRtl"></embryo-HomePageOneSlider>
+<!-- Main Carousel - Full Width -->
+<div class="full-width-section mb-5">
+    <div class="main-carousel-wrapper">
+        <app-home-page-one-slider></app-home-page-one-slider>
+    </div>
+</div>
+
+<!-- Secondary content with full width -->
+<div class="full-width-section mb-5">
+    <div class="secondary-banners" fxLayout="row wrap" fxLayoutGap="20px">
+            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="33" fxFlex.lg="33" fxFlex.xl="33">
+                <div class="secondary-banner">
+                    <a [routerLink]="['/products']" class="card-shadow">
+                        <img src="assets/images/home-three.jpg" alt="Ropa y Moda" class="secondary-banner-image">
+                        <div class="banner-overlay-text">
+                            <h3>Ropa y Moda</h3>
+                            <p>Las últimas tendencias</p>
+                        </div>
+                    </a>
                 </div>
             </div>
-            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="37" fxFlex.xl="37">
-                <div class="aside-banner">
-                    <a [routerLink]="['/products/accessories']" class="card-shadow"> <img
-                            src="assets/images/aside-1.jpg" alt="side" width="547" height="315"></a>
+            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="33" fxFlex.lg="33" fxFlex.xl="33">
+                <div class="secondary-banner">
+                    <a [routerLink]="['/products']" class="card-shadow">
+                        <img src="assets/images/home-two.jpg" alt="Electrónicos" class="secondary-banner-image">
+                        <div class="banner-overlay-text">
+                            <h3>Electrónicos</h3>
+                            <p>Tecnología de última generación</p>
+                        </div>
+                    </a>
                 </div>
-
-                <div class="aside-banner">
-                    <a [routerLink]="['/products/accessories']" class="card-shadow"><img src="assets/images/aside-2.jpg"
-                            alt="side" width="547" height="315"></a>
+            </div>
+            <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="33" fxFlex.lg="33" fxFlex.xl="33">
+                <div class="secondary-banner">
+                    <a [routerLink]="['/products']" class="card-shadow">
+                        <img src="assets/images/collection.jpg" alt="Ofertas Especiales" class="secondary-banner-image">
+                        <div class="banner-overlay-text">
+                            <h3>Ofertas Especiales</h3>
+                            <p>Descuentos increíbles</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
 </div>
+
 <div class="home-main-banner mb-5">
     <div class="feature-section">
         <div class="container">
@@ -40,20 +64,6 @@
             <mat-tab label="Accessories"></mat-tab>
         </mat-tab-group>
         <ng-container *ngIf="onFeaturedSelectedTab(embryoService.featuredProductsSelectedTab)">
-            <!-- <ngx-slick-carousel *ngIf="embryoService.isDirectionRtl" class="carousel" >
-                <div ngxSlickItem *ngFor="let product of productsSliderData; let i=index">
-                    <embryo-ProductCard [product]="product" (addToCart)="addToCart($event)"
-                        [currency]="embryoService.currency" (addToWishlist)="addToWishlist($event)" [index]="i"
-                        type="featured"></embryo-ProductCard>
-                </div>
-            </ngx-slick-carousel>
-            <ngx-slick-carousel *ngIf="!embryoService.isDirectionRtl" class="carousel" >
-                <div ngxSlickItem *ngFor="let product of productsSliderData; let i=index">
-                    <embryo-ProductCard [product]="product" (addToCart)="addToCart($event)"
-                        [currency]="embryoService.currency" (addToWishlist)="addToWishlist($event)" [index]="i"
-                        type="featured"></embryo-ProductCard>
-                </div>
-            </ngx-slick-carousel> -->
         </ng-container>
     </div>
 </div>
@@ -64,9 +74,11 @@
         </embryo-DealOfTheDay>
     </div>
 </div>
+
 <div class="quick-shop">
     <embryo-Sales></embryo-Sales>
 </div>
+
 <div class="shop-card-wrapper section-gap" *ngIf="productsArray">
     <div class="block-title text-center">
         <h2>New Arrivals</h2>
@@ -79,46 +91,37 @@
             <mat-tab label="Accessories"></mat-tab>
         </mat-tab-group>
         <ng-container *ngIf="onNewArrivalsSelectedTab(embryoService.newArrivalSelectedTab)">
-            <!-- <ngx-slick-carousel *ngIf="embryoService.isDirectionRtl" class="carousel">
-                <div ngxSlickItem *ngFor="let product of newProductsSliderData; let i=index">
-                    <embryo-ProductCard [product]="product" (addToCart)="addToCart($event)"
-                        [currency]="embryoService.currency" (addToWishlist)="addToWishlist($event)" [index]="i"
-                        type="new"></embryo-ProductCard>
-                </div>
-            </ngx-slick-carousel>
-            <ngx-slick-carousel *ngIf="!embryoService.isDirectionRtl" class="carousel" >
-                <div ngxSlickItem *ngFor="let product of newProductsSliderData; let i=index">
-                    <embryo-ProductCard [product]="product" (addToCart)="addToCart($event)"
-                        [currency]="embryoService.currency" (addToWishlist)="addToWishlist($event)" [index]="i"
-                        type="new"></embryo-ProductCard>
-                </div>
-            </ngx-slick-carousel> -->
         </ng-container>
     </div>
 </div>
+
 <div class="testimonial-wrapper" *ngIf="productReviews && productReviews.length>0">
     <div class="block-title text-center">
         <h2>Customer Reviews</h2>
     </div>
     <div class="container">
-        <embryo-Review [reviews]="productReviews"></embryo-Review>
+        <!-- Review component temporarily commented - ReviewComponent not available -->
+        <!-- <embryo-Review [reviews]="productReviews"></embryo-Review> -->
     </div>
 </div>
+
 <div class="post-wrapper section-gap">
     <div class="block-title text-center">
         <h2>Latest From Blogs</h2>
     </div>
-    <div class="container" *ngIf="blogList">
+    <!-- Blog section temporarily commented - Grid3Component not available -->
+    <!-- <div class="container" *ngIf="blogList">
         <embryo-Grid3 [blogList]="blogList"></embryo-Grid3>
-    </div>
+    </div> -->
 </div>
+
 <div class="subscribe-wrapper bg-brown section-gap">
     <div class="container">
         <embryo-SubscribeOne></embryo-SubscribeOne>
     </div>
 </div>
 
-<div class="shop-card-wrapper section-gap ">
+<div class="shop-card-wrapper section-gap">
     <div class="block-title text-center">
         <h2>Shop By Brands</h2>
     </div>

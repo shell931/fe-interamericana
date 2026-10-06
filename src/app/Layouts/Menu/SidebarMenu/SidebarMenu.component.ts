@@ -17,13 +17,12 @@ import { EmbryoService } from '../../../Services/Embryo.service';
         animate('225ms cubic-bezier(0.4,0.0,0.2,1)')
       ),
     ])
-  ]
-})
+  ]})
 export class SideBarMenuComponent implements OnInit {
  
-   expanded: boolean;
+   expanded: boolean = false;
    @Input() item: any;
-   @Input() depth: number;
+   @Input() depth?: number;
    @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
 
    constructor(public router: Router, 
@@ -52,3 +51,4 @@ export class SideBarMenuComponent implements OnInit {
       }
    }
 }
+

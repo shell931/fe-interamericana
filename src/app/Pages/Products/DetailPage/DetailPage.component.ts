@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
-import { SeoService } from '../../../Services/seo.service';
 import { environment } from '../../../../../src/environments/environment';
+import { CommonModule } from '@angular/common';
+import { ShopDetailsComponent } from '../../../Templates/ShopDetails/ShopDetails.component';
 
 export interface Prod {
    image: string;
@@ -32,6 +33,8 @@ export interface Prod {
 
 @Component({
    selector: 'app-DetailPage',
+   standalone: true,
+   imports: [CommonModule, ShopDetailsComponent],
    templateUrl: './DetailPage.component.html',
    styleUrls: ['./DetailPage.component.scss']
 })
@@ -48,8 +51,7 @@ export class DetailPageComponent implements OnInit {
    constructor(private route: ActivatedRoute,
       private router: Router,
       public embryoService: EmbryoService,
-      private apiService: ApiService,
-      private seoService: SeoService) {
+      private apiService: ApiService,) {
 
    }
 
@@ -58,50 +60,72 @@ export class DetailPageComponent implements OnInit {
          this.id = res.id;
          this.type = res.type;
       })
-      this.apiService.getProductsbyId(this.id).subscribe(res => {
-         this.getProductData(res);
-         this.updateProductSeo(res);
-      });
+      this.apiService.getProductsbyId(this.id).subscribe(res => this.getProductData(res));
    }
 
    getProductData(response) {
 
-      console.log(response);
+      console.log('Product API Response:', response);
+      
 
-
-
-      let gallery = response.rel_product;
+      // Process image gallery
+      let gallery = response.rel_product || [];
       this.get_pr = [];
       for (var i = 0; i < gallery.length; i++) {
-         let image_route = gallery[i].image;
-         this.get_pr[i] = image_route;
+         if (gallery[i].image) {
+            let image_route = this.buildImageUrl(gallery[i].image);
+            this.get_pr[i] = image_route;
+         }
       }
 
-      let myObj_product;
-      myObj_product = {
+      // Build main product object
+      let myObj_product; 
+      myObj_product = { 
          availablity: response.availability,
          brand: response.brand,
-         category: "Jewellery",
-         category_type: "accessories",
-         color: "Black",
+         category: response.category || null,
+         category_type: response.category_type || null,
+         color: response.color || null,
          description: response.description_product,
          discount_price: response.discount_price,
          id: response.id_product,
-         image: environment.api.baseBucketImageUrl + response.image,
+         image: this.buildImageUrl(response.image),
          image_gallery: this.get_pr,
          name: response.name_product,
-         popular: false,
+         popular: response.popular || false,
          price: response.total_price,
          product_code: response.product_code,
          stock: response.stock,
          rating: response.rating,
          store_id: response.store,
-         status: true,
-         type: "accessories",
-         quantity: 1,
-         valid_quant:1
+         status: response.status !== undefined ? response.status : true,
+         type: response.type || null,
+         quantity: response.quantity || 1,
+         valid_quant: response.valid_quant || 1
       };
-      this.productsGrid = myObj_product;
+      
+      console.log('Processed Product Data:', myObj_product);
+      this.productsGrid = myObj_product;      
+   }
+
+   /**
+    * buildImageUrl constructs a complete image URL from the image path
+    */
+   private buildImageUrl(imagePath: string): string {
+      if (!imagePath) {
+         console.warn('No image path provided');
+         return '';
+      }
+      
+      // If the image path is already a complete URL, return it as is
+      if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+         return imagePath;
+      }
+      
+      // Build the complete URL using the base bucket URL
+      const completeUrl = environment.api.baseBucketImageUrl + imagePath;
+      console.log('Built image URL:', completeUrl);
+      return completeUrl;
    }
 
    // public getData() {
@@ -129,29 +153,5 @@ export class DetailPageComponent implements OnInit {
       this.embryoService.addToWishlist(value);
    }
 
-   updateProductSeo(productData: any): void {
-      if (!productData) return;
-
-      const productName = productData.name_product || 'Producto';
-      const productDescription = productData.description_product || '';
-      const productType = this.type || 'repuesto';
-
-      // Configurar SEO específico del producto
-      this.seoService.setProductDetailSeo(productName, productType, productDescription);
-
-      // Generar structured data para el producto
-      const structuredProduct = {
-         name: productName,
-         description: productDescription,
-         price: productData.total_price,
-         brand: productData.brand,
-         image: productData.image ? environment.api.baseBucketImageUrl + productData.image : null,
-         inStock: productData.availability,
-         rating: productData.rating,
-         reviewCount: 1
-      };
-
-      this.seoService.generateProductStructuredData(structuredProduct);
-   }
-
 }
+

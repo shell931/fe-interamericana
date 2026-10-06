@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../../../Services/api.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -11,6 +10,18 @@ import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { PromoDialogComponent } from '../../../Global/PromoDialog/PromoDialog.component';
 
 export interface Departament {
     id_departament: string;
@@ -40,6 +51,22 @@ interface TokenObj {
 
 @Component({
     selector: 'embryo-Register',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        RouterModule,
+        NgSelectModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatProgressSpinnerModule,
+        AsyncPipe
+    ],
     templateUrl: './Register.component.html',
     styleUrls: ['./Register.component.scss']
 })
@@ -51,40 +78,44 @@ export class RegisterComponent implements OnInit {
     identifiers: Identifiers[] = [];
     citietlist: City[] = [];
     cities: City[] = [];
-    registerForm: FormGroup;
+    registerForm!: UntypedFormGroup;
     emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
     formBuilder: any;
-    identifier$: Observable<Identifiers[]>;
-    depart$: Observable<Departament[]>;
-    city$: Observable<City[]>;
+    identifier$!: Observable<Identifiers[]>;
+    depart$!: Observable<Departament[]>;
+    city$!: Observable<City[]>;
     selectIdentifiers: any;
     selectedCity: any;
     public validate_user: boolean = false;
+    public isLoading: boolean = false;
 
 
     // START ANGULAR MAT SEARCH    
-    public departamentCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public departamentFilterCtrl: FormControl = new FormControl();
+    public departamentCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
 
-    public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieFilterCtrl: FormControl = new FormControl();
+    public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
 
-    public identifiersCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public identifiersFilterCtrl: FormControl = new FormControl();
+    public identifiersCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public identifiersFilterCtrl: UntypedFormControl = new UntypedFormControl();
 
-    @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+    @ViewChild('singleSelect', { static: true })
+    singleSelect!: MatSelect;
     private _onDestroy = new Subject<void>();
     // END ANGULAR MAT SEARCH
 
 
     constructor(
         private router: Router,
-        private formGroup: FormBuilder,
-        private toastyService: ToastaService,
+        private formGroup: UntypedFormBuilder,
+        private toastyService: ToastrService,
         private apiService: ApiService,
+        private dialog: MatDialog,
     ) { }
 
     ngOnInit() {
+        this.maybeOpenStoreModal();
         // START ANGULAR MAT SEARCH DEPARTAMENT
         this.departments = [];
         this.apiService.getDepartmentsFront().subscribe(
@@ -117,49 +148,54 @@ export class RegisterComponent implements OnInit {
         // START ANGULAR MAT SEARCH TYPE IDENTIFICATION
 
         this.registerForm = this.formGroup.group({
-            name: ['', [Validators.required]],
-            second_name: ['', [Validators.required]],
+            name: ['', [Validators.required, Validators.minLength(2)]],
+            second_name: ['', [Validators.required, Validators.minLength(2)]],
             number_identifier: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-            email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
-            password: ['', [Validators.required]],
-            // repeat_password: ['', [Validators.required]],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
             neighborhood: ['', [Validators.required]],
             via: ['', [Validators.required]],
             number_streeth: ['', [Validators.required]],
             sn: ['', [Validators.required]],
             aditional_data: ['', [Validators.required]],
-            phone: ['', [Validators.required]],
+            phone: ['', [Validators.required, Validators.minLength(7)]],
             contact: ['', [Validators.required]],
-            identifiersCtrl: new FormControl('', [Validators.required]),
-            departamentCtrl: new FormControl('', [Validators.required]),
-            citieCtrl: new FormControl('', [Validators.required]),
+            identifiersCtrl: new UntypedFormControl('', [Validators.required]),
+            departamentCtrl: new UntypedFormControl('', [Validators.required]),
+            citieCtrl: new UntypedFormControl('', [Validators.required]),
         });
     }
 
 
 
-    citieChangeAction(departament) {
+    citieChangeAction(departament: any) {
         // START ANGULAR MAT SEARCH CITIES
-        let get_data_dep = departament;
-        let id_dep = get_data_dep.id_departament;
-        // console.log(id_dep);
-        this.cities = [];
-        this.apiService.getCitiesFrontbyDepartments(id_dep).subscribe(
-            (data: City[]) => {
-                this.citietlist = data;
-                for (var i in this.citietlist) {
-                    let get_id_citie = this.citietlist[i]['id_city'];
-                    let get_citie = this.citietlist[i]['city'];
-                    this.cities.push({ city: get_citie, id_city: get_id_citie });
+        if (departament && departament.id_departament) {
+            let id_dep = departament.id_departament;
+            this.cities = [];
+            this.registerForm.get('citieCtrl')?.setValue(null);
+            this.selectedCity = null;
+
+            this.apiService.getCitiesFrontbyDepartments(id_dep).subscribe(
+                (data: City[]) => {
+                    this.citietlist = data;
+                    for (var i in this.citietlist) {
+                        let get_id_citie = this.citietlist[i]['id_city'];
+                        let get_citie = this.citietlist[i]['city'];
+                        this.cities.push({ city: get_citie, id_city: get_id_citie });
+                    }
+                    this.city$ = this.getCity("", this.cities);
+                },
+                error => {
+                    console.error('Error loading cities:', error);
                 }
-                this.city$ = this.getCity("", this.cities);
-            },
-        );
+            );
+        }
         // END ANGULAR MAT SEARCH CITIES
     }
 
 
-    getIdentifiers(term: string = null, algo): Observable<Identifiers[]> {
+    getIdentifiers(term: string = '', algo: Identifiers[]): Observable<Identifiers[]> {
         let items = algo;
         if (term) {
             items = items.filter(x => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
@@ -168,79 +204,126 @@ export class RegisterComponent implements OnInit {
     }
 
 
-    getDepartment(term: string = null, algo): Observable<Departament[]> {
+    getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getCity(term: string = null, algo): Observable<City[]> {
+    getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
+    private maybeOpenStoreModal(): void {
+        // Verificar si ya se mostró el diálogo la primera vez
+        if (localStorage.getItem('store-modal-first-visit-shown') === '1') {
+            return;
+        }
+
+        // Marcar que ya se mostró
+        localStorage.setItem('store-modal-first-visit-shown', '1');
+
+        // Abrir el diálogo después de un pequeño delay para que la página cargue
+        setTimeout(() => {
+            this.dialog.open(PromoDialogComponent, {
+                panelClass: 'promo-dialog-panel',
+                maxWidth: 'none',
+                width: 'auto',
+                hasBackdrop: true,
+                backdropClass: 'promo-backdrop',
+                closeOnNavigation: true,
+                disableClose: false,
+                autoFocus: false,
+                restoreFocus: false,
+                data: {
+                    imageUrl: 'https://market-docus-v2.s3.us-east-2.amazonaws.com/Modal+Crear+tienda.png',
+                    alt: 'Crea tu tienda'
+                }
+            });
+        }, 500);
+    }
 
     register_user_front() {
-        this.validate_user = false
-        if (this.registerForm.valid) {
+        this.validate_user = false;
+        this.isLoading = true;
 
+        if (this.registerForm.valid) {
             let values_register = this.registerForm.value;
-            let myObj_user_client;
-            let myObj_ubication;
-            let myObj_login;
-            myObj_user_client = { "username": values_register.email, "password": values_register.password, "first_name": values_register.name, "last_name": values_register.second_name, "email": values_register.email, "is_active": "true", "group_id": 2, "store": '', "type_user": 3, "type_identifier": this.selectIdentifiers, "number_identifier": values_register.number_identifier };
+            let myObj_user_client = {
+                "username": values_register.email,
+                "password": values_register.password,
+                "first_name": values_register.name,
+                "last_name": values_register.second_name,
+                "email": values_register.email,
+                "is_active": "true",
+                "group_id": 2,
+                "store": '',
+                "type_user": 3,
+                "type_identifier": values_register.identifiersCtrl,
+                "number_identifier": values_register.number_identifier
+            };
 
             this.apiService.ValidateUserExist(values_register.email).subscribe(
-                result => {
+                (result: boolean) => {
                     if (result == true) {
-                        this.validate_user = true
+                        this.isLoading = false;
+                        this.validate_user = true;
                     } else {
                         this.apiService.registerUserFront(myObj_user_client).subscribe(
                             result => {
-                                myObj_login = { "username": values_register.email, "password": values_register.password }
+                                let myObj_login = { "username": values_register.email, "password": values_register.password };
                                 this.apiService.loginUser(myObj_login).subscribe(
-                                    (result_login: TokenObj) => {
-                                        let user_id = result_login["user_id"];
-                                        localStorage.setItem('mr-token-front', result_login.token);
-                                        localStorage.setItem('id_type_user', result_login.type_user);
-                                        localStorage.setItem('id_user_front', result_login.user_id);
-                                        localStorage.setItem('personal_name', result_login.personal_name);
-                                        localStorage.setItem('user_email', result_login.user_email);
-                                        localStorage.setItem('id-store', result_login.id_store);
-                                        myObj_ubication = { "city": this.selectedCity, "neighborhood": values_register.neighborhood, "via": values_register.via, "number": values_register.number_streeth, "sn": values_register.sn, "additional_data": values_register.aditional_data, "phone": values_register.phone, "contact": values_register.contact, "latitude": 0, "longitude": 0, "user": [user_id], "predetermined": true };
-                                        this.apiService.SetLocationClient(myObj_ubication).subscribe(
-                                            result => {
-                                                this.router.navigate(['/checkout/payment']).then(() => {
-                                                    window.location.reload();
-                                                });
-                                            },
-                                            error => console.log(error)
-                                        );
+                                    (result_login) => {
+                                        this.isLoading = false;
+                                        const login = result_login as TokenObj;
+                                        localStorage.setItem('mr-token-front', login.token);
+                                        localStorage.setItem('id_user_front', login.user_id);
+                                        localStorage.setItem('id_type_user', login.type_user);
+                                        localStorage.setItem('personal_name', login.personal_name);
+                                        localStorage.setItem('user_email', login.user_email);
+                                        localStorage.setItem('id-store', login.id_store);
 
+                                        this.toastyService.success('¡Registro exitoso! Bienvenido a nuestra plataforma.', 'Éxito');
+                                        this.router.navigate(['/sell/response']).then(() => {
+                                            window.location.reload();
+                                        });
                                     },
-                                    error => console.log(error)
+                                    error => {
+                                        this.isLoading = false;
+                                        console.error('Login error:', error);
+                                        this.toastyService.error('Error al iniciar sesión después del registro', 'Error');
+                                    }
                                 );
                             },
-                            error =>
-                                this.validate_user = true
+                            error => {
+                                this.isLoading = false;
+                                this.validate_user = true;
+                                console.error('Registration error:', error);
+                                this.toastyService.error('Error al registrar usuario', 'Error');
+                            }
                         );
                     }
                 },
-                error =>
-                    console.log(error)
+                (error: any) => {
+                    this.isLoading = false;
+                    console.error('Validation error:', error);
+                    this.toastyService.error('Error al validar usuario', 'Error');
+                }
             );
-
         } else {
+            this.isLoading = false;
             for (let i in this.registerForm.controls) {
                 this.registerForm.controls[i].markAsTouched();
             }
+            this.toastyService.warning('Por favor completa todos los campos requeridos', 'Formulario incompleto');
         }
-
     }
 
 }
+

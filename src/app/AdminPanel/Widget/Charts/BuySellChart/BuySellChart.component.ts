@@ -1,17 +1,23 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-buy-sell-chart',
 	templateUrl: './BuySellChart.component.html',
-	styleUrls: ['./BuySellChart.component.scss']
+	styleUrls: ['./BuySellChart.component.scss'],
+	standalone: true,
+	imports: [CommonModule, BaseChartDirective]
 })
-
 export class BuySellChartComponent implements OnInit {
+
+	@ViewChild(BaseChartDirective)
+	public chart: BaseChartDirective;
 
 	@Input() color :any;
    @Input() label :any;
    @Input() data  :any;
-   showChart : boolean;
+   showChart : boolean = false;
    //line chart options
 	public lineChartOptions :any = {
       responsive: true,
@@ -46,3 +52,4 @@ export class BuySellChartComponent implements OnInit {
       },0)
 	}
 }
+

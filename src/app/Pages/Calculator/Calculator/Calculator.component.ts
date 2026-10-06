@@ -1,14 +1,31 @@
 import {Component, OnInit} from '@angular/core';
 import {Calculator} from '../../../Models/Calculator';
-import {CalculatorCardItem} from '../CardCalculator/CardCalculator.component';
+import {CalculatorCardItem, CardCalculatorComponent} from '../CardCalculator/CardCalculator.component';
 import {CalculatorService} from '../../../Services/calculator.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators, ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
+import {CommonModule, CurrencyPipe} from '@angular/common';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-calculator',
   templateUrl: './Calculator.component.html',
-  styleUrls: ['./Calculator.component.css']
+  styleUrls: ['./Calculator.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    CardCalculatorComponent,
+    CurrencyPipe
+  ]
 })
 export class CalculatorComponent implements OnInit {
 
@@ -17,8 +34,9 @@ export class CalculatorComponent implements OnInit {
   public itemsWithHoldings: Array<CalculatorCardItem> = [];
   public footerCommissions: CalculatorCardItem;
   public footerWithHoldings: CalculatorCardItem;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public calculatorTypeId: number;
+  public hasCalculated: boolean = false;
 
   constructor(
     private calculatorService: CalculatorService,
@@ -34,20 +52,22 @@ export class CalculatorComponent implements OnInit {
   }
 
   private async initValues(): Promise<any> {
-    this.form = new FormGroup({
-      amount: new FormControl(0, Validators.required),
-      vatPercentage: new FormControl(0)
+    this.form = new UntypedFormGroup({
+      amount: new UntypedFormControl(0, Validators.required),
+      vatPercentage: new UntypedFormControl(0)
     });
 
-    this.calculateData = await this.calculatorService.calculate(0, 0, this.calculatorTypeId);
+    // Initialize calculateData but don't show summary until calculation is performed
+    this.calculateData = new Calculator();
+    this.hasCalculated = false;
 
-    this.footerCommissions = {text: 'Total comisión Kómpralo', value: 0};
+    this.footerCommissions = {text: 'Total comisión Swiftly', value: 0};
     this.footerWithHoldings = {text: 'Total Retenciones', value: 0};
 
     this.itemsKompralo = [
-      {text: 'Comisión plataforma de pago ' + this.calculateData.perPaymentPlatformCommission, value: 0},
+      {text: 'Comisión plataforma de pago', value: 0},
       {text: 'IVA comisión', value: 0},
-      {text: 'Comisión Marketplace ' + this.calculateData.perMarketPlaceCommission, value: 0},
+      {text: 'Comisión Marketplace', value: 0},
       {text: 'IVA Comisión', value: 0},
     ];
 
@@ -60,7 +80,7 @@ export class CalculatorComponent implements OnInit {
 
   public async calculate(): Promise<any> {
     this.calculateData = await this.calculatorService.calculate(this.form.value.amount, this.form.value.vatPercentage, this.calculatorTypeId);
-    this.footerCommissions = {text: 'Total comisión Kómpralo', value: this.calculateData.totalCommission};
+    this.footerCommissions = {text: 'Total comisión Swiftly', value: this.calculateData.totalCommission};
     this.footerWithHoldings = {text: 'Total Retenciones', value: this.calculateData.totalWithholding};
 
     this.itemsKompralo = [
@@ -75,6 +95,9 @@ export class CalculatorComponent implements OnInit {
       {text: 'Retención ICA', value: this.calculateData.icaWithholding},
       {text: 'Retención IVA', value: this.calculateData.vatWithholding},
     ];
+
+    this.hasCalculated = true;
   }
 
 }
+

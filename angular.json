@@ -1,137 +1,95 @@
 {
-    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-    "version": 1,
-    "newProjectRoot": "projects",
-    "projects": {
-        "fe-market": {
-            "projectType": "application",
-            "schematics": {},
-            "root": "",
-            "sourceRoot": "src",
-            "prefix": "app",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/interamericana",
-                        "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": "src/polyfills.ts",
-                        "tsConfig": "tsconfig.app.json",
-                        "aot": true,
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets",
-                            "src/sitemap.xml",
-                            "src/robots.txt"
-                        ],
-                        "styles": [
-                            "src/styles.css",
-                            "src/assets/scss/style.scss",
-                            "./node_modules/swiper/swiper-bundle.css",
-                            "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-                            "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-                            "./node_modules/ngx-bar-rating/themes/br-default-theme.scss"
-                        ],
-                        "scripts": []
-                    },
-                    "configurations": {
-                        "production": {
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.prod.ts"
-                            }],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "extractCss": true,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "budgets": [{
-                                    "type": "initial",
-                                    "maximumWarning": "4mb",
-                                    "maximumError": "5mb"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb",
-                                    "maximumError": "15kb"
-                                }
-                            ]
-                        }
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "browserTarget": "fe-market:build"
-                    },
-                    "configurations": {
-                        "production": {
-                            "browserTarget": "fe-market:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "browserTarget": "fe-market:build"
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/test.ts",
-                        "polyfills": "src/polyfills.ts",
-                        "tsConfig": "tsconfig.spec.json",
-                        "karmaConfig": "karma.conf.js",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/assets",
-                            "src/sitemap.xml",
-                            "src/robots.txt"
-                        ],
-                        "styles": [
-
-                            "src/styles.css",
-                            "src/assets/scss/style.scss"
-
-                        ],
-                        "scripts": []
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "tsconfig.app.json",
-                            "tsconfig.spec.json",
-                            "e2e/tsconfig.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
-                    }
-                },
-                "e2e": {
-                    "builder": "@angular-devkit/build-angular:protractor",
-                    "options": {
-                        "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "fe-market:serve"
-                    },
-                    "configurations": {
-                        "production": {
-                            "devServerTarget": "fe-market:serve:production"
-                        }
-                    }
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "swiftly": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "tsConfig": "tsconfig.app.json",
+            "browser": "src/main.ts",
+            "polyfills": ["src/polyfills.ts"],
+            "outputPath": "dist/swiftly",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css",
+              "src/custom-theme.scss"
+            ],
+            "allowedCommonJsDependencies": [
+              "sweetalert2",
+              "jquery",
+              "swiper",
+              "bootstrap",
+              "chart.js",
+              "perfect-scrollbar",
+              "file-saver",
+              "exceljs"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "tsConfig":"tsconfig.app.json",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
+              ]
             }
+          }
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "swiftly:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "swiftly:build:production"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "tsconfig.spec.json",
+            "main": "src/test.ts"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular/build:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "swiftly:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "swiftly:serve:production"
+            }
+          }
         }
-    },
-    "defaultProject": "fe-market",
-    "cli": {
-        "analytics": "19e05073-a686-4e9b-8e8c-39b0d0a52042"
+      }
     }
+  },
+  "cli": {
+    "analytics": "6304c6a3-c06d-4aee-bd2a-7cc82aedb261"
+  }
 }

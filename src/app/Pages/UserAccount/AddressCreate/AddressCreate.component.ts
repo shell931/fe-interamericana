@@ -1,7 +1,14 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../../../Services/api.service';
 import { MatSelect } from '@angular/material/select';
 import { Subject } from 'rxjs';
@@ -25,6 +32,18 @@ export interface City {
 
 @Component({
     selector: 'app-AddressCreate',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        NgSelectModule
+    ],
     templateUrl: './AddressCreate.component.html',
     styleUrls: ['./AddressCreate.component.scss']
 })
@@ -42,48 +61,48 @@ export class AddressCreateComponent implements OnInit {
     contact: any;
     id_city: any;
     id_departament: any;
-    formLocationCreate: FormGroup;
+    formLocationCreate!: UntypedFormGroup;
     dep_id: any;
     citietlist: City[] = [];
-    depart$: Observable<Departament[]>;
-    city$: Observable<City[]>;
+    depart$!: Observable<Departament[]>;
+    city$!: Observable<City[]>;
     selectedCity: any;
 
 
     // START ANGULAR MAT SEARCH DEPARTAMENT    
-    public departamentCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public departamentCtrll: FormControl = new FormControl(null, [Validators.required]);
-    public departamentFilterCtrl: FormControl = new FormControl();
-    public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieFilterCtrl: FormControl = new FormControl();
-    @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+    public departamentCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentCtrll: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    @ViewChild('singleSelect', { static: true })
+    singleSelect!: MatSelect;
     private _onDestroy = new Subject<void>();
     // END ANGULAR MAT SEARCH DEPARTAMENT
     // START ANGULAR MAT SEARCH CITY
-    public cityCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public cityFilterCtrl: FormControl = new FormControl();
+    public cityCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public cityFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH CITY
     departments: Departament[] = [];
     cities: City[] = [];
     department_selected: Departament[] = [];
     departamentlist: Departament[] = [];
 
-    formData: FormGroup;
-    selectedValue;
-    selectedCityValue;
-    toastOption: ToastOptions = {
-        title: "Ubicación creada",
-        msg: "Ubicación ha sido creada!",
-        showClose: true,
-        timeout: 3000,
-        theme: "material"
-    };
+    formData!: UntypedFormGroup;
+    selectedValue: any;
+    selectedCityValue: any;
+    toastOption:any = this.toastyService.success(
+  "La ubicación ha sido creada!",
+  "Ubicación creada",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
+
 
 
     constructor(private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
-        private toastyService: ToastaService,
+        private formGroup: UntypedFormBuilder,
+        private toastyService: ToastrService,
         private apiService: ApiService,) {
 
     }
@@ -108,12 +127,12 @@ export class AddressCreateComponent implements OnInit {
                 sn: ['', [Validators.required]],
                 // departmentControl: new FormControl('', [Validators.required]),
                 // cityControl: new FormControl('', [Validators.required]),
-                contact: new FormControl('', [Validators.required]),
-                phone: new FormControl('', [Validators.required]),
-                additional_data: new FormControl('', [Validators.required]),
+                contact: new UntypedFormControl('', [Validators.required]),
+                phone: new UntypedFormControl('', [Validators.required]),
+                additional_data: new UntypedFormControl('', [Validators.required]),
                 id: [''],
-                departamentCtrll: new FormControl('', [Validators.required]),
-                citieCtrl: new FormControl('', [Validators.required]),
+                departamentCtrll: new UntypedFormControl('', [Validators.required]),
+                citieCtrl: new UntypedFormControl('', [Validators.required]),
             });
 
 
@@ -144,49 +163,68 @@ export class AddressCreateComponent implements OnInit {
 
 
 
-    getDepartment(term: string = null, algo): Observable<Departament[]> {
+    getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    citieChangeAction(departament) {
+    citieChangeAction(departament: any) {
         // START ANGULAR MAT SEARCH CITIES
-        let get_data_dep = departament;
-        let id_dep = get_data_dep.id_departament;
-        // console.log(id_dep);
-        this.cities = [];
-        this.apiService.getCitiesFrontbyDepartments(id_dep).subscribe(
-            (data: City[]) => {
-                this.citietlist = data;
-                for (var i in this.citietlist) {
-                    let get_id_citie = this.citietlist[i]['id_city'];
-                    let get_citie = this.citietlist[i]['city'];
-                    this.cities.push({ city: get_citie, id_city: get_id_citie });
-                }
-                this.city$ = this.getCity("", this.cities);
-            },
-        );
+        // El evento change de ng-select pasa el valor directamente (id_departament)
+        let id_dep = departament;
+        
+        // Si es un objeto, extraer el id_departament
+        if (departament && typeof departament === 'object' && departament.id_departament) {
+            id_dep = departament.id_departament;
+        }
+        
+        // Limpiar la selección de ciudad cuando cambia el departamento
+        this.formLocationCreate.get('citieCtrl')?.setValue('');
+        this.selectedCity = null;
+        
+        if (id_dep) {
+            this.cities = [];
+            this.apiService.getCitiesFrontbyDepartments(id_dep).subscribe(
+                (data: City[]) => {
+                    this.citietlist = data;
+                    for (var i in this.citietlist) {
+                        let get_id_citie = this.citietlist[i]['id_city'];
+                        let get_citie = this.citietlist[i]['city'];
+                        this.cities.push({ city: get_citie, id_city: get_id_citie });
+                    }
+                    this.city$ = this.getCity("", this.cities);
+                },
+            );
+        }
         // END ANGULAR MAT SEARCH CITIES
     }
 
 
-    getCity(term: string = null, algo): Observable<City[]> {
+    getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
     updateLocationUserFront() {             
+        // Actualizar validación antes de verificar
+        this.formLocationCreate.updateValueAndValidity();
+        
+        // Asegurar que selectedCity tenga el valor del formulario si no está establecido
+        if (!this.selectedCity && this.formLocationCreate.get('citieCtrl')?.value) {
+            this.selectedCity = this.formLocationCreate.get('citieCtrl')?.value;
+        }
+        
         if (this.formLocationCreate.valid) {
             let get_values_location = this.formLocationCreate.value;
             const id_user_front = localStorage.getItem('id_user_front');
             let myObj_user_client = {
-                "city": this.selectedCity, "neighborhood": get_values_location.neighborhood, "via": get_values_location.via,
+                "city": this.selectedCity || get_values_location.citieCtrl, "neighborhood": get_values_location.neighborhood, "via": get_values_location.via,
                 "number": get_values_location.number, "sn": get_values_location.sn,
                 "additional_data": get_values_location.additional_data, "phone": get_values_location.phone, "contact": get_values_location.contact,
                 "latitude": 0, "longitude": 0,
@@ -214,3 +252,4 @@ export class AddressCreateComponent implements OnInit {
 
 
 }
+

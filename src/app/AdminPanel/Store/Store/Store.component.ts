@@ -1,27 +1,40 @@
-import { Component, OnInit, ViewChild, SecurityContext } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
-
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { ApiService } from '../../../Services/api.service';
 import { StoreAdmin, StoreDocs } from '../../../Models/StoreAdmin';
-import {BrowserModule, DomSanitizer} from '@angular/platform-browser'
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
    selector: 'app-users',
    templateUrl: './Store.component.html',
-   styleUrls: ['./Store.component.scss']
+   styleUrls: ['./Store.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      MatCardModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatButtonModule,
+      MatIconModule,
+      RouterModule
+   ]
 })
-
 export class StoreComponent implements OnInit {
 
    popUpDeleteUserResponse: any;
    storeList: StoreAdmin[] = [];
-   storeGrid: StoreAdmin;
+   storeGrid!: StoreAdmin;
    storeDocsGrid: StoreDocs[] = [];
 
-   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+   @ViewChild(MatPaginator, { static: false })
+   paginator!: MatPaginator;
 
    dataSource = new MatTableDataSource<any>(this.storeList);
 
@@ -34,10 +47,10 @@ export class StoreComponent implements OnInit {
    ) { }
 
    ngOnInit() {
-      this.apiService.getStore().subscribe(res => this.getStoreData(res));
+      this.apiService.getStore().subscribe((res: any) => this.getStoreData(res));
    }
 
-   getStoreData(response) {
+   getStoreData(response : any) {
       this.storeList = response;
       this.dataSource = new MatTableDataSource<any>(this.storeList);
       setTimeout(() => {
@@ -53,23 +66,19 @@ export class StoreComponent implements OnInit {
       }
    }
 
-   onSeeDialog(data) {
-      this.apiService.getStoreData(data.id_store).subscribe(
-         res => {
-            this.apiService.getStoreDocuments(data.id_store).subscribe(
-               data_docs => {
-                  this.getStoreDialogData(res,data_docs);  
-               }
-            );
-         }
-      );
+   onSeeDialog(data: { id_store: any; }) {
+      this.apiService.getStoreData(data.id_store).subscribe((res: any) => {
+         this.apiService.getStoreDocuments(data.id_store).subscribe((data_docs: any) => {
+            this.getStoreDialogData(res, data_docs);
+         }, (error: any) => console.log(error));
+      }, (error: any) => console.log(error));
    }
 
-   getStoreDialogData(response, data_docs) {
-      let myObj_store;
+   getStoreDialogData(response: { address: any; city: any; departament: any; description: any; email: any; logo_store_up: any; manager: any; name_store: any; number_identifier: any; state_store: any; telephone: any; storecategories_description?: any; }, data_docs: any[]) {
+      let myObj_store: any = {};
       this.storeDocsGrid = [];
 
-      let myObj_store_docs;
+      let myObj_store_docs: any;
       myObj_store = {
          address: response.address,
          city: response.city,
@@ -82,11 +91,11 @@ export class StoreComponent implements OnInit {
          number_identifier: response.number_identifier,
          state_store: response.state_store,
          telephone: response.telephone,
+         storecategories_description: response.storecategories_description ?? '',
       };   
-      this.storeGrid = myObj_store;
+   this.storeGrid = myObj_store as StoreAdmin;
 
-      
-      this.storeDocsGrid = data_docs.map(item => {
+   this.storeDocsGrid = (data_docs || []).map((item: { [x: string]: any; }) => {
          let url = item['url_document'];
          let extension: [] = url.split('.');
          
@@ -104,3 +113,4 @@ export class StoreComponent implements OnInit {
       this.apiService.PopUpStoreViewValidate(this.storeGrid, this.storeDocsGrid);
    }
 }
+

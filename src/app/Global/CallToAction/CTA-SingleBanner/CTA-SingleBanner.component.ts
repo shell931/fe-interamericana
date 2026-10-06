@@ -13,3 +13,4 @@ export class CTASingleBannerComponent implements OnInit {
   }
 
 }
+

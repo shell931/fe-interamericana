@@ -1,31 +1,37 @@
-<mat-card>
-    <div fxLayoutAlign="space-between"><b>Tarjetas guardadas</b> <button mat-raised-button color="accent" [routerLink]="['/account/profile/edit']" [queryParams]="{type:'add-card'}">Agregar nueva tarjeta</button></div>
+<div class="cards-container">
+    <div class="cards-header">
+        <b>Tarjetas guardadas</b>
+        <span class="card-count">{{cards.length}} {{cards.length === 1 ? 'tarjeta' : 'tarjetas'}}</span>
+    </div>
 
-    <div fxLayout="row wrap" class="col-gap">
-        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="40" fxFlex.xl="40">
-            <mat-card>
-                <p>VISA -- Credit Card</p>
-                <div class="pt-3">
-                    <div class="saved-card-box text-xl mb-4">
-                        <span>4545 4XXX XXX5 4545</span>
-                    </div>
-                    <button mat-raised-button color="accent" [routerLink]="['/account/profile/edit']" [queryParams]="{type:'card'}">Edit</button>
+    <div class="cards-list">
+        <div class="card-item" *ngFor="let card of cards">
+            <div class="card-header">
+                <div class="card-brand">
+                    <i class="material-icons">credit_card</i>
+                    <span>{{card.brand}}</span>
                 </div>
-            </mat-card>
-        </div>
-        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="50" fxFlex.lg="40" fxFlex.xl="40">
-            <mat-card>
-                <p>MasterCard -- Debit Card</p>
-                <div class="pt-3">
-                    <div class="saved-card-box text-xl mb-4">
-                        <span>8585 8XXX XXX5 8585</span>
-                    </div>
-
-                    <button mat-raised-button color="accent" [routerLink]="['/account/profile/edit']" [queryParams]="{type:'card'}">Edit</button>
-
-                </div>
-            </mat-card>
+                <div class="card-type-badge" [ngClass]="{'debit': card.type === 'Débito'}">{{card.type}}</div>
+            </div>
+            <div class="card-number">{{card.number}}</div>
+            <div class="card-actions">
+                <button class="edit-card-btn" mat-raised-button [routerLink]="['/account/profile/edit']"
+                    [queryParams]="{type:'card', id: card.id}">
+                    <i class="material-icons">edit</i>
+                    Editar
+                </button>
+                <button class="delete-card-btn" title="Eliminar tarjeta" (click)="deleteCard(card.id)">
+                    <i class="material-icons">delete</i>
+                </button>
+            </div>
         </div>
     </div>
 
-</mat-card>
+    <div class="cards-actions">
+        <button class="add-card-btn" mat-raised-button [routerLink]="['/account/profile/edit']"
+            [queryParams]="{type:'add-card'}">
+            <i class="material-icons">add</i>
+            Agregar tarjeta
+        </button>
+    </div>
+</div>

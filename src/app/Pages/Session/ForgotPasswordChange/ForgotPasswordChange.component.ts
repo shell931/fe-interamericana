@@ -1,16 +1,31 @@
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../Services/api.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'embryo-ForgotPasswordChange',
     templateUrl: './ForgotPasswordChange.component.html',
-    styleUrls: ['./ForgotPasswordChange.component.scss']
+    styleUrls: ['./ForgotPasswordChange.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule
+    ]
 })
 export class ForgotPasswordChangeComponent implements OnInit {
 
-    forgotForm: FormGroup;
+    forgotForm: UntypedFormGroup;
     emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
     public validate_same_email: boolean = false;
     public validate_user: boolean = false;
@@ -24,7 +39,7 @@ export class ForgotPasswordChangeComponent implements OnInit {
 
     constructor(
 
-        public formBuilder: FormBuilder,
+        public formBuilder: UntypedFormBuilder,
         private apiService: ApiService,
         private router: Router,
         private route: ActivatedRoute,
@@ -96,3 +111,4 @@ export class ForgotPasswordChangeComponent implements OnInit {
     }
 
 }
+

@@ -1,11 +1,27 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiService } from '../../../Services/api.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+
+// Angular Material imports
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+
+// Third party imports
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 import { take, takeUntil } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
@@ -26,30 +42,48 @@ export interface Subcategory {
 @Component({
    selector: 'app-add-product',
    templateUrl: './AddProduct.component.html',
-   styleUrls: ['./AddProduct.component.scss']
+   styleUrls: ['./AddProduct.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      FormsModule,
+      RouterModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatCardModule,
+      MatProgressSpinnerModule,
+      MatIconModule,
+      MatSelectModule,
+      MatOptionModule,
+      NgSelectModule,
+      NgxDropzoneModule,
+      AsyncPipe,
+   ]
 })
 
 export class AddProductComponent implements OnInit {
 
-   widthMin: Number = 700;
-   heightMin: Number = 700;
+   widthMin: number = 700;
+   heightMin: number = 700;
    isApproved: boolean = false;
-   selectedFiles: FileList;
+   selectedFiles!: FileList;
    files: File[] = [];
    subcategories: Subcategory[] = [];
    subcategorieslist: Subcategory[] = [];
 
-   public subcategoryFilterCtrl: FormControl = new FormControl();
+   public subcategoryFilterCtrl: UntypedFormControl = new UntypedFormControl();
    next_id_image: any;
    doc_identi_docu: any;
-   form: FormGroup;
-   mainImgPath: string;
+   form!: UntypedFormGroup;
+   mainImgPath!: string;
    colorsArray: string[] = ["Red", "Blue", "Yellow", "Green"];
    sizeArray: number[] = [36, 38, 40, 42, 44, 46, 48];
    quantityArray: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-   public imagePath;
-   prod_category$: Observable<Category[]>;
-   sub_catego$: Observable<Subcategory[]>;
+   public imagePath: any;
+   prod_category$!: Observable<Category[]>;
+   sub_catego$!: Observable<Subcategory[]>;
    selectedProdCate: any;
    selectedSubcategory: any;
    selectedAvaila: any;
@@ -67,50 +101,45 @@ export class AddProductComponent implements OnInit {
       }
    ]
 
-   productForm: FormGroup;
-   public availa: FormControl = new FormControl(null, [Validators.required]);
+   productForm!: UntypedFormGroup;
+   public availa: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
 
    // START ANGULAR MAT SEARCH CATEGORIES
    /** control for the selected bank */
-   public categoryCtrl: FormControl = new FormControl(null, [Validators.required]);
-   public subcategoryCtrl: FormControl = new FormControl(null, [Validators.required]);
-   public categoryFilterCtrl: FormControl = new FormControl();
+   public categoryCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+   public subcategoryCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+   public categoryFilterCtrl: UntypedFormControl = new UntypedFormControl();
    // END ANGULAR MAT SEARCH CATEGORIES
 
    categorylist: Category[] = [];
    category: Category[] = [];
 
-   toastvalidateimg: ToastOptions = {
-      title: "Imagen",
-      msg: "Ingresar por lo menos una imagen!",
-      showClose: true,
-      timeout: 8000,
-      theme: "material"
-   };
+   toastvalidateimg: any = this.toastyService.warning(
+      "Ingresar por lo menos una imagen!",
+      "Imagen",
+      { timeOut: 8000, closeButton: true, progressBar: true }
+   );
 
-   toastsaveproduct: ToastOptions = {
-      title: "Producto registrado",
-      msg: "El producto o servicio a sido registrado!",
-      showClose: true,
-      timeout: 8000,
-      theme: "material"
-   };
+   toastsaveproduct: any = this.toastyService.success(
+      "el producto o servicio ha sido registrado!",
+      "Producto registrado!",
+      { timeOut: 8000, closeButton: true, progressBar: true }
+   );
 
-   toastRejectPixelsImg: ToastOptions = {
-      title: "Dimension de imagen",
-      msg: "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
-      showClose: true,
-      timeout: 8000,
-      theme: "material"
-   };
+
+   toastRejectPixelsImg: any = this.toastyService.warning(
+      "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
+      "Dimension de imagen",
+      { timeOut: 8000, closeButton: true, progressBar: true }
+   );
 
    public show: boolean = false;
 
    constructor(
-      public formBuilder: FormBuilder,
+      public formBuilder: UntypedFormBuilder,
       private apiService: ApiService,
       private cookieService: CookieService,
-      private toastyService: ToastaService,
+      private toastyService: ToastrService,
       private router: Router,
    ) { }
 
@@ -123,12 +152,12 @@ export class AddProductComponent implements OnInit {
          description_product: ['', [Validators.required]],
          product_code: ['', [Validators.required]],
          stock: ['', [Validators.required]],
-         categoryCtrl: new FormControl('', [Validators.required]),
-         subcategoryCtrl: new FormControl('', [Validators.required]),
+         categoryCtrl: new UntypedFormControl('', [Validators.required]),
+         subcategoryCtrl: new UntypedFormControl('', [Validators.required]),
          brand: ['', [Validators.required]],
          discount_price: ['', [Validators.required]],
          total_price: ['', [Validators.required]],
-         availa: new FormControl('', [Validators.required]),
+         availa: new UntypedFormControl('', [Validators.required]),
       });
 
       // START ANGULAR MAT SEARCH CATEGORIES
@@ -145,7 +174,7 @@ export class AddProductComponent implements OnInit {
             this.prod_category$ = this.getCategoriesProd("", this.category);
 
          },
-         error => console.log(error)
+         (error: any) => console.log(error)
       );
       // END ANGULAR MAT SEARCH CATEGORIES
 
@@ -163,48 +192,50 @@ export class AddProductComponent implements OnInit {
 
 
 
-   onSelect(event) {
+   onSelect(event: { addedFiles: any; }) {
       console.log(event);
       this.files.push(...event.addedFiles);
    }
 
-   onRemove(event) {
+   onRemove(event: File) {
       console.log(event);
       this.files.splice(this.files.indexOf(event), 1);
    }
 
 
    //START SET EVENT FROM DROPZONE COMPLEMENT
-   selectFile(event) {
-      // console.log("entrando a evento");
-      // console.log(event.addedFiles.length);
-      // console.log(this.files.length);
-      let index = this.files.length != event.addedFiles ? 0 : this.files.length;
-      event.addedFiles.map((item) => {
-         this.onValidatePixels(item)
-            .then((value: boolean) => {
-               if (value) {
-                  this.files.push(item);
-               } else {
-                  // event.addedFiles.splice(this.files.length, 1);
-                  this.toastyService.error(this.toastRejectPixelsImg);
-               }
+   selectFile(event: { addedFiles: number | any[]; }) {
 
-            });
-      });
+      if (Array.isArray(event.addedFiles)) {
+         event.addedFiles.forEach((item: File) => {
+            this.onValidatePixels(item)
+               .then((value: boolean) => {
+                  if (value) {
+                     this.files.push(item);
+                  } else {
+                     this.toastyService.error(this.toastRejectPixelsImg);
+                  }
+
+               }).catch((e) => { this.toastyService.error(this.toastRejectPixelsImg); });
+         });
+      }
 
    }
 
-   onValidatePixels(file: File) {
+   onValidatePixels(file: File): Promise<boolean> {
       return new Promise((resolve, reject) => {
          const Img = new Image();
          Img.src = URL.createObjectURL(file);
          Img.onload = (e: any) => {
-            console.log(e);
-            const height = e.target.height;
-            const width = e.path[0].width;
-            if (height >= this.heightMin || width >= this.widthMin) {
-               resolve(true);
+            try {
+               const height = e.target?.height || Img.height;
+               const width = (e.target && e.target.width) || (Img && (Img as any).width) || 0;
+               if (height >= this.heightMin || width >= this.widthMin) {
+                  resolve(true);
+                  return;
+               }
+            } catch (err) {
+               // swallow and reject
             }
             resolve(false);
          };
@@ -215,21 +246,31 @@ export class AddProductComponent implements OnInit {
 
 
 
-   subcategoriesChangeAction(categori_id) {
+   subcategoriesChangeAction(categori_id: { id: any; }) {
       // START ANGULAR MAT SEARCH SUBCATEGORIES
       let id_category = categori_id.id;
       this.subcategories = [];
       this.apiService.getSubCategories(id_category).subscribe(
          (data: Subcategory[]) => {
             this.subcategorieslist = data;
-            for (var i in this.subcategorieslist) {
-               let get_id_subcategory = this.subcategorieslist[i]['id'];
-               let get_name_subcategory = this.subcategorieslist[i]['name_subcategory'];
-               this.subcategories.push({ id: get_id_subcategory, name_subcategory: get_name_subcategory });
+            if (this.subcategorieslist && this.subcategorieslist.length > 0) {
+               for (var i in this.subcategorieslist) {
+                  let get_id_subcategory = this.subcategorieslist[i]['id'];
+                  let get_name_subcategory = this.subcategorieslist[i]['name_subcategory'];
+                  this.subcategories.push({ id: get_id_subcategory, name_subcategory: get_name_subcategory });
+               }
+            } else {
+               // Si no hay subcategorías, agregar opción "Otros" con id 0
+               this.subcategories.push({ id: 0, name_subcategory: 'Otros' });
             }
             this.sub_catego$ = this.getSubcategories("", this.subcategories);
          },
-         error => console.log(error)
+         (error: any) => {
+            console.log(error);
+            // En caso de error, agregar opción "Otros" con id 0
+            this.subcategories = [{ id: 0, name_subcategory: 'Otros' }];
+            this.sub_catego$ = this.getSubcategories("", this.subcategories);
+         }
       );
       // END ANGULAR MAT SEARCH SUBCATEGORIES
 
@@ -245,18 +286,18 @@ export class AddProductComponent implements OnInit {
       }
    }
 
-   getCategoriesProd(term: string = null, algo): Observable<Category[]> {
+   getCategoriesProd(term: string = '', algo: Category[]): Observable<Category[]> {
       let items = algo;
       if (term) {
-         items = items.filter(x => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+         items = items.filter((x: { name_category: string; }) => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
       }
       return of(items).pipe(delay(500));
    }
 
-   getSubcategories(term: string = null, algo): Observable<Subcategory[]> {
+   getSubcategories(term: string = '', algo: Subcategory[]): Observable<Subcategory[]> {
       let items = algo;
       if (term) {
-         items = items.filter(x => x.name_subcategory.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+         items = items.filter((x: { name_subcategory: string; }) => x.name_subcategory.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
       }
       return of(items).pipe(delay(500));
    }
@@ -266,12 +307,21 @@ export class AddProductComponent implements OnInit {
 
       if (this.files.length > 0) {
          if (this.productForm.valid) {
+            // Validar que se haya seleccionado una subcategoría válida (permite 0, rechaza null/undefined/negativos)
+            if (this.selectedSubcategory === null || this.selectedSubcategory === undefined || this.selectedSubcategory < 0) {
+               this.toastyService.error('Por favor selecciona una subcategoría válida');
+               return;
+            }
+
             this.btnDisabled = true;
             this.show = !this.show;
             let myObj_product;
             let values_productForm = this.productForm.value;
 
             const id_store = localStorage.getItem('id-store');
+            // Convertir subcategory_id 0 a null para el backend
+            const subcategoryId = this.selectedSubcategory === 0 ? null : this.selectedSubcategory;
+
             myObj_product = {
                "name_product": values_productForm.name_product,
                "description_product": values_productForm.description_product,
@@ -281,7 +331,7 @@ export class AddProductComponent implements OnInit {
                "stock": values_productForm.stock,
                "store": id_store,
                "brand": values_productForm.brand,
-               "subcategory_id": this.selectedSubcategory,
+               "subcategory_id": subcategoryId,
                "discount_price": values_productForm.discount_price,
                "features": 'na',
                "state": 1,
@@ -311,8 +361,7 @@ export class AddProductComponent implements OnInit {
                      var dateTime = date + ' ' + time;
                      var dates_as_int = [dateTime];
                      const dates = dates_as_int.map(date => new Date(date).getTime());
-                     const random = Math.random().toString(36).substring(2, 15);
-                     const namefile = id_store + '-' + random + '.' + get_type_img;
+                     const namefile = id_store + '-' + this.selectedSubcategory + '-' + dates + i + '.' + get_type_img;
 
                      if (i == 0) {
                         get_first_image_name = namefile;
@@ -363,8 +412,17 @@ export class AddProductComponent implements OnInit {
     * getImagePath is used to change the image path on click event.
     */
    public getImagePath(imgPath: string, index: number) {
-      document.querySelector('.border-active').classList.remove('border-active');
+      const active = document.querySelector('.border-active') as HTMLElement | null;
+      if (active) {
+         active.classList.remove('border-active');
+      }
+
       this.mainImgPath = imgPath;
-      document.getElementById(index + '_img').className += " border-active";
+
+      const el = document.getElementById(index + '_img') as HTMLElement | null;
+      if (el) {
+         el.classList.add('border-active');
+      }
    }
 }
+

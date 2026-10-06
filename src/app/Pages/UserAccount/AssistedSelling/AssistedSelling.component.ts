@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { CommonModule, AsyncPipe, CurrencyPipe } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators } from '@angular/forms';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { ApiService } from '../../../Services/api.service';
@@ -8,8 +10,15 @@ import { Subject } from 'rxjs';
 import { Observable, Subscription } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { Transactions } from '../../../Models/Transactions';
 import { LoadScriptsService } from "../../../load-scripts.service";
 
@@ -46,17 +55,34 @@ export interface City {
 
 @Component({
 	selector: 'app-AssistedSelling',
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		FormsModule,
+		AsyncPipe,
+		CurrencyPipe,
+		MatTableModule,
+		MatPaginatorModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule,
+		MatButtonModule,
+		MatCardModule,
+		NgSelectModule,
+		SweetAlert2Module
+	],
 	templateUrl: './AssistedSelling.component.html',
 	styleUrls: ['./AssistedSelling.component.scss']
 })
 
 export class AssistedSellingComponent implements OnInit {
 	public show: boolean = false;
-	txDetailGrid: Transactions;
-	assistedsellingForm: FormGroup;
-	paymentForm: FormGroup;
+	txDetailGrid!: Transactions;
+	assistedsellingForm!: UntypedFormGroup;
+	paymentForm!: UntypedFormGroup;
 	emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
-	months$: Observable<Month[]>;
+	months$!: Observable<Month[]>;
 	selectedMonth: any;
 	months: Month[] = [
 		{
@@ -152,42 +178,43 @@ export class AssistedSellingComponent implements OnInit {
 			year: '29'
 		},
 	]
-	years$: Observable<Year[]>;
+	years$!: Observable<Year[]>;
 	selectedYear: any;
 	selectIdentifiers: any;
-	identifier$: Observable<Identifiers[]>;
+	identifier$!: Observable<Identifiers[]>;
 	identifierstlist: Identifiers[] = [];
 	identifiers: Identifiers[] = [];
 
 	selectedPercentageTax: any;
-	percentage_tax$: Observable<PercentageTax[]>;
-	public percentagetaxFilterCtrl: FormControl = new FormControl();
+	percentage_tax$!: Observable<PercentageTax[]>;
+	public percentagetaxFilterCtrl: UntypedFormControl = new UntypedFormControl();
 	percentagetaxlist: PercentageTax[] = [];
 	percentagetax: PercentageTax[] = [];
 	id_percentage_tax: any;
 
 	transactionsList: any[] = [];
-	transactionsDetailGrid: Transactions;
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+	transactionsDetailGrid!: Transactions;
+	@ViewChild(MatPaginator, { static: false })
+	paginator!: MatPaginator;
 	dataSource = new MatTableDataSource<any>(this.transactionsList);
 
 	departament: any
 	id_departament: any;
 	// START ANGULAR MAT SEARCH DEPARTAMENT    
-	public departamentCtrl: FormControl = new FormControl(null, [Validators.required]);
-	public departamentCtrll: FormControl = new FormControl(null, [Validators.required]);
-	public departamentFilterCtrl: FormControl = new FormControl();
+	public departamentCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+	public departamentCtrll: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+	public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
 	// END ANGULAR MAT SEARCH CITY
 	departments: Departament[] = [];
 	department_selected: Departament[] = [];
 	departamentlist: Departament[] = [];
-	depart$: Observable<Departament[]>;
+	depart$!: Observable<Departament[]>;
 
 	citietlist: City[] = [];
-	public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieFilterCtrl: FormControl = new FormControl();
+	public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
 	cities: City[] = [];
-	city$: Observable<City[]>;
+	city$!: Observable<City[]>;
 	selectedCity: any;
 
 	displayedColumns: string[] = ['action', 'id', 'created_at', 'num_aprob', 'cod_reply', 'name_state', 'total_tx'];
@@ -196,7 +223,7 @@ export class AssistedSellingComponent implements OnInit {
 		// public service: AdminPanelServiceService,
 		private apiService: ApiService,
 		public router: Router,
-		private formGroup: FormBuilder,
+		private formGroup: UntypedFormBuilder,
 		private _LoadScript: LoadScriptsService
 	) {
 		_LoadScript.Carga(["card/card"]);
@@ -231,7 +258,7 @@ export class AssistedSellingComponent implements OnInit {
 				}
 				this.percentage_tax$ = this.getPercentageTax("", this.percentagetax);
 			},
-			error => console.log(error)
+			(			error: any) => console.log(error)
 		);
 
 		// START ANGULAR MAT SEARCH DEPARTAMENT
@@ -257,26 +284,26 @@ export class AssistedSellingComponent implements OnInit {
 		this.assistedsellingForm = this.formGroup.group({
 			tag_first_name: ['', [Validators.required]],
 			tag_last_name: ['', [Validators.required]],
-			identifiersCtrl: new FormControl('', [Validators.required]),
+			identifiersCtrl: new UntypedFormControl('', [Validators.required]),
 			number_identifier: ['', [Validators.required]],
 			tag_email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
 			tag_cellphone: ['', [Validators.required]],
 			total_tx: ['', [Validators.required]],
-			percentagetaxCtrl: new FormControl(null, [Validators.required]),
+			percentagetaxCtrl: new UntypedFormControl(null, [Validators.required]),
 			tag_desc_selling: ['', [Validators.required]],
-			departamentCtrll: new FormControl('', [Validators.required]),
-			citieCtrl: new FormControl('', [Validators.required]),
-			address: new FormControl('', [Validators.required]),
+			departamentCtrll: new UntypedFormControl('', [Validators.required]),
+			citieCtrl: new UntypedFormControl('', [Validators.required]),
+			address: new UntypedFormControl('', [Validators.required]),
 		});
 
 
 		this.paymentForm = this.formGroup.group({
 			inputNumero: ['', [Validators.required]],
 			inputNombre: ['', [Validators.required]],
-			selectMesFc: new FormControl('', [Validators.required]),
-			selectYearFc: new FormControl('', [Validators.required]),
-			inputCCV: new FormControl('', [Validators.required]),
-			quote: new FormControl('', [Validators.required]),
+			selectMesFc: new UntypedFormControl('', [Validators.required]),
+			selectYearFc: new UntypedFormControl('', [Validators.required]),
+			inputCCV: new UntypedFormControl('', [Validators.required]),
+			quote: new UntypedFormControl('', [Validators.required]),
 		});
 
 
@@ -284,18 +311,18 @@ export class AssistedSellingComponent implements OnInit {
 		this.years$ = this.getYears("", this.years);
 
 		const id_store_list = localStorage.getItem('id-store');
-		this.apiService.ListTransactionByStore(id_store_list).subscribe(res => this.getAllTransactionData(res));
+		this.apiService.ListTransactionByStore(id_store_list).subscribe((res: any) => this.getAllTransactionData(res));
 	}
 
-	getDepartment(term: string = null, algo): Observable<Departament[]> {
+	getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-	getAllTransactionData(response) {
+	getAllTransactionData(response: any[]) {
 		console.log(response);
 		this.transactionsList = response;
 		this.dataSource = new MatTableDataSource<any>(this.transactionsList);
@@ -311,40 +338,40 @@ export class AssistedSellingComponent implements OnInit {
 		}
 	}
 
-	getMonths(term: string = null, algo): Observable<Month[]> {
+	getMonths(term: string = '', algo: Month[]): Observable<Month[]> {
 		let items = algo;
 		if (term) {
-			items = items.filter(x => x.month.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+			items = items.filter((x: { month: string; }) => x.month.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
 		}
 		return of(items).pipe(delay(500));
 	}
 
-	getYears(term: string = null, algo): Observable<Year[]> {
+	getYears(term: string = '', algo: Year[]): Observable<Year[]> {
 		let items = algo;
 		if (term) {
-			items = items.filter(x => x.year.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+			items = items.filter((x: { year: string; }) => x.year.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
 		}
 		return of(items).pipe(delay(500));
 	}
 
-	getIdentifiers(term: string = null, algo): Observable<Identifiers[]> {
+	getIdentifiers(term: string = '', algo: Identifiers[]): Observable<Identifiers[]> {
 		let items = algo;
 		if (term) {
-			items = items.filter(x => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+			items = items.filter((x: { type_identifier: string; }) => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
 		}
 		return of(items).pipe(delay(500));
 	}
 
-	getPercentageTax(term: string = null, algo): Observable<PercentageTax[]> {
+	getPercentageTax(term: string = '', algo: PercentageTax[]): Observable<PercentageTax[]> {
 		let items = algo;
 		if (term) {
-			items = items.filter(x => x.percentage.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+			items = items.filter((x: { percentage: string; }) => x.percentage.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
 		}
 		return of(items).pipe(delay(500));
 	}
 
 
-	citieChangeAction(departament) {
+	citieChangeAction(departament: any) {
         // START ANGULAR MAT SEARCH CITIES
         let get_data_dep = departament;
         let id_dep = get_data_dep.id_departament;
@@ -364,10 +391,10 @@ export class AssistedSellingComponent implements OnInit {
         // END ANGULAR MAT SEARCH CITIES
     }
 
-	getCity(term: string = null, algo): Observable<City[]> {
+	getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
@@ -428,7 +455,7 @@ export class AssistedSellingComponent implements OnInit {
 	}
 
 
-	GetCardType(number) {
+	GetCardType(number: { match: (arg0: RegExp) => null; }) {
 		// visa
 		var re = new RegExp("^4");
 		if (number.match(re) != null)
@@ -477,14 +504,14 @@ export class AssistedSellingComponent implements OnInit {
 	/**
 	* onSeeDialog method is to see detail transaction .
 	*/
-	onSeeDialog(data) {
+	onSeeDialog(data: any) {
 		this.getTransactionDetailData(data)
 		// this.apiService.GetTransactionById(data.id).subscribe(dataDetailInvoice => this.getTransactionDetailData(data));
 	}
 
 
-	getTransactionDetailData(dataTransaction) {
-		let myObjTransaction;
+	getTransactionDetailData(dataTransaction: { created_at: any; quot: any; departament: any; brand: any; num_aprob: any; cod_reply: any; messaje_reply: any; reference: any; total_tx: any; state: any; name_state: any; tag_first_name: any; tag_last_name: any; tag_type_identification: any; tag_number_identification: any; tag_email: any; tag_cellphone: any; tag_desc_selling: any; num_recibo: any; }) {
+		let myObjTransaction: any;
 		myObjTransaction = {
 			created_at: dataTransaction.created_at,
 			quot: dataTransaction.quot,
@@ -511,7 +538,7 @@ export class AssistedSellingComponent implements OnInit {
 		this.apiService.PopUpTransactionDetail(this.txDetailGrid);
 	}
 
-	numberOnly(event): boolean {
+	numberOnly(event: { which: any; keyCode: any; }): boolean {
 		const charCode = (event.which) ? event.which : event.keyCode;
 		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
 			return false;
@@ -521,4 +548,5 @@ export class AssistedSellingComponent implements OnInit {
 
 
 }
+
 

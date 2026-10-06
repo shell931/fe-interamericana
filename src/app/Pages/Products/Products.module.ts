@@ -9,7 +9,7 @@ import { DetailPageComponent } from './DetailPage/DetailPage.component';
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -38,20 +38,14 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
 import { BarRatingModule } from "ngx-bar-rating";
 @NgModule({
-	bootstrap: [
-		ProductsListComponent
-	  ],
-
 	imports: [
 		BarRatingModule,
 		LazyLoadImageModule,
-		NgxUsefulSwiperModule,
 		CommonModule,
 		RouterModule.forChild(ProductsRoutes),
-		FlexLayoutModule,
+		LayoutModule,
 		MatCardModule,
 		MatButtonModule,
 		MatMenuModule,
@@ -87,8 +81,8 @@ import { BarRatingModule } from "ngx-bar-rating";
 		
 	  ],
 	declarations: [
-		ProductsListComponent,
-		DetailPageComponent
 	]
 })
 export class ProductsModule { }
+
+

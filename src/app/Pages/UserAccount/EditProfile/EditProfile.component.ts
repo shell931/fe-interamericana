@@ -1,11 +1,29 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { ApiService } from '../../../Services/api.service';
 
 @Component({
    selector: 'app-EditProfile',
+   standalone: true,
+   imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatButtonModule,
+      MatCardModule
+   ],
    templateUrl: './EditProfile.component.html',
    styleUrls: ['./EditProfile.component.scss']
 })
@@ -16,23 +34,21 @@ export class EditProfileComponent implements OnInit {
    name = '';
    last_name = '';
    id_user = '';
-   type: string;
-   info: FormGroup;
-   address: FormGroup;
-   card: FormGroup;
+   type!: string;
+   info!: UntypedFormGroup;
+   address!: UntypedFormGroup;
+   card!: UntypedFormGroup;
    emailPattern: any = /\S+@\S+\.\S+/;
-   toastOption: ToastOptions = {
-      title: "Cuenta actualizada",
-      msg: "La información de tu cuenta ha sido actualizada!",
-      showClose: true,
-      timeout: 3000,
-      theme: "material"
-   };
+   toastOption: any = this.toastyService.success(
+  "La cuenta ha sido actualizada en el sistema!",
+  "Cuenta actualizada",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
 
    constructor(private route: ActivatedRoute,
       private router: Router,
-      private formGroup: FormBuilder,
-      private toastyService: ToastaService,
+      private formGroup: UntypedFormBuilder,
+      private toastyService: ToastrService,
       private apiService: ApiService,) {
 
       this.route.params.subscribe(params => {
@@ -56,7 +72,7 @@ export class EditProfileComponent implements OnInit {
             last_name: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.pattern(this.emailPattern)]]
          });
-         this.apiService.getUserProfileFront(id_user_front).subscribe(res => this.getDataUser(res, id_user_front));
+         this.apiService.getUserProfileFront(id_user_front).subscribe((res: any) => this.getDataUser(res, id_user_front));
 
 
 
@@ -80,7 +96,7 @@ export class EditProfileComponent implements OnInit {
 
    }
 
-   getDataUser(response, id_user_front) {
+   getDataUser(response: { first_name: string; last_name: string; email: string; }, id_user_front: string) {
       this.name = response.first_name;
       this.last_name = response.last_name;
       this.get_email = response.email;
@@ -94,13 +110,13 @@ export class EditProfileComponent implements OnInit {
     * Function is used to submit the profile info.
     * If form value is valid, redirect to profile page.
     */
-   submitProfileInfo(id_user) {
+   submitProfileInfo(id_user: string) {
       console.log(id_user);
       if (this.info.valid) {
          let data = this.info.value;
          const body = JSON.stringify({ first_name: data.first_name, last_name: data.last_name, type_user: 3 });
          console.log(body);
-         this.apiService.updateInformationUserFront(body, id_user).subscribe(
+         this.apiService.updateInformationUserFront(body, Number(id_user)).subscribe(
             response => {
                this.router.navigate(['/account/profile']).then(() => {
                   this.toastyService.success(this.toastOption);
@@ -132,19 +148,90 @@ export class EditProfileComponent implements OnInit {
    }
 
    /**
-    * Function is used to submit the profile card.
-    * If form value is valid, redirect to card page.
+    * Función para limpiar espacios en blanco de un campo cuando pierde el foco
     */
-   submitCard() {
-      if (this.card.valid) {
-         this.router.navigate(['/account/card']).then(() => {
-            this.toastyService.success(this.toastOption);
-         });
-      } else {
-         for (let i in this.card.controls) {
-            this.card.controls[i].markAsTouched();
+   trimField(fieldName: string) {
+      const control = this.card.get(fieldName);
+      if (control && control.value && typeof control.value === 'string') {
+         const trimmed = control.value.trim();
+         if (trimmed !== control.value) {
+            control.setValue(trimmed);
          }
       }
    }
 
+   /**
+    * Function is used to submit the profile card.
+    * If form value is valid, redirect to card page.
+    */
+   submitCard() {
+      // Limpiar espacios en blanco de los campos de texto antes de validar
+      const cardNumberControl = this.card.get('card_number');
+      const cvvControl = this.card.get('cvv');
+      const nameControl = this.card.get('name');
+      
+      if (cardNumberControl) {
+         const value = cardNumberControl.value;
+         if (value && typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed !== value) {
+               cardNumberControl.setValue(trimmed);
+            }
+         }
+      }
+      
+      if (cvvControl) {
+         const value = cvvControl.value;
+         if (value && typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed !== value) {
+               cvvControl.setValue(trimmed);
+            }
+         }
+      }
+      
+      if (nameControl) {
+         const value = nameControl.value;
+         if (value && typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed !== value) {
+               nameControl.setValue(trimmed);
+            }
+         }
+      }
+      
+      // Actualizar validación después de limpiar
+      this.card.updateValueAndValidity();
+      
+      // Esperar un tick para que Angular actualice el estado del formulario
+      setTimeout(() => {
+         if (this.card.valid) {
+            // Navegar a la página de tarjetas (la ruta correcta es /account/cards con 's')
+            this.router.navigate(['/account/cards']).then(() => {
+               this.toastyService.success(this.toastOption);
+            });
+         } else {
+            // Marcar todos los campos como touched para mostrar errores
+            Object.keys(this.card.controls).forEach(key => {
+               const control = this.card.get(key);
+               if (control) {
+                  control.markAsTouched();
+                  control.updateValueAndValidity();
+               }
+            });
+            
+            // Mostrar mensaje de error si el formulario no es válido
+            console.log('Form errors:', this.card.errors);
+            console.log('Form valid:', this.card.valid);
+            Object.keys(this.card.controls).forEach(key => {
+               const control = this.card.get(key);
+               if (control && control.errors) {
+                  console.log(`Field ${key} errors:`, control.errors);
+               }
+            });
+         }
+      }, 0);
+   }
+
 }
+
