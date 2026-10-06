@@ -4674,3 +4674,35 @@ div.main-container div.container.container-wide div.destacados-grid div.products
     object-position: 25% center !important;
   }
 }
+
+/* Interamericana: encabezado SEO de la página y descripción de sección */
+.page-header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .page-description {
+        color: #666;
+        line-height: 1.5;
+        margin: 0;
+    }
+}
+
+.section-description {
+    color: #666;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .page-header .page-title {
+        font-size: 1.4rem;
+    }
+}

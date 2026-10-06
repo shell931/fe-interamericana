@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetect
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { ApiService } from '../../../Services/api.service';
+import { SeoService } from '../../../Services/seo.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { EmbryoService } from '../../../Services/Embryo.service';
@@ -122,6 +123,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       private apiService: ApiService,
       private changeDetectorRef: ChangeDetectorRef,
       private dialog: MatDialog,
+      private seoService: SeoService,
    ) {}
 
    storelist: Prod[] = [];
@@ -132,8 +134,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       
       this.route.params.subscribe(params => {
          this.route.queryParams.forEach(queryParams => {
-            this.getPageTitle();
-            console.log("aa");
+            this.type = params['type'];
+            this.category = queryParams['category'];
+
+            // Configurar SEO según el tipo de producto
+            this.setSeoForProductType(this.type);
          });
       });
 
@@ -309,9 +314,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
    public getBannerImages(): Array<{src: string, alt: string}> {
       // Return the banner images
       return [
-         { src: 'assets/images/BANNER3swift.jpg', alt: 'Banner 1' },
-         { src: 'assets/images/Banner3Swiftly.jpg', alt: 'Banner 2' },
-         { src: 'assets/images/New2.jpg', alt: 'Banner 3' }
+         { src: 'assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner.jpg', alt: 'Repuestos de carro y autopartes - Interamericana' },
+         { src: 'assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner2.jpg', alt: 'Escobillas de grafito, rodamientos y farolas para carros' }
       ];
    }
 
@@ -390,14 +394,126 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       }
    }
 
-   public getPageTitle() {
-      this.pageTitle = null;
-      this.subPageTitle = null;
+   private setSeoForProductType(type: string): void {
+      if (!type) {
+         this.seoService.setRepuestosPageSeo();
+         return;
+      }
 
-      switch (this.type || this.category) {
-         case undefined:
-            this.pageTitle = this.getDefaultPageTitle();
-            break;
+      const typeLower = type.toLowerCase();
+
+      if (typeLower.includes('escobilla')) {
+         this.seoService.setEscobillasPageSeo(type);
+      } else if (typeLower.includes('rodamiento')) {
+         this.seoService.setRodamientosPageSeo(type);
+      } else if (typeLower.includes('farola') || typeLower.includes('luz') || typeLower.includes('balastro')) {
+         this.seoService.setFarolasPageSeo(type);
+      } else {
+         this.seoService.setRepuestosPageSeo(type);
+      }
+   }
+
+   getPageTitle(): string {
+      if (!this.type) {
+         return 'Escobillas de Grafito y Rodamientos - Interamericana';
+      }
+
+      const typeLower = this.type.toLowerCase();
+
+      if (typeLower.includes('escobilla')) {
+         return 'Escobillas de Grafito y Carbón para Carro';
+      } else if (typeLower.includes('rodamiento')) {
+         return 'Rodamientos para Carro y Vehículos';
+      } else if (typeLower.includes('farola') || typeLower.includes('luz')) {
+         return 'Farolas y Luces para Carro';
+      } else if (typeLower.includes('balastro')) {
+         return 'Balastros para Farolas de Carro';
+      } else {
+         return `${this.type} - Interamericana`;
+      }
+   }
+
+   getPageDescription(): string {
+      if (!this.type) {
+         return 'Especialistas en escobillas de grafito y carbón, rodamientos, farolas y luces para carro.';
+      }
+
+      const typeLower = this.type.toLowerCase();
+
+      if (typeLower.includes('escobilla')) {
+         return 'Especialistas en escobillas de grafito y carbón de alta calidad para limpiaparabrisas. Las mejores escobillas compatible con todas las marcas de vehículos.';
+      } else if (typeLower.includes('rodamiento')) {
+         return 'Rodamientos de precisión para ruedas, motor y caja de cambios. Durabilidad y rendimiento garantizado para tu vehículo.';
+      } else if (typeLower.includes('farola') || typeLower.includes('luz')) {
+         return 'Farolas y luces para carro de alta calidad. Iluminación perfecta y seguridad garantizada en la carretera.';
+      } else if (typeLower.includes('balastro')) {
+         return 'Balastros para farolas de carro. Componentes eléctricos de calidad para el sistema de iluminación de tu vehículo.';
+      } else {
+         return `Encuentra los mejores ${this.type} para tu vehículo. Especialistas en escobillas y rodamientos.`;
+      }
+   }
+
+   getSectionTitle(): string {
+      if (!this.type) {
+         return 'Productos Destacados';
+      }
+
+      const typeLower = this.type.toLowerCase();
+
+      if (typeLower.includes('escobilla')) {
+         return 'Escobillas Destacadas';
+      } else if (typeLower.includes('rodamiento')) {
+         return 'Rodamientos Destacados';
+      } else if (typeLower.includes('farola') || typeLower.includes('luz')) {
+         return 'Farolas y Luces Destacadas';
+      } else if (typeLower.includes('balastro')) {
+         return 'Balastros Destacados';
+      } else {
+         return 'Productos Destacados';
+      }
+   }
+
+   getSectionDescription(): string {
+      if (!this.type) {
+         return 'Las mejores escobillas de grafito, rodamientos y repuestos seleccionados especialmente para ti.';
+      }
+
+      const typeLower = this.type.toLowerCase();
+
+      if (typeLower.includes('escobilla')) {
+         return 'Las mejores escobillas de grafito y carbón para tu vehículo. Especialistas en escobillas con calidad y durabilidad garantizada.';
+      } else if (typeLower.includes('rodamiento')) {
+         return 'Rodamientos de alta precisión para un funcionamiento óptimo de tu vehículo. Calidad profesional garantizada.';
+      } else if (typeLower.includes('farola') || typeLower.includes('luz')) {
+         return 'Farolas y luces de calidad superior para una iluminación perfecta y segura en tu vehículo.';
+      } else if (typeLower.includes('balastro')) {
+         return 'Balastros confiables para el sistema de iluminación de tu vehículo.';
+      } else {
+         return `Los mejores ${this.type} seleccionados por nuestros especialistas en escobillas y rodamientos.`;
+      }
+   }
+
+   getProductImageAlt(product: any): string {
+      if (!product) {
+         return 'Repuesto de carro - Interamericana';
+      }
+
+      const productName = product.name || 'Producto';
+      const productType = product.type || this.type || 'repuesto';
+
+      // Generar alt tag descriptivo basado en el tipo de producto
+      const typeLower = String(productType).toLowerCase();
+
+      if (typeLower.includes('escobilla')) {
+         return `${productName} - Escobilla de grafito para carro | Interamericana`;
+      } else if (typeLower.includes('rodamiento')) {
+         return `${productName} - Rodamiento para carro | Interamericana`;
+      } else if (typeLower.includes('farola') || typeLower.includes('luz')) {
+         return `${productName} - Farola y luz para carro | Interamericana`;
+      } else if (typeLower.includes('balastro')) {
+         return `${productName} - Balastro para farola de carro | Interamericana`;
+      } else {
+         return `${productName} - Repuesto de carro | Interamericana`;
       }
    }
 

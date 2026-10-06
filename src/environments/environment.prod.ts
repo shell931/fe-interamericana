@@ -1,5 +1,7 @@
 export const environment = {
   production: true,
+  get domain() { return `${window.location.protocol}//${window.location.host}`; },
+  basePath: '/interamericana',
   api: {
     get baseUrl() { return `${window.location.protocol}//${window.location.host}/api/`; },
     get baseAuthUrl() { return `${window.location.protocol}//${window.location.host}/auth/`; },

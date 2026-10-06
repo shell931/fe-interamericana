@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  domain: 'http://localhost:4216',
+  basePath: '/interamericana',
   api: {
     // baseUrl: 'https://ofertas-swiftly.com/api/',
     // baseAuthUrl: 'https://ofertas-swiftly.com/auth/',
