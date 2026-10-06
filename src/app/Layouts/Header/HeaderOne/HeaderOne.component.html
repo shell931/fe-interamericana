@@ -147,7 +147,7 @@
             </li>
             <li class="account">
               <a *ngIf="show" [matMenuTriggerFor]="loginuser" class="btn-xs">
-                <span>MI SWIFTLY</span> <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                <span>MI CUENTA</span> <i class="fa fa-chevron-down" aria-hidden="true"></i>
               </a>
             </li>
             <li class="account">
@@ -157,7 +157,7 @@
             </li>
             <li class="account">
               <a *ngIf="show_store_pr" [matMenuTriggerFor]="loginuser_commerce" class="space_menus pointer" (click)="onCommerceMenuClick('Abrir menú comercio')">
-                MI SWIFTLY<span *ngIf="validate_img" class="material-icons" style="color:red;margin-left: 5px;">warning</span><i class="fa fa-chevron-down" aria-hidden="true"></i>
+                MI CUENTA<span *ngIf="validate_img" class="material-icons" style="color:red;margin-left: 5px;">warning</span><i class="fa fa-chevron-down" aria-hidden="true"></i>
               </a>
             </li>
           </ul>
@@ -195,10 +195,8 @@
 
   <!-- Info -->
   <mat-menu #info_business="matMenu" class="custom-menu">
-    <a mat-menu-item [routerLink]="['/terms_conditions']">Términos y Condiciones</a>
+    <!-- Interamericana: solo protección de datos -->
     <a mat-menu-item [routerLink]="['/data_protection']">Protección de datos</a>
-    <a mat-menu-item [routerLink]="['/payment_information']">Proceso de pago</a>
-    <a mat-menu-item [routerLink]="['/calculator2']">Calculadora de tarifas</a>
   </mat-menu>
 </header>
 
@@ -224,12 +222,12 @@
       <li><a *ngIf="show_add" [routerLink]="['/session/signin']" (click)="closeMobileMenu()">ACCEDER / REGISTRAR</a></li>
       <li>
         <a *ngIf="show" [matMenuTriggerFor]="loginuser_mobile">
-          <span>MI SWIFTLY</span> <i class="fa fa-chevron-down"></i>
+          <span>MI CUENTA</span> <i class="fa fa-chevron-down"></i>
         </a>
       </li>
       <li>
         <a *ngIf="show_store_pr" [matMenuTriggerFor]="loginuser_commerce_mobile">
-          MI SWIFTLY<span *ngIf="validate_img" class="material-icons" style="color:red;margin-left: 5px;">warning</span><i class="fa fa-chevron-down" aria-hidden="true"></i>
+          MI CUENTA<span *ngIf="validate_img" class="material-icons" style="color:red;margin-left: 5px;">warning</span><i class="fa fa-chevron-down" aria-hidden="true"></i>
         </a>
       </li>
     </ul>
@@ -246,10 +244,8 @@
 
 <!-- Info Mobile -->
 <mat-menu #info_business_mobile="matMenu" class="custom-menu">
-  <a mat-menu-item [routerLink]="['/terms_conditions']" (click)="closeMobileMenu()">Términos y Condiciones</a>
+  <!-- Interamericana: solo protección de datos -->
   <a mat-menu-item [routerLink]="['/data_protection']" (click)="closeMobileMenu()">Protección de datos</a>
-  <a mat-menu-item [routerLink]="['/payment_information']" (click)="closeMobileMenu()">Proceso de pago</a>
-  <a mat-menu-item [routerLink]="['/calculator2']" (click)="closeMobileMenu()">Calculadora de tarifas</a>
 </mat-menu>
 
 <mat-menu #loginuser_mobile="matMenu" class="custom-menu">
