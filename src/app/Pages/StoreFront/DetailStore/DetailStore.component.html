@@ -2,10 +2,7 @@
     <div class="store-layout">
         <!-- Sidebar -->
         <aside class="store-sidebar">
-            <!-- Store Header -->
-            <div class="store-header">
-                <h1 class="store-title">{{name_store}}</h1>
-            </div>
+            <!-- Store Header (oculto en Interamericana: tienda única) -->
             
             <!-- Categories Filter -->
             <div class="categories-filter">
@@ -24,7 +21,7 @@
                     <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding class="category-item">
                         <mat-list-item>
                             <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
-                                <span class="category-text">{{node.name}}</span>
+                                <span class="category-text category-text--parent">{{node.name}}</span>
                             </a>
                         </mat-list-item>
                     </mat-tree-node>
@@ -95,10 +92,7 @@
                             
                             <!-- Price -->
                             <div class="product-price">
-                                <span class="current-price">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
-                                <span class="payment-info">
-                                    <img class="payment-cards" src="assets/images/tarjetas.png" alt="payment methods">
-                                </span>
+                                <span class="current-price price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
                             </div>
                             
                             <!-- Rating -->
@@ -128,7 +122,7 @@
                             <!-- Delivery Info -->
                             <div class="delivery-info">
                                 <img src="assets/images/shipping-fast-solid.svg" alt="shipping">
-                                <span>Envío gratis</span>
+                                <span>Envío a todo el país</span>
                             </div>
                         </div>
                     </div>

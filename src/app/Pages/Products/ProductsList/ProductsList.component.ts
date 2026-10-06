@@ -541,7 +541,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
    }
 
    extendGridStructure() {
-      this.router.navigate(['/storelist']);
+      // Interamericana: el catálogo completo es la tienda única (id 6)
+      this.router.navigate(['/storefront/6']);
    }
 
    /**

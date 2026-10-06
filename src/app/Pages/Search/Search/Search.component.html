@@ -26,9 +26,7 @@
                             <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding
                                 class="category-item">
                                 <div class="category-link" (click)="toggleCategory(node)">
-                                    <img *ngIf="node.icon" src="assets/images/icons_category_product/{{node.icon}}"
-                                        alt="category icon" class="category-icon">
-                                    <span class="category-text">{{node.name}}</span>
+                                    <span class="category-text category-text--parent">{{node.name}}</span>
                                     <button mat-icon-button [attr.aria-label]="'toggle ' + node.name"
                                         class="expand-button">
                                         <mat-icon class="expand-icon">
@@ -69,14 +67,9 @@
                                     class="title-link ">{{card?.name}}</a> </h6>
 
                             <div class="price-section">
-                                <p class="price red ">
-                                    <span class="price-red ">{{card?.price | currency : 'USD' : 'symbol' :
+                                <p class="price price-container-custom">
+                                    <span class="price-new price-new-custom">{{card?.price | currency : 'USD' : 'symbol' :
                                         '1.0-0'}}</span>
-                                </p>
-                                <p class="price ">
-                                    <span class="price-new ">{{card?.price | currency : 'USD' : 'symbol' :
-                                        '1.0-0'}}</span>
-                                    <img class="cards " src="assets/images/tarjetas.png " />
                                 </p>
                             </div>
 
@@ -85,7 +78,7 @@
                             </div>
 
                             <span class="deliveryicon ">
-                                <img src="assets/images/shipping-fast-solid.svg " /> Envío gratis</span>
+                                <img src="assets/images/shipping-fast-solid.svg " /> Envío a todo el país</span>
 
                             <div class="buttons-section">
                                 <button (click)="productAddToWishlist(card, i+ '-wishlist') " type="button "

@@ -236,6 +236,8 @@ export class DetailStoreComponent implements OnInit {
         }            
         this.dataSourceTree.data = this.get_categories;
         this.dataSourceN.data = this.get_categories;
+        // Interamericana: árbol de categorías siempre expandido por defecto
+        this.treeControlN.expandAll();
     }
 
     createSubcategories(subcate: string | any[], id_store: any) {

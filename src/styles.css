@@ -5884,3 +5884,15 @@ body::before {
     display: none;
   }
 }
+/* ===== Interamericana customizations ===== */
+
+/* Precio único en tarjetas de producto (sin precio tachado ni tarjetas) */
+.price-container-custom {
+  padding-bottom: 10px !important;
+}
+
+.price-new-custom {
+  font-weight: bold !important;
+  color: #333333 !important;
+  text-decoration: none !important;
+}

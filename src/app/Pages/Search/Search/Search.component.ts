@@ -57,6 +57,7 @@ interface subcategoryNode {
     children?: subcategoryNode[];
     type: string;
     icon: any;
+    active?: boolean;
 }
 
 interface ExampleFlatNode {
@@ -200,9 +201,9 @@ export class SearchComponent implements OnInit {
     getCategoriesMenu(response: any) {
         this.get_categories = [];
         for (var i = 0; i < response.length; i++) {
-            // Filtrar categorías hasta "escobillas"
-            if (response[i].name_category && response[i].name_category.toLowerCase().includes('escobillas')) {
-                break; // Detener cuando llegue a escobillas
+            // Interamericana: mostrar solo categorías activas
+            if (!response[i].active) {
+                continue;
             }
 
             let subcategor = this.createSubcategories(response[i].rel_categories);
@@ -213,9 +214,12 @@ export class SearchComponent implements OnInit {
                     type: 'category',
                     children: subcategor,
                     icon: response[i].icon,
+                    active: response[i].active
                 });
         }
         this.dataSourceN.data = this.get_categories;
+        // Interamericana: árbol de categorías expandido por defecto
+        this.treeControlN.expandAll();
     }
 
     createSubcategories(subcate: any) {

@@ -136,6 +136,13 @@
             <section class="products-area" aria-label="Productos destacados">
                 <h2 class="section-title">{{ getSectionTitle() }}</h2>
                 <p class="section-description">{{ getSectionDescription() }}</p>
+
+                <!-- Interamericana: acceso directo al catálogo completo -->
+                <div class="ver-mas-productos-section" style="text-align: center; margin: 0 0 20px;">
+                    <button class="btn btn-block transparent-btn" (click)="extendGridStructure()">
+                        VER TODOS LOS PRODUCTOS
+                    </button>
+                </div>
                 
                 <!-- Featured Products Grid -->
                 <div class="products-grid" fxLayout="row wrap">
@@ -150,8 +157,7 @@
                             <div class="right-block">
                                 <h6 class="titulo_producto"><a *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]" class="title-link">{{ (card?.name?.length > 26) ? (card?.name | slice:0:26) + '…' : card?.name }}</a></h6>
                                 <h6 class="titulo_producto"><a *ngIf="!card?.id_product" [routerLink]="[card?.route_product]" class="title-link">{{ (card?.name?.length > 26) ? (card?.name | slice:0:26) + '…' : card?.name }}</a></h6>
-                                <p class="price"><span class="price-new">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span></p>
-                                <p class="price red"><span class="price-red">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}} <img class="cards" src="assets/images/tarjetas.png"/> </span></p>
+                                <p class="price price-container-custom"><span class="price-new price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span></p>
                                 <button (click)="productAddToWishlist(card, i+'-wishlist')" [id]="i+'-wishlist'" type="button" class="wishlist btn-button" [class.wishlist-active]="checkWishlistAlready(card)" title="Añadir a lista de deseos">
                                     <i [class]="checkWishlistAlready(card) ? 'fa fa-heart' : 'fa fa-heart-o'"></i>
                                 </button>
@@ -161,17 +167,17 @@
                                 <div class="btn_comprar" *ngIf="!checkCartAlready(card)">
                                     <button class="btn-button" mat-mini-fab *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                 </div>
-                                <span class="deliveryicon"><img src="assets/images/shipping-fast-solid.svg" /> Envío gratis</span>
+                                <span class="deliveryicon"><img src="assets/images/shipping-fast-solid.svg" /> Envío a todo el país</span>
                                 <bar-rating [(rate)]="card.rating" [max]="5"></bar-rating>
                             </div>
                         </mat-card-content>
                     </mat-card>
                 </div>
                 
-                <!-- VER MAS PRODUCTOS BUTTON -->
+                <!-- VER TODOS LOS PRODUCTOS BUTTON -->
                 <div class="ver-mas-productos-section" style="text-align: center; margin: 30px 0;">
                     <button class="btn btn-block transparent-btn" (click)="extendGridStructure()">
-                        VER MAS PRODUCTOS
+                        VER TODOS LOS PRODUCTOS
                     </button>
                 </div>
             </section>
