@@ -15,7 +15,7 @@
             "tsConfig": "tsconfig.app.json",
             "browser": "src/main.ts",
             "polyfills": ["src/polyfills.ts"],
-            "outputPath": "dist/swiftly",
+            "outputPath": "dist/interamericana",
             "assets": [
               "src/favicon.ico",
               "src/assets",

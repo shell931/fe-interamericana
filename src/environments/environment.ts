@@ -14,11 +14,11 @@ export const environment = {
 
     baseBucketImageUrl: 'https://market-docus-v2.s3.us-east-2.amazonaws.com/',
     // baseAuthGateway: 'http://52.44.5.11:1700/marketgateway/public/'
-    baseAuthGateway: 'https://ofertas-swiftly.com/gateway/public/',
+    baseAuthGateway: 'https://interamericana.store/gateway/public/',
     key: '2204119136',
     hash: 'bdd05095c22502bbd11161c206a99785c0d44abedc9b11cb9f96af4267e0993b342ef0d88956a356517bda1005c1ae437e609d789416200a746d2f438888fc95',
-    productinfo: 'Compra en swiftly',
-    url_response: 'http://localhost:4200/checkout/final-receipt',
+    productinfo: 'Compra en interamericana',
+    url_response: 'http://localhost:4216/checkout/final-receipt',
     url_webhook: 'https://38d30d8e0158.ngrok-free.app/api/payment-webhook/'
   },
 };

@@ -13,7 +13,7 @@ import { LoaderComponent } from './Global/Loader/Loader.component';
   imports: [RouterOutlet, GlobalModule, LoadingBarModule, LoaderComponent],
 })
 export class AppComponent implements AfterViewInit {
-  title = 'Swiftly';
+  title = 'interamericana';
   
   @ViewChild('animatedElement', { static: false }) animatedElement!: ElementRef;
   

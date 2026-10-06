@@ -8,10 +8,13 @@
     "start:legacy": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng serve",
     "build": "ng build",
     "build:legacy": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng build",
-    "build:prod": "ng build --configuration production --aot --base-href \"/swiftly/\"",
+    "build:prod": "npm run generate-sitemap:prod && ng build --configuration production --aot --base-href \"/interamericana/\"",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "generate-sitemap:prod": "node scripts/generate-sitemap.js https://tu-dominio.com /interamericana",
+    "postbuild": "npm run generate-sitemap:prod"
   },
   "dependencies": {
     "@angular/animations": "^20.2.3",
