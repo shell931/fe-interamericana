@@ -18,7 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatListModule } from '@angular/material/list';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { PromoDialogComponent } from '../../../Global/PromoDialog/PromoDialog.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { GlobalModule } from '../../../Global/Global.module';
 import { TemplatesModule } from '../../../Templates/Templates.module';
@@ -151,39 +150,13 @@ export class ProductsListComponent implements OnInit, OnDestroy {
             console.error('API Error:', error);
          }
       );
-      this.apiService.getStoreWithoutAuth().subscribe((res: any) => this.getStoreData(res));
 
-      // Abrir diálogo promocional (reemplazo del services-section)
-      this.maybeOpenPromoDialog();
    }
 
    ngOnDestroy() {
       // Cleanup any subscriptions if needed
    }
 
-   private maybeOpenPromoDialog(): void {
-      // Mostrar solo una vez por sesión
-      if (sessionStorage.getItem('promo_shown') === '1') {
-         return;
-      }
-      sessionStorage.setItem('promo_shown', '1');
-
-      this.dialog.open(PromoDialogComponent, {
-         panelClass: 'promo-dialog-panel',
-         maxWidth: 'none',
-         width: 'auto',
-         hasBackdrop: true,
-         backdropClass: 'promo-backdrop',
-         closeOnNavigation: true,
-         disableClose: false,
-         autoFocus: false,
-         restoreFocus: false,
-         data: {
-            imageUrl: 'https://market-docus-v2.s3.us-east-2.amazonaws.com/Modal+Crear+tienda.png',
-            alt: 'Crea tu tienda'
-         }
-      });
-   }
 
    mostrarbanner1() {
       const bannershow1 = document.getElementById("bannershow1");

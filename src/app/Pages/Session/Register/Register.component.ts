@@ -21,7 +21,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
-import { PromoDialogComponent } from '../../../Global/PromoDialog/PromoDialog.component';
 
 export interface Departament {
     id_departament: string;
@@ -115,7 +114,6 @@ export class RegisterComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.maybeOpenStoreModal();
         // START ANGULAR MAT SEARCH DEPARTAMENT
         this.departments = [];
         this.apiService.getDepartmentsFront().subscribe(
@@ -220,34 +218,6 @@ export class RegisterComponent implements OnInit {
         return of(items).pipe(delay(500));
     }
 
-    private maybeOpenStoreModal(): void {
-        // Verificar si ya se mostró el diálogo la primera vez
-        if (localStorage.getItem('store-modal-first-visit-shown') === '1') {
-            return;
-        }
-
-        // Marcar que ya se mostró
-        localStorage.setItem('store-modal-first-visit-shown', '1');
-
-        // Abrir el diálogo después de un pequeño delay para que la página cargue
-        setTimeout(() => {
-            this.dialog.open(PromoDialogComponent, {
-                panelClass: 'promo-dialog-panel',
-                maxWidth: 'none',
-                width: 'auto',
-                hasBackdrop: true,
-                backdropClass: 'promo-backdrop',
-                closeOnNavigation: true,
-                disableClose: false,
-                autoFocus: false,
-                restoreFocus: false,
-                data: {
-                    imageUrl: 'https://market-docus-v2.s3.us-east-2.amazonaws.com/Modal+Crear+tienda.png',
-                    alt: 'Crea tu tienda'
-                }
-            });
-        }, 500);
-    }
 
     register_user_front() {
         this.validate_user = false;

@@ -20,7 +20,6 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { AppLogoComponent } from '../../../Global/AppLogo/AppLogo.component';
 import { HeaderCartComponent } from '../../../Global/HeaderCart/HeaderCart.component';
 import { WishListComponent } from '../../../Global/WishList/WishList.component';
-import { PromoDialogComponent } from '../../../Global/PromoDialog/PromoDialog.component';
 import $ from 'jquery';
 export interface Prod {
    image: string;
@@ -213,31 +212,10 @@ export class HeaderOneComponent implements OnInit, OnDestroy {
       try { (document.activeElement as HTMLElement)?.blur?.(); } catch {}
    }
 
-   // Open promo dialog before navigating to Sign In / Register
+   // Navigate to Sign In (promo dialog removed for Interamericana)
    public openSignInWithPromo(event?: Event) {
       try { event?.preventDefault?.(); } catch {}
-      const promoKey = 'signinPromoShown';
-      if (!sessionStorage.getItem(promoKey)) {
-         sessionStorage.setItem(promoKey, 'true');
-         const dialogRef = this.dialog.open(PromoDialogComponent, {
-            panelClass: 'promo-dialog-panel',
-            maxWidth: 'none',
-            width: 'auto',
-            backdropClass: 'promo-backdrop',
-            disableClose: false,
-            autoFocus: false,
-            restoreFocus: false,
-            data: {
-              imageUrl: 'https://market-docus-v2.s3.us-east-2.amazonaws.com/Modal+Crear+tienda.png',
-              alt: 'Crea tu tienda'
-            }
-         });
-         dialogRef.afterClosed().subscribe(() => {
-            this.router.navigate(['/session/signin']);
-         });
-      } else {
-         this.router.navigate(['/session/signin']);
-      }
+      this.router.navigate(['/session/signin']);
    }
 
 trackByFn(index: number, item: any): any {

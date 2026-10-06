@@ -93,28 +93,6 @@
             </section>
         </div>
 
-        <!-- TIENDAS DESTACADAS SECTION -->
-        <div class="stores-section">
-            <div class="stores-area">
-                <h2 class="section-title">TIENDAS DESTACADAS</h2>
-                
-                <!-- Featured Stores Grid -->
-                <div class="stores-grid" fxLayout="row wrap">
-                    <mat-card class="example-card card_store" fxFlex="25%" fxFlex.xs="50%" fxFlex.sm="33%" *ngFor="let store of obsStore | async; let i = index">
-                        <mat-card-content class="store-content">
-                            <a class="p-link link_tienda" [routerLink]="[store?.route_store]">
-                                <img class="store-logo" mat-card-image [src]="store?.logo_store" [ngClass]="{ transparent: !loaded }" (load)="onLoad()" alt="Store Logo">
-                            </a>
-                            <div class="store-info">
-                                <h6 class="store-name"><a [routerLink]="[store?.route_store]" class="title-link">{{store?.name_store}}</a></h6>
-                                <p class="store-description">{{store?.description}}</p>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <!-- GARANTÍAS SECTION - HORIZONTAL LAYOUT - FULL WIDTH -->

@@ -30,7 +30,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatDialog } from '@angular/material/dialog';
-import { PromoDialogComponent } from '../../../Global/PromoDialog/PromoDialog.component';
 
 // models
 import { CategoryStore } from '../../../Models/CategoryStore';
@@ -183,22 +182,6 @@ export class SellComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Show session-based promo dialog on first visit to Sell per session
-    const promoKey = 'sellPromoShown';
-    if (!sessionStorage.getItem(promoKey)) {
-      sessionStorage.setItem(promoKey, 'true');
-      this.dialog.open(PromoDialogComponent, {
-        panelClass: 'promo-dialog-panel',
-        maxWidth: 'none',
-        width: 'auto',
-        backdropClass: 'promo-backdrop',
-        data: {
-          imageUrl: 'https://market-docus-v2.s3.us-east-2.amazonaws.com/Modal+Crear+tienda.png',
-          alt: 'Crea tu tienda'
-        },
-        disableClose: false
-      });
-    }
 
     // START ANGULAR MAT SEARCH CATEGORIES
     this.storecategory = [];
