@@ -4706,3 +4706,62 @@ div.main-container div.container.container-wide div.destacados-grid div.products
         font-size: 1.4rem;
     }
 }
+
+/* === INTERAMERICANA: home sin barra lateral, cards centradas y anchas === */
+
+/* Oculta visualmente el header pero lo mantiene para SEO y lectores de pantalla */
+.page-header.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.main-container .container.container-wide {
+  max-width: 1400px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.destacados-grid.sin-sidebar {
+  grid-template-columns: 1fr !important;
+}
+
+.destacados-grid.sin-sidebar .products-area .products-grid[fxLayout="row wrap"] {
+  grid-template-columns: repeat(5, 1fr) !important;
+  justify-content: center !important;
+  padding: 20px 0 !important;
+  margin: 0 !important;
+}
+
+.destacados-grid.sin-sidebar .products-area .products-grid mat-card.card_store_prod {
+  max-width: none !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .destacados-grid.sin-sidebar .products-area .products-grid[fxLayout="row wrap"] {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .destacados-grid.sin-sidebar .products-area .products-grid[fxLayout="row wrap"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .destacados-grid.sin-sidebar .products-area .products-grid[fxLayout="row wrap"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 10px 0 !important;
+  }
+}

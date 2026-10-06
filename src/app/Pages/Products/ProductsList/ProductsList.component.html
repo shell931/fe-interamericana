@@ -28,7 +28,7 @@
     <div class="container container-wide">
 
         <!-- Header principal con SEO -->
-        <header class="page-header mt-4">
+        <header class="page-header visually-hidden">
             <h1 class="page-title">{{ getPageTitle() }}</h1>
             <p class="page-description">{{ getPageDescription() }}</p>
         </header>
@@ -41,75 +41,7 @@
 
 
         <!-- Main Layout with Sidebar -->
-        <div class="destacados-grid">
-            <!-- Left Sidebar -->
-            <div class="sidebar-banners">
-
-                <!-- Banner 4 - Additional Banner 1 -->
-                <div class="sidebar-banner banner-4">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/id2-banner1.jpg" alt="Banner 4">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner 5 - Additional Banner 2 -->
-                <div class="sidebar-banner banner-5">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/id2-banner2.jpg" alt="Banner 5">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner 6 - Viajes 1 -->
-                <div class="sidebar-banner banner-6">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/banners-viajes-1.png" alt="Viajes 1">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner 7 - Viajes 2 -->
-                <div class="sidebar-banner banner-7">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/banners-viajes-2.png" alt="Viajes 2">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner 8 - Viajes 3 -->
-                <div class="sidebar-banner banner-8">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/banners-viajes-3.png" alt="Viajes 3">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner 9 - Viajes 4 -->
-                <div class="sidebar-banner banner-9">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/banners-viajes-4.png" alt="Viajes 4">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner 10 - Viajes 5 -->
-                <div class="sidebar-banner banner-10">
-                    <div class="banner-content">
-                        <div class="banner-image">
-                            <img src="assets/kompralostyle/image/catalog/banners/banners-viajes-5.png" alt="Viajes 5">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
+        <div class="destacados-grid sin-sidebar">
             <!-- Main Content Area -->
             <section class="products-area" aria-label="Productos destacados">
                 <h2 class="section-title">{{ getSectionTitle() }}</h2>
