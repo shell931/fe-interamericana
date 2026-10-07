@@ -56,32 +56,34 @@
                 
                 <!-- Featured Products Grid -->
                 <div class="products-grid" fxLayout="row wrap">
-                    <mat-card class="example-card card_store_prod" fxFlex="25%" fxFlex.xs="50%" fxFlex.sm="50%" *ngFor="let card of productsGrid; let i = index">
-                        <mat-card-content class="product-content producto_destacado relative">
-                            <a class="p-link link_producto" *ngIf="!card?.id" [routerLink]="[card?.route_product]">
-                                <img class="img_size image_pixeled" mat-card-image [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)" (error)="onImageError($event)">
+                    <!-- Interamericana: card propia (clases ia-product-card), estilo del sitio original -->
+                    <article class="ia-product-card" *ngFor="let card of productsGrid; let i = index">
+                        <div class="ia-product-card__media">
+                            <a *ngIf="!card?.id" [routerLink]="[card?.route_product]">
+                                <img class="ia-product-card__img" [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)" (error)="onImageError($event)">
                             </a>
-                            <a class="p-link" *ngIf="card?.id" [routerLink]="['/products', card?.type, card?.id_product]">
-                                <img class="img_size image_pixeled" mat-card-image [src]="card?.image" [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)" (error)="onImageError($event)">
+                            <a *ngIf="card?.id" [routerLink]="['/products', card?.type, card?.id_product]">
+                                <img class="ia-product-card__img" [src]="card?.image" [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)" (error)="onImageError($event)">
                             </a>
-                            <div class="right-block">
-                                <h6 class="titulo_producto"><a *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]" class="title-link">{{ (card?.name?.length > 26) ? (card?.name | slice:0:26) + '…' : card?.name }}</a></h6>
-                                <h6 class="titulo_producto"><a *ngIf="!card?.id_product" [routerLink]="[card?.route_product]" class="title-link">{{ (card?.name?.length > 26) ? (card?.name | slice:0:26) + '…' : card?.name }}</a></h6>
-                                <p class="price price-container-custom"><span class="price-new price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span></p>
-                                <button (click)="productAddToWishlist(card, i+'-wishlist')" [id]="i+'-wishlist'" type="button" class="wishlist btn-button" [class.wishlist-active]="checkWishlistAlready(card)" title="Añadir a lista de deseos">
-                                    <i [class]="checkWishlistAlready(card) ? 'fa fa-heart' : 'fa fa-heart-o'"></i>
-                                </button>
-                                <div class="btn_comprar" *ngIf="checkCartAlready(card)">
-                                    <button mat-mini-fab (click)="addToCartProduct(card)" class="btn-button"><i class="fa fa-cart-plus" aria-hidden="true"></i></button>
-                                </div>
-                                <div class="btn_comprar" *ngIf="!checkCartAlready(card)">
-                                    <button class="btn-button" mat-mini-fab *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]"><i class="fa fa-eye" aria-hidden="true"></i></button>
-                                </div>
-                                <span class="deliveryicon"><img src="assets/images/shipping-fast-solid.svg" /> Envío a todo el país</span>
-                                <bar-rating [(rate)]="card.rating" [max]="5"></bar-rating>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--wishlist" [class.is-active]="checkWishlistAlready(card)" [id]="i+'-wishlist'" (click)="productAddToWishlist(card, i+'-wishlist')" title="Añadir a lista de deseos">
+                                <i [class]="checkWishlistAlready(card) ? 'fa fa-heart' : 'fa fa-heart-o'" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--cart" *ngIf="checkCartAlready(card)" (click)="addToCartProduct(card)" title="Añadir al carrito">
+                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--cart" *ngIf="!checkCartAlready(card) && card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]" title="Ver producto">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="ia-product-card__body">
+                            <h6 class="ia-product-card__title">
+                                <a *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]">{{ card?.name }}</a>
+                                <a *ngIf="!card?.id_product" [routerLink]="[card?.route_product]">{{ card?.name }}</a>
+                            </h6>
+                            <p class="ia-product-card__price">{{ card?.price | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
+                            <span class="ia-product-card__shipping"><img src="assets/images/shipping-fast-solid.svg" alt="" /> Envío a todo el país</span>
+                        </div>
+                    </article>
                 </div>
                 
                 <!-- VER TODOS LOS PRODUCTOS BUTTON -->

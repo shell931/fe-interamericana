@@ -10,7 +10,6 @@ import { environment } from '../../../../../src/environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +20,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { GlobalModule } from '../../../Global/Global.module';
 import { TemplatesModule } from '../../../Templates/Templates.module';
-import { BarRatingModule } from 'ngx-bar-rating';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { RatingComponent } from '../../../Global/Rating/Rating.component';
 
@@ -65,7 +63,6 @@ export interface Store {
       FormsModule,
       ReactiveFormsModule,
       RouterModule,
-      MatCardModule,
       MatFormFieldModule,
       MatInputModule,
       MatButtonModule,
@@ -78,7 +75,6 @@ export interface Store {
       // SwiperModule, // Module imports not allowed in standalone components  
       GlobalModule,
       TemplatesModule,
-      BarRatingModule,
       LazyLoadImageModule,
 
    ],
