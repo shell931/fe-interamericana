@@ -50,7 +50,7 @@ import { BalanceDetailSideBarComponent } from './Layouts/BalanceDetailSideBar/Ba
 import { AdminPanelModule } from './AdminPanel/admin-panel.module';
 import { AuthModule } from './auth/auth.module';
 import { CookieService } from 'ngx-cookie-service';
-import { MainModule } from './main/main.module';
+import { MainModule } from './Main/main.module';
 // import { HeaderOneModule } from './Layouts/Header/HeaderOne/HeaderOne.module';
 // import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 // import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
