@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import {
   transition,
   trigger,
@@ -8,6 +10,7 @@ import {
   group,
   animateChild
 } from '@angular/animations';
+import { MetaPixelService } from './Services/meta-pixel.service';
 
 
 @Component({
@@ -39,6 +42,19 @@ import {
 })
 export class AppComponent {
   title = 'interamericana';
+  private isInitialNavigation = true;
 
+  constructor(
+    private router: Router,
+    private metaPixel: MetaPixelService
+  ) {
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const isInitialLoad = this.isInitialNavigation;
+        this.isInitialNavigation = false;
+        this.metaPixel.onRouteChange(event.urlAfterRedirects || event.url, isInitialLoad);
+      });
+  }
 
 }

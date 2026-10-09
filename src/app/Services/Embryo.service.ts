@@ -11,6 +11,7 @@ import { ConfirmationPopupComponent } from '../Global/ConfirmationPopup/Confirma
 import { LocationPredeterminedComponent } from '../AdminPanel/Widget/PopUp/LocationPredetermined/LocationPredetermined.component';
 import { AddCartComponent } from '../AdminPanel/Widget/PopUp/AddCart/AddCart.component';
 import { ShowCartDataComponent } from '../AdminPanel/Widget/PopUp/ShowCartData/ShowCartData.component';
+import { MetaPixelService } from './meta-pixel.service';
 
 
 
@@ -55,7 +56,8 @@ export class EmbryoService {
       private dialog: MatDialog,
       // private db: AngularFireDatabase,
       private toastyService: ToastaService,
-      private toastyConfig: ToastaConfig) {
+      private toastyConfig: ToastaConfig,
+      private metaPixel: MetaPixelService) {
 
       this.toastyConfig.position = "top-right";
       this.toastyConfig.theme = "material";
@@ -161,6 +163,7 @@ export class EmbryoService {
          price:data.price,
          produc_code:data.produc_code};
       this.addCartPopup(this.get_product_data);
+      this.metaPixel.trackAddToCart(data);
 
       setTimeout(() => {
          localStorage.setItem("cart_item", JSON.stringify(products));
@@ -183,6 +186,7 @@ export class EmbryoService {
 
       localStorage.setItem("cart_item", JSON.stringify(products));
       this.calculateLocalCartProdCounts();
+      this.metaPixel.trackAddToCart(data);
    }
 
    public updateAllLocalCartProduct(products: any) {
@@ -394,6 +398,7 @@ export class EmbryoService {
       let product = JSON.parse(localStorage.getItem("cart_item"))
       localStorage.setItem("byProductDetails", JSON.stringify(product));
       this.buyUserCartProducts = JSON.parse(localStorage.getItem("byProductDetails"))
+      this.metaPixel.stagePurchase(product, reference);
 
       localStorage.removeItem("cart_item");
       this.calculateLocalCartProdCounts();

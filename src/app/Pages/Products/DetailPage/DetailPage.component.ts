@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
 import { SeoService } from '../../../Services/seo.service';
+import { MetaPixelService } from '../../../Services/meta-pixel.service';
 import { environment } from '../../../../../src/environments/environment';
 
 export interface Prod {
@@ -49,7 +50,8 @@ export class DetailPageComponent implements OnInit {
       private router: Router,
       public embryoService: EmbryoService,
       private apiService: ApiService,
-      private seoService: SeoService) {
+      private seoService: SeoService,
+      private metaPixel: MetaPixelService) {
 
    }
 
@@ -102,6 +104,7 @@ export class DetailPageComponent implements OnInit {
          valid_quant:1
       };
       this.productsGrid = myObj_product;
+      this.metaPixel.trackViewContent(myObj_product);
    }
 
    // public getData() {
