@@ -2,7 +2,6 @@
 import { Routes} from '@angular/router';
 
 import { MainComponent } from './Main/Main.component';
-import { MainWorkingComponent } from './main-working.component';
 import { CartComponent } from './Pages/Cart/Cart.component';
 
 

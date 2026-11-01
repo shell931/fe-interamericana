@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { EmbryoService } from '../../Services/Embryo.service';
 import { ApiService } from '../../Services/api.service';
@@ -10,6 +12,8 @@ import { Invoice, BalanceDetail } from '../../Models/Invoice';
 
 @Component({
    selector: 'embryo-BalanceDetailSideBar',
+   standalone: true,
+   imports: [CommonModule, MatButtonModule],
    templateUrl: './BalanceDetailSideBar.component.html',
    styleUrls: ['./BalanceDetailSideBar.component.scss']})
 export class BalanceDetailSideBarComponent implements OnInit {

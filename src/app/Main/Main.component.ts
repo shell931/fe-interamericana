@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HeaderOneComponent } from '../Layouts/Header/HeaderOne/HeaderOne.component';
 import { FooterOneComponent } from '../Layouts/Footer/FooterOne/FooterOne.component';
+import { BalanceDetailSideBarComponent } from '../Layouts/BalanceDetailSideBar/BalanceDetailSideBar.component';
 
 
 export interface Prod {
@@ -56,7 +57,7 @@ export interface InfoProd {
       MatToolbarModule,
       HeaderOneComponent, 
       FooterOneComponent,
-  
+      BalanceDetailSideBarComponent,
    ],
    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

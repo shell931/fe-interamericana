@@ -20,4 +20,10 @@
             <FooterOne></FooterOne>
         </mat-sidenav-content>
     </mat-sidenav-container>
+
+    <mat-sidenav-container>
+        <mat-sidenav class="em-sidebar" #balanceSidenav [(opened)]="embryoService.balanceSidenavOpen" position="end" mode="over">
+            <embryo-BalanceDetailSideBar></embryo-BalanceDetailSideBar>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

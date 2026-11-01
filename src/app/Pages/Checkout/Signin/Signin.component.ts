@@ -3,6 +3,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { EmbryoService } from '../../../Services/Embryo.service';
+import { PopupManagerService } from '../../../Services/popup-manager.service';
 import { CommonSignInComponent } from '../../../Global/CommonSignIn/CommonSignIn.component';
 
 @Component({
@@ -21,13 +22,14 @@ import { CommonSignInComponent } from '../../../Global/CommonSignIn/CommonSignIn
 export class SigninComponent implements OnInit {
 
 
-   constructor(public embryoService : EmbryoService) { }
+   constructor(public embryoService : EmbryoService,
+               private popupManager : PopupManagerService) { }
 
    ngOnInit() {
    }
 
    public toggleRightSidenav() {
-      this.embryoService.paymentSidenavOpen = !this.embryoService.paymentSidenavOpen;
+      this.popupManager.tryOpenPopup('cart');
    }
 
    public getCartProducts() {
