@@ -5,126 +5,126 @@
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/</loc>
+        <loc>https://interamericana.store/interamericana/</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products</loc>
+        <loc>https://interamericana.store/interamericana/products</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/escobillas</loc>
+        <loc>https://interamericana.store/interamericana/products/escobillas</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/escobillas-grafito</loc>
+        <loc>https://interamericana.store/interamericana/products/escobillas-grafito</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/escobillas-carbon</loc>
+        <loc>https://interamericana.store/interamericana/products/escobillas-carbon</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/rodamientos</loc>
+        <loc>https://interamericana.store/interamericana/products/rodamientos</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/farolas</loc>
+        <loc>https://interamericana.store/interamericana/products/farolas</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/luces-carro</loc>
+        <loc>https://interamericana.store/interamericana/products/luces-carro</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/farolas-para-carros</loc>
+        <loc>https://interamericana.store/interamericana/products/farolas-para-carros</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/products/balastros</loc>
+        <loc>https://interamericana.store/interamericana/products/balastros</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/search</loc>
+        <loc>https://interamericana.store/interamericana/search</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/storefront</loc>
+        <loc>https://interamericana.store/interamericana/storefront</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/storelist</loc>
+        <loc>https://interamericana.store/interamericana/storelist</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/terms_conditions</loc>
+        <loc>https://interamericana.store/interamericana/terms_conditions</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/data_protection</loc>
+        <loc>https://interamericana.store/interamericana/data_protection</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/help_pqr</loc>
+        <loc>https://interamericana.store/interamericana/help_pqr</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.4</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/payment_information</loc>
+        <loc>https://interamericana.store/interamericana/payment_information</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://tu-dominio.com/interamericana/assisted_buy</loc>
+        <loc>https://interamericana.store/interamericana/assisted_buy</loc>
         <lastmod>2025-09-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>

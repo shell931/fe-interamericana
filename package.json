@@ -13,7 +13,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "generate-sitemap": "node scripts/generate-sitemap.js",
-    "generate-sitemap:prod": "node scripts/generate-sitemap.js https://tu-dominio.com /interamericana",
+    "generate-sitemap:prod": "node scripts/generate-sitemap.js https://interamericana.store /interamericana",
     "postbuild": "npm run generate-sitemap:prod"
   },
   "dependencies": {
