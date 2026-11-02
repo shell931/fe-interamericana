@@ -130,11 +130,6 @@ ng-select {
     &:hover {
       border-color: #79dc78;
     }
-
-    &.ng-select-focused {
-      border-color: #79dc78;
-      box-shadow: 0 0 0 0.15rem rgba(121, 220, 120, 0.25);
-    }
   }
 
   .ng-value-container {
@@ -1034,4 +1029,9 @@ ng-select {
     width: 1.2rem !important;
     height: 1.2rem !important;
   }
+}
+/* Foco visible al navegar con Tab: ng-select pone .ng-select-focused en el host, no en el container */
+:host ::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: #79dc78 !important;
+  box-shadow: 0 0 0 0.15rem rgba(121, 220, 120, 0.25) !important;
 }
