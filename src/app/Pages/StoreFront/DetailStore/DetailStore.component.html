@@ -9,21 +9,18 @@
                 <h3 class="filter-title">Categorías</h3>
                 <mat-tree [dataSource]="dataSourceN" [treeControl]="treeControlN" class="category-tree">
                     <!-- Leaf nodes -->
-                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="category-item">
-                        <mat-list-item>
-                            <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
-                                <span class="category-text">{{node.name}}</span>
-                            </a>
-                        </mat-list-item>
+                    <mat-tree-node *matTreeNodeDef="let node" class="category-item"
+                        [class.category-item--child]="node.level > 0">
+                        <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
+                            <span class="category-text" [class.category-text--parent]="node.level === 0">{{node.name}}</span>
+                        </a>
                     </mat-tree-node>
-                    
+
                     <!-- Expandable nodes -->
-                    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding class="category-item">
-                        <mat-list-item>
-                            <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
-                                <span class="category-text category-text--parent">{{node.name}}</span>
-                            </a>
-                        </mat-list-item>
+                    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" class="category-item category-item--parent">
+                        <a (click)="SearchStoreCategories(node.type,node.id_store,node.id)" class="category-link">
+                            <span class="category-text category-text--parent">{{node.name}}</span>
+                        </a>
                     </mat-tree-node>
                 </mat-tree>
             </div>
@@ -54,78 +51,31 @@
             <!-- Products Grid -->
             <div class="products-section">
                 <div class="products-grid">
-                    <div class="product-card" *ngFor="let card of obs | async; let i = index">
-                        <!-- Product Image -->
-                        <div class="product-image-container">
-                            <a *ngIf="card?.route_product && card?.id_product" class="product-image-link" [routerLink]="card?.route_product">
-                                <img 
-                                    class="product-image" 
-                                    [src]="card?.image" 
-                                    [alt]="card?.name"
-                                    [ngClass]="{ transparent: !loaded }" 
-                                    (load)="onLoad()">
+                    <!-- Misma card que la home (estilos en assets/scss/pages/_ia-product-card.scss) -->
+                    <article class="ia-product-card" *ngFor="let card of obs | async; let i = index">
+                        <div class="ia-product-card__media">
+                            <a *ngIf="card?.route_product && card?.id_product" [routerLink]="card?.route_product">
+                                <img class="ia-product-card__img" [src]="card?.image" [alt]="card?.name" loading="lazy">
                             </a>
-                            <div *ngIf="!card?.route_product || !card?.id_product" class="product-image-link">
-                                <img 
-                                    class="product-image" 
-                                    [src]="card?.image" 
-                                    [alt]="card?.name"
-                                    [ngClass]="{ transparent: !loaded }" 
-                                    (load)="onLoad()">
-                            </div>
-                            
-                            <!-- Wishlist Button -->
-                            <button 
-                                (click)="productAddToWishlist(card, i+'-wishlist')" 
-                                class="wishlist-button" 
-                                title="Añadir a lista de deseos">
-                                <i class="fa fa-heart-o"></i>
+                            <img *ngIf="!card?.route_product || !card?.id_product" class="ia-product-card__img" [src]="card?.image" [alt]="card?.name" loading="lazy">
+                            <button type="button" class="ia-product-card__action ia-product-card__action--wishlist" [class.is-active]="checkWishlistAlready(card)" (click)="productAddToWishlist(card, i+'-wishlist')" title="Añadir a lista de deseos">
+                                <i [class]="checkWishlistAlready(card) ? 'fa fa-heart' : 'fa fa-heart-o'" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--cart" *ngIf="checkCartAlready(card)" (click)="addToCartProduct(card)" title="Añadir al carrito">
+                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--cart" *ngIf="!checkCartAlready(card) && card?.route_product && card?.id_product" [routerLink]="card?.route_product" title="Ver producto">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
                             </button>
                         </div>
-                        
-                        <!-- Product Info -->
-                        <div class="product-info">
-                            <h3 class="product-name">
-                                <a *ngIf="card?.route_product && card?.id_product" [routerLink]="card?.route_product" class="product-link">{{card?.name}}</a>
-                                <span *ngIf="!card?.route_product || !card?.id_product" class="product-name-text">{{card?.name}}</span>
-                            </h3>
-                            
-                            <!-- Price -->
-                            <div class="product-price">
-                                <span class="current-price price-new-custom">{{card?.price | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
-                            </div>
-                            
-                            <!-- Rating -->
-                            <div class="product-rating">
-                                <embryo-Rating [rate]="card.rating"></embryo-Rating>
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div class="product-actions">
-                                <div *ngIf="checkCartAlready(card)" class="action-buttons">
-                                    <embryo-AddToCardButton [product]="card" (addToCart)="addToCartProduct($event)">
-                                    </embryo-AddToCardButton>
-                                    <button class="add-to-cart-btn" (click)="addToCartProduct(card)">
-                                        <i class="fa fa-cart-plus"></i>
-                                        Agregar
-                                    </button>
-                                </div>
-                                
-                                <div *ngIf="!checkCartAlready(card) && card?.route_product && card?.id_product" class="action-buttons">
-                                    <button class="view-product-btn" [routerLink]="card?.route_product">
-                                        <i class="fa fa-eye"></i>
-                                        Ver producto
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Delivery Info -->
-                            <div class="delivery-info">
-                                <img src="assets/images/shipping-fast-solid.svg" alt="shipping">
-                                <span>Envío a todo el país</span>
-                            </div>
+                        <div class="ia-product-card__body">
+                            <h6 class="ia-product-card__title">
+                                <a *ngIf="card?.route_product && card?.id_product" [routerLink]="card?.route_product">{{ card?.name }}</a>
+                                <span *ngIf="!card?.route_product || !card?.id_product">{{ card?.name }}</span>
+                            </h6>
+                            <p class="ia-product-card__price">{{ card?.price | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
                         </div>
-                    </div>
+                    </article>
                 </div>
                 
                 <!-- Paginator -->

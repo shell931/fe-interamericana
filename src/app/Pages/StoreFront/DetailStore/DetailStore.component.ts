@@ -13,12 +13,9 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RatingComponent } from '../../../Global/Rating/Rating.component';
-import { AddToCardButtonComponent } from '../../../Global/AddToCardButton/AddToCardButton.component';
 
 const { isArray } = Array;
 
@@ -108,15 +105,12 @@ interface ExampleFlatNode {
         FormsModule,
         RouterModule,
         MatCardModule,
-        MatListModule,
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
         MatTreeModule,
         MatPaginatorModule,
-        CurrencyPipe,
-        RatingComponent,
-        AddToCardButtonComponent
+        CurrencyPipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -422,6 +416,15 @@ export class DetailStoreComponent implements OnInit {
 
     public productAddToWishlist(value: any, index?: any) {
         this.embryoService.addToWishlist(value);
+    }
+
+    public checkWishlistAlready(product: any): boolean {
+        const wishlistItem = localStorage.getItem("wishlist_item");
+        if (wishlistItem) {
+            const wishlistProducts = JSON.parse(wishlistItem);
+            return wishlistProducts.some((item: any) => item.name === product.name);
+        }
+        return false;
     }
 
 }

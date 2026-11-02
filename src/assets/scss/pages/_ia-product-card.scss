@@ -1,0 +1,142 @@
+/* === INTERAMERICANA: card de producto (replica el estilo del sitio original) ===
+   Compartida por la home (ProductsList) y la tienda (DetailStore).
+   Es un mixin para que cada componente la incluya en el mismo punto de su cascada. */
+@mixin ia-product-card {
+  .ia-product-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    padding: 15px;
+    min-width: 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .ia-product-card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .ia-product-card__media {
+    position: relative;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .ia-product-card__media a {
+    display: block;
+  }
+
+  .ia-product-card__img {
+    display: block;
+    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: contain;
+    background: #fff;
+  }
+
+  /* !important en position: src/styles.css fuerza `button { position: relative !important }` en todo el sitio */
+  .ia-product-card__action {
+    position: absolute !important;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #79dc78;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .ia-product-card__action i {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .ia-product-card__action--wishlist {
+    left: 10px;
+    background: #fff;
+    color: #79dc78;
+  }
+
+  .ia-product-card__action--wishlist.is-active {
+    background: #79dc78;
+    color: #fff;
+  }
+
+  .ia-product-card__action--cart {
+    right: 10px;
+    background: #79dc78;
+    color: #fff;
+  }
+
+  .ia-product-card:hover .ia-product-card__action,
+  .ia-product-card__action:focus-visible {
+    opacity: 1;
+  }
+
+  /* En pantallas táctiles no hay hover: botones siempre visibles */
+  @media (hover: none) {
+    .ia-product-card__action {
+      opacity: 1;
+    }
+  }
+
+  .ia-product-card__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .ia-product-card__title {
+    margin: 0 0 7px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .ia-product-card__title a {
+    color: #111;
+    text-decoration: none;
+  }
+
+  .ia-product-card__title a:hover {
+    text-decoration: underline;
+  }
+
+  .ia-product-card__price {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 21px;
+    color: #333;
+  }
+
+  .ia-product-card__shipping {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #111;
+  }
+
+  .ia-product-card__shipping img {
+    width: 25px;
+    height: 25px;
+    padding: 5px;
+    border-radius: 50%;
+    background: #79dc78;
+  }
+}
