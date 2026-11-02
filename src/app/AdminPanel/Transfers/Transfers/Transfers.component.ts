@@ -1,19 +1,36 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
 import { ApiService } from '../../../Services/api.service';
 import { Transfer } from '../../../Models/Transfer';
 import { EmbryoService } from '../../../Services/Embryo.service';
-
-
+import { CurrencyPipe, CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TransfersDetailAdmSidebarSidebarComponent } from '../../Shared/TransfersDetailAdmSidebar/TransfersDetailAdmSidebar.component';
 
 @Component({
 	selector: 'Transfers',
 	templateUrl: './Transfers.component.html',
-	styleUrls: ['./Transfers.component.scss']
+	styleUrls: ['./Transfers.component.scss'],
+	standalone: true,
+	imports: [
+		CommonModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatCardModule,
+		MatSidenavModule,
+		MatButtonModule,
+		MatIconModule,
+		CurrencyPipe,
+		TransfersDetailAdmSidebarSidebarComponent
+	]
 })
 
 export class TransfersComponent implements OnInit {
@@ -22,8 +39,8 @@ export class TransfersComponent implements OnInit {
 	transferList: any[] = [];
 	adminTransferList: any[] = [];
 	get_pr: any[] = [];
-	transferGrid: Transfer;
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+		transferGrid: Transfer | any;
+		@ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
 	dataSource = new MatTableDataSource<any>(this.adminTransferList);
 	displayedColumns: string[] = ['action', 'detail','reference', 'state', 'store','created_at','responsible' , 'val_transfer'];
@@ -34,19 +51,20 @@ export class TransfersComponent implements OnInit {
 		public embryoService: EmbryoService,
 	) { }
 
-	ngOnInit() {						
-		this.addBodyClass();
-		this.apiService.GetAllTransfers().subscribe(res => this.getAllTransfersData(res));		
-	}
+		ngOnInit() {
+			this.addBodyClass();
+			this.apiService.GetAllTransfers().subscribe((res: any) => this.getAllTransfersData(res), (error: any) => console.log(error));
+		}
 
 
-	addBodyClass() {
-		window.addEventListener('load', function () {
-			document.querySelector('body').classList.add("loaded")
-		});
-	}
+		addBodyClass() {
+			window.addEventListener('load', function () {
+				const body = document.querySelector('body');
+				if (body) body.classList.add("loaded");
+			});
+		}
 
-	getAllTransfersData(response) {	
+		getAllTransfersData(response: any) {	
 		console.log(response);
 					
 		this.transferList = response.data;
@@ -65,11 +83,11 @@ export class TransfersComponent implements OnInit {
 	}
 
 
-	onSeeDialog(data) {				
-		this.getTransferData(data);		
+		onSeeDialog(data: any) {				
+			this.getTransferData(data);		
 	}
 
-	getTransferData(response) {				
+		getTransferData(response: any) {				
 		let myObj_transfer = {
 			id: response.id,
 			reference: response.reference,
@@ -89,13 +107,12 @@ export class TransfersComponent implements OnInit {
 		this.apiService.PopUpAdminTransfers(this.transferGrid);
 	}
 
-	DetailTransfer(data){
-		localStorage.removeItem("id_transfer");
-		localStorage.setItem('id_transfer', data.id);
-		localStorage.removeItem("refer_transfer");
-		localStorage.setItem('refer_transfer', data.reference);
-		this.apiService.GetTransfersByIdPanelAdmin(data.id).subscribe(
-			response => {
+			DetailTransfer(data: any){
+			localStorage.removeItem("id_transfer");
+			localStorage.setItem('id_transfer', String(data.id));
+			localStorage.removeItem("refer_transfer");
+			localStorage.setItem('refer_transfer', String(data.reference));
+		this.apiService.GetTransfersByIdPanelAdmin(data.id).subscribe((response: any) => {
 				let myJSONtrsDetail = JSON.stringify(response.data);
 				localStorage.removeItem("detail_transfer");
 				localStorage.setItem('detail_transfer', myJSONtrsDetail);				
@@ -104,11 +121,10 @@ export class TransfersComponent implements OnInit {
 				localStorage.removeItem("val_transfer");
 				localStorage.setItem('val_transfer', response.val_transfer);	
 				this.embryoService.TransfersDetailAdmSidebarOpen = !this.embryoService.TransfersDetailAdmSidebarOpen;
-			},
-			error => console.log(error)
-		);
+		}, (error: any) => console.log(error));
 		
 	}
 
 
 }
+

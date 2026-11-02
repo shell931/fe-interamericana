@@ -1,51 +1,38 @@
 <!-- Footer Container -->
-<footer class="hidden-xs hidden-sm footer-container kompralofooter dark" fxShow="false" fxHide.gt-sm="false">
-    <section class="footer-middle ">
+<footer class="footer-container family-footer">
+    <!-- Main Footer Content Section -->
+    <section class="main-footer-content">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-5 col-style">
-                    <div class="box-information box-footer">
-                        <div class="module clearfix">
-                            <h3 class="modtitle">ACERCA DE INTERAMERICANA</h3>
-                            <div class="modcontent">
-                                <ul class="menu">
-                                    <p style="text-align:justify;padding-right: 100px;">
-                                      Interamericana es una empresa dedicada a la venta de escobillas de grafito y otros
-                                      productos relacionados con la industria.
-                                    </p>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-sm-4 col-style">
-                    <div class="box-account box-footer">
-                        <div class="module clearfix">
-                            <h3 class="modtitle">INFORMACIÓN</h3>
-                            <div class="modcontent">
-                                <ul class="menu">
-                                    <li><a [routerLink]="['/data_protection']">Política de tratamiento de datos</a></li>
-                                </ul>
-                            </div>
-                        </div>
+            <div class="footer-grid">
+                <!-- ACERCA DE INTERAMERICANA -->
+                <div class="footer-column">
+                    <div class="footer-section">
+                        <h3 class="footer-title">ACERCA DE INTERAMERICANA</h3>
+                        <p class="footer-text">
+                            Interamericana es una empresa dedicada a la venta de escobillas de grafito y otros
+                            productos relacionados con la industria.
+                        </p>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="infos-footer box-footer">
-                        <div class="module">
-                            <h3 class="modtitle">CONTACTOS</h3>
-                            <ul>
-                                <li class="phone">
-                                    Teléfono: (1) 3202863947
-                                </li>
-                                <li class="mail">
-                                    <a href="#">Correo: interamericanaescobillascj@gmail.com</a>
-                                </li>
-                                <li class="time">
-                                    Horario: 8:00AM - 6:00PM
-                                </li>
-                            </ul>
+                
+                <!-- INFORMACIÓN -->
+                <div class="footer-column">
+                    <div class="footer-section">
+                        <h3 class="footer-title">INFORMACIÓN</h3>
+                        <ul class="footer-links">
+                            <li><a [routerLink]="['/data_protection']">Política de tratamiento de datos</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- CONTACTOS -->
+                <div class="footer-column">
+                    <div class="footer-section">
+                        <h3 class="footer-title">CONTACTOS</h3>
+                        <div class="contact-info">
+                            <p><strong>Teléfono:</strong> (1) 3202863947</p>
+                            <p><strong>Correo:</strong> interamericanaescobillascj&#64;gmail.com</p>
+                            <p><strong>Horario:</strong> 8:00AM - 6:00PM</p>
                         </div>
                     </div>
                 </div>
@@ -54,7 +41,7 @@
     </section>
 
     <!-- Footer Bottom Container -->
-    <section class="footer-bottom ">
+    <section class="footer-bottom">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-xs-12 copyright-w">
@@ -67,9 +54,9 @@
     </section>
     <!-- /Footer Bottom Container -->
 
-
     <!--Back To Top-->
-    <button (click)="gotoTop()" id="top" class="back-to-top"> <i (click)="gotoTop()" class="fa fa-angle-up"></i>
+    <button (click)="gotoTop()" id="top" class="back-to-top"> 
+        <i (click)="gotoTop()" class="fa fa-angle-up"></i> 
     </button>
 </footer>
 <!-- //  / Footer Container -->
@@ -77,6 +64,7 @@
 <!--WhatsApp Button-->
 <a href="https://wa.me/573202863947?text=Hola,%20necesito%20información%20sobre%20sus%20productos"
    target="_blank"
+   rel="noopener"
    class="whatsapp-float"
    title="Contáctanos por WhatsApp">
     <i class="fa fa-whatsapp"></i>

@@ -39,21 +39,8 @@
     padding: 1rem;
 }
 
-@media(min-width:768px) {
-    .rating-header {
-        display: flex;
-        justify-content: space-between;
-        >div {
-            align-self: center;
-        }
-    }
-}
 
-@media(max-width:767px) {
-    .add-later {
-        display: none;
-    }
-}
+
 
 .cdk-global-overlay-wrapper {
     overflow-y: auto;

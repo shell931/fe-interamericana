@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {MatSidenavModule, MatSidenav} from '@angular/material/sidenav';
 // import { AngularFireDatabase, AngularFireList, AngularFireObject } from "@angular/fire/database";
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import 'rxjs/Rx';
+import { ToastrService } from 'ngx-toastr';
+import { of } from 'rxjs';
 import { ReviewPopupComponent } from '../Global/ReviewPopup/ReviewPopup.component';
 import { ConfirmationPopupComponent } from '../Global/ConfirmationPopup/ConfirmationPopup.component';
 import { LocationPredeterminedComponent } from '../AdminPanel/Widget/PopUp/LocationPredetermined/LocationPredetermined.component';
@@ -49,16 +48,14 @@ export class EmbryoService {
    navbarCartCount: number = 3;
    navbarWishlistProdCount = 0;
    buyUserCartProducts: any;
-   get_product_data: Product;
+   get_product_data: Product | null = null;
 
    constructor(private http: HttpClient,
       private dialog: MatDialog,
       // private db: AngularFireDatabase,
-      private toastyService: ToastaService,
-      private toastyConfig: ToastaConfig) {
+      private toastyService: ToastrService,
+      ) {
 
-      this.toastyConfig.position = "top-right";
-      this.toastyConfig.theme = "material";
       this.calculateLocalWishlistProdCounts();
       this.calculateLocalCartProdCounts();
       localStorage.removeItem("user");
@@ -67,10 +64,11 @@ export class EmbryoService {
       // this.db.object("products").valueChanges().subscribe(res => { this.setCartItemDefaultValue(res['gadgets'][1]) });
    }
 
-   public setCartItemDefaultValue(setCartItemDefaultValue) {
+   public setCartItemDefaultValue(setCartItemDefaultValue: any) {
       let products: any;
-      products = JSON.parse(localStorage.getItem("cart_item")) || [];
-      let found = products.some(function (el, index) {
+      const cartItem = localStorage.getItem("cart_item");
+      products = cartItem ? JSON.parse(cartItem) : [];
+      let found = products.some(function (el: { name: any; }, index: any) {
          if (el.name == setCartItemDefaultValue.name) {
             return true;
          }
@@ -79,7 +77,7 @@ export class EmbryoService {
       this.calculateLocalCartProdCounts();
    }
 
-   public reviewPopup(singleProductDetails, reviews) {
+   public reviewPopup(singleProductDetails: any, reviews: any) {
       let review: MatDialogRef<ReviewPopupComponent>;
       const dialogConfig = new MatDialogConfig();
       if (this.isDirectionRtl) {
@@ -103,15 +101,22 @@ export class EmbryoService {
    }
 
    public getProducts() {
-      // this.products = this.db.object("products");
-      // return this.products;
+      // In the original project this returned an AngularFire DB object with valueChanges().
+      // Provide a safe default so callers can call `.valueChanges().subscribe(...)` without runtime errors.
+      return {
+         valueChanges: () => of([])
+      } as any;
    }
 
 
    public addCartPopup(data: any) {
       let dialogRef_sta: MatDialogRef<AddCartComponent>;
-      dialogRef_sta = this.dialog.open(AddCartComponent);
-      dialogRef_sta.componentInstance.data = data;
+      dialogRef_sta = this.dialog.open(AddCartComponent, {
+         data: data,
+         disableClose: false,
+         hasBackdrop: false,
+         panelClass: 'add-cart-dialog-panel'
+      });
       return dialogRef_sta.afterClosed();
    }
 
@@ -130,26 +135,34 @@ export class EmbryoService {
    // Adding new Product to cart in localStorage
    public addToCart(data: any, type: any = "") {
       let products: any;
-      products = JSON.parse(localStorage.getItem("cart_item")) || [];
+      const cartItem = localStorage.getItem("cart_item");
+      products = cartItem ? JSON.parse(cartItem) : [];
       let productsLength = products.length;
-      let toastOption: ToastOptions = {
-         title: "Agregando producto",
-         msg: "Producto agregado",
-         showClose: true,
-         timeout: 1000,
-         theme: "material"
-      };
-      let found = products.some(function (el, index) {
+      let toastOption = this.toastyService.success('Producto agregado al carrito', 'Agregando producto');
+      
+      // Si viene desde favoritos, forzar cantidad a 1
+      if (type == 'wishlist') {
+         data.quantity = 1;
+         data.canti = 1;
+      }
+      
+      let found = products.some((el: any, index: number) => {
          if (el.name == data.name) {
             if (!data.quantity) { data.quantity = 1 }
-            products[index]['quantity'] = data.quantity;
+            // Si viene desde favoritos, reemplazar cantidad existente con 1
+            if (type == 'wishlist') {
+               products[index]['quantity'] = 1;
+               products[index]['canti'] = 1;
+            } else {
+               products[index]['quantity'] = data.quantity;
+            }
             return true;
          }
       });
       if (!found) { products.push(data); }
       if (productsLength == products.length) {
          toastOption.title = "Producto ya fue agregado";
-         toastOption.msg = "Ya agregaste este producto al carrito";
+         toastOption.message = "Ya agregaste este producto al carrito";
       }
       if (type == 'wishlist') {
          this.removeLocalWishlistProduct(data);
@@ -168,11 +181,34 @@ export class EmbryoService {
       }, 500);
    }
 
+   // Update quantity without showing notifications
+   public updateCartProductQuantity(data: any) {
+      let products: any;
+      const cartItem = localStorage.getItem("cart_item");
+      products = cartItem ? JSON.parse(cartItem) : [];
+      
+      let found = products.some((el: any, index: number) => {
+         if (el.name == data.name) {
+            if (!data.quantity) { data.quantity = 1 }
+            products[index]['quantity'] = data.quantity;
+            return true;
+         }
+      });
+      
+      if (!found) { 
+         products.push(data); 
+      }
+
+      localStorage.setItem("cart_item", JSON.stringify(products));
+      this.calculateLocalCartProdCounts();
+   }
+
    public buyNow(data: any) {
       let products: any;
-      products = JSON.parse(localStorage.getItem("cart_item")) || [];
+      const cartItem = localStorage.getItem("cart_item");
+      products = cartItem ? JSON.parse(cartItem) : [];
 
-      let found = products.some(function (el, index) {
+      let found = products.some((el: any, index: number) => {
          if (el.name == data.name) {
             if (!data.quantity) { data.quantity = 1 }
             products[index]['quantity'] = data.quantity;
@@ -193,13 +229,15 @@ export class EmbryoService {
    // returning LocalCarts Product Count
    public calculateLocalCartProdCounts() {
       this.localStorageCartProducts = null;
-      this.localStorageCartProducts = JSON.parse(localStorage.getItem("cart_item")) || [];
+      const cartItem = localStorage.getItem("cart_item");
+      this.localStorageCartProducts = cartItem ? JSON.parse(cartItem) : [];
       this.navbarCartCount = +((this.localStorageCartProducts).length);
    }
 
    // Removing cart from local
    public removeLocalCartProduct(product: any) {
-      let products: any = JSON.parse(localStorage.getItem("cart_item"));
+      const cartItem = localStorage.getItem("cart_item");
+      let products: any = cartItem ? JSON.parse(cartItem) : [];
 
       for (let i = 0; i < products.length; i++) {
          if (products[i].name === product.name) {
@@ -208,15 +246,11 @@ export class EmbryoService {
          }
       }
 
-      let toastOption: ToastOptions = {
-         title: "Eliminando producto",
-         msg: "Producto eliminado del carrito",
-         showClose: true,
-         timeout: 1000,
-         theme: "material"
-      };
-
-      this.toastyService.wait(toastOption);
+    this.toastyService.info('Producto eliminado del carrito', 'Eliminando producto', {
+      timeOut: 1000,
+      progressBar: true,
+      closeButton: true
+    });
       setTimeout(() => {
          // ReAdding the products after remove
          localStorage.setItem("cart_item", JSON.stringify(products));
@@ -230,19 +264,18 @@ export class EmbryoService {
 
    // Adding new Product to Wishlist in localStorage
    public addToWishlist(data: any) {
-      let toastOption: ToastOptions = {
-         title: "Adding Product To Wishlist",
-         msg: "Product adding to the wishlist",
-         showClose: true,
-         timeout: 1000,
-         theme: "material"
-      };
+     this.toastyService.info(
+       "Product adding to the wishlist",
+       "Adding Product To Wishlist",
+       { timeOut: 1000, progressBar: true, closeButton: true }
+     );
 
       let products: any;
-      products = JSON.parse(localStorage.getItem("wishlist_item")) || [];
+      const wishlistItem = localStorage.getItem("wishlist_item");
+      products = wishlistItem ? JSON.parse(wishlistItem) : [];
       let productsLength = products.length;
 
-      let found = products.some(function (el, index) {
+      let found = products.some((el: any, index: number) => {
          if (el.name == data.name) {
             if (!data.quantity) { data.quantity = 1 }
             products[index]['quantity'] = data.quantity;
@@ -251,12 +284,22 @@ export class EmbryoService {
       });
       if (!found) { products.push(data); }
 
-      if (productsLength == products.length) {
-         toastOption.title = "Product Already Added";
-         toastOption.msg = "You have already added this product to wishlist";
-      }
+ if (productsLength == products.length) {
+  // Producto ya estaba en la lista
+  this.toastyService.warning(
+    "You have already added this product to wishlist",
+    "Product Already Added",
+    { timeOut: 1000 }
+  );
+} else {
+  // Producto nuevo agregado a la lista
+  this.toastyService.success(
+    "Product adding to the wishlist",
+    "Adding Product To Wishlist",
+    { timeOut: 1000 }
+  );
+}
 
-      this.toastyService.wait(toastOption);
       setTimeout(() => {
          localStorage.setItem("wishlist_item", JSON.stringify(products));
          this.calculateLocalWishlistProdCounts();
@@ -267,14 +310,16 @@ export class EmbryoService {
    // returning LocalWishlist Product Count
    public calculateLocalWishlistProdCounts() {
       this.localStorageWishlist = null;
-      this.localStorageWishlist = JSON.parse(localStorage.getItem("wishlist_item")) || [];
+      const wishlistItem = localStorage.getItem("wishlist_item");
+      this.localStorageWishlist = wishlistItem ? JSON.parse(wishlistItem) : [];
       this.navbarWishlistProdCount = +((this.localStorageWishlist).length);
    }
 
 
    // Removing Wishlist from local
    public removeLocalWishlistProduct(product: any) {
-      let products: any = JSON.parse(localStorage.getItem("wishlist_item"));
+      const wishlistItem = localStorage.getItem("wishlist_item");
+      let products: any = wishlistItem ? JSON.parse(wishlistItem) : [];
 
       for (let i = 0; i < products.length; i++) {
          if (products[i].productId === product.productId) {
@@ -282,17 +327,11 @@ export class EmbryoService {
             break;
          }
       }
-
-      const toastOption: ToastOptions = {
-         title: "Remove Product From Wishlist",
-         msg: "Product removing from wishlist",
-         showClose: true,
-         timeout: 1000,
-         theme: "material"
-      };
-
-
-      this.toastyService.wait(toastOption);
+      this.toastyService.info(
+        "Product removing from wishlist",
+        "Remove Product From Wishlist",
+        { timeOut: 1000, progressBar: true, closeButton: true }
+      );
       setTimeout(() => {
          // ReAdding the products after remove
          localStorage.setItem("wishlist_item", JSON.stringify(products));
@@ -303,21 +342,22 @@ export class EmbryoService {
 
    public addAllWishListToCart(dataArray: any) {
       let a: any;
-      a = JSON.parse(localStorage.getItem("cart_item")) || [];
+      const cartItem = localStorage.getItem("cart_item");
+      a = cartItem ? JSON.parse(cartItem) : [];
 
       for (let singleData of dataArray) {
+         // Forzar cantidad a 1 para todos los productos desde favoritos
+         singleData.quantity = 1;
+         singleData.canti = 1;
          a.push(singleData);
       }
 
-      let toastOption: ToastOptions = {
-         title: "Adding All Product To Cart",
-         msg: "Products adding to the cart",
-         showClose: true,
-         timeout: 1000,
-         theme: "material"
-      };
+      this.toastyService.info(
+        "Products adding to the cart",
+        "Adding All Product To Cart",
+        { timeOut: 1000, progressBar: true, closeButton: true }
+      );
 
-      this.toastyService.wait(toastOption);
       setTimeout(() => {
          localStorage.removeItem('wishlist_item');
          localStorage.setItem("cart_item", JSON.stringify(a));
@@ -331,69 +371,73 @@ export class EmbryoService {
     * getBlogList used to get the blog list.
     */
    public getBlogList() {
-      let blogs: any;
-      // blogs = this.db.list("blogs");
-      return blogs;
+      // Return safe default with valueChanges() to match original AngularFire pattern
+      return {
+         valueChanges: () => of([])
+      } as any;
    }
 
    /**
     * getContactInfo used to get the contact infomation.
     */
    public getContactInfo() {
-      let contact: any;
-      // contact = this.db.object("contact");
-      return contact;
+      // Return safe default
+      return {
+         valueChanges: () => of(null)
+      } as any;
    }
 
    /**
     * getTermCondition used to get the term and condition.
     */
    public getTermCondition() {
-      let termCondition: any;
-      // termCondition = this.db.list("term_condition");
-      return termCondition;
+      return {
+         valueChanges: () => of([])
+      } as any;
    }
 
    /**
     * getPrivacyPolicy used to get the privacy policy.
     */
    public getPrivacyPolicy() {
-      let privacyPolicy: any;
-      // privacyPolicy = this.db.list("privacy_policy");
-      return privacyPolicy;
+      return {
+         valueChanges: () => of([])
+      } as any;
    }
 
    /**
     * getFaq used to get the faq.
     */
    public getFaq() {
-      let faq: any;
-      // faq = this.db.object("faq");
-      return faq;
+      return {
+         valueChanges: () => of([])
+      } as any;
    }
 
    /**
     * getProductReviews used to get the product review.
     */
    public getProductReviews() {
-      let review: any;
-      // review = this.db.list("product_reviews");
-      return review;
+      return {
+         valueChanges: () => of([])
+      } as any;
    }
 
    /**
     * Buy Product functions
     */
-   public addBuyUserDetails(formdata, num_aprob, date, reference) {
+   public addBuyUserDetails(formdata: any, num_aprob: any, date: any, reference: any) {
 
       let InvoiceDetail = { "num_aprob": num_aprob, "date": date, "reference": reference };
       localStorage.setItem("InvoiceDetail", JSON.stringify(InvoiceDetail));
 
       localStorage.setItem("user", JSON.stringify(formdata));
 
-      let product = JSON.parse(localStorage.getItem("cart_item"))
+      const cartItem = localStorage.getItem("cart_item");
+      let product = cartItem ? JSON.parse(cartItem) : [];
       localStorage.setItem("byProductDetails", JSON.stringify(product));
-      this.buyUserCartProducts = JSON.parse(localStorage.getItem("byProductDetails"))
+      const buyProductDetails = localStorage.getItem("byProductDetails");
+      this.buyUserCartProducts = buyProductDetails ? JSON.parse(buyProductDetails) : [];
 
       localStorage.removeItem("cart_item");
       this.calculateLocalCartProdCounts();
@@ -401,7 +445,8 @@ export class EmbryoService {
 
    public removeBuyProducts() {
       localStorage.removeItem("byProductDetails");
-      this.buyUserCartProducts = JSON.parse(localStorage.getItem("byProductDetails"))
+      const buyProductDetails = localStorage.getItem("byProductDetails");
+      this.buyUserCartProducts = buyProductDetails ? JSON.parse(buyProductDetails) : [];
    }
 
    /**
@@ -441,3 +486,4 @@ export class EmbryoService {
    }
 
 }
+

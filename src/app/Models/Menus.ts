@@ -10,4 +10,8 @@ export interface Menu {
   type: string;
   icon: string;
   children?: ChildrenItems[];
+  // API properties
+  route_menu?: string;
+  name_menu?: string;
+  icon_menu?: string;
 }

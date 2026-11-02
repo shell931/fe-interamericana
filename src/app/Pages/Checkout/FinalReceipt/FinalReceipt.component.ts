@@ -1,12 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { CurrencyPipe } from '@angular/common';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
 
 @Component({
    selector: 'app-FinalReceipt',
    templateUrl: './FinalReceipt.component.html',
-   styleUrls: ['./FinalReceipt.component.scss']
+   styleUrls: ['./FinalReceipt.component.scss'],
+   standalone: true,
+   imports: [
+     CommonModule,
+     RouterModule,
+     MatCardModule,
+     MatButtonModule,
+     CurrencyPipe
+   ]
 })
 export class FinalReceiptComponent implements OnInit {
 
@@ -27,9 +39,24 @@ export class FinalReceiptComponent implements OnInit {
       private route: ActivatedRoute
    ) {
       this.getDeliveryDate();
-      this.userDetails = JSON.parse(localStorage.getItem("user"));
-      this.invoiceDetails = JSON.parse(localStorage.getItem("InvoiceDetail"));
-      this.LocationDetail = JSON.parse(localStorage.getItem("LocationDetail"));
+      try {
+         const userStored = localStorage.getItem("user") || 'null';
+         this.userDetails = userStored !== 'null' ? JSON.parse(userStored) : null;
+      } catch (e) {
+         this.userDetails = null;
+      }
+      try {
+         const invoiceStored = localStorage.getItem("InvoiceDetail") || 'null';
+         this.invoiceDetails = invoiceStored !== 'null' ? JSON.parse(invoiceStored) : null;
+      } catch (e) {
+         this.invoiceDetails = null;
+      }
+      try {
+         const locationStored = localStorage.getItem("LocationDetail") || 'null';
+         this.LocationDetail = locationStored !== 'null' ? JSON.parse(locationStored) : null;
+      } catch (e) {
+         this.LocationDetail = null;
+      }
    }
 
    ngOnInit() {
@@ -113,7 +140,7 @@ export class FinalReceiptComponent implements OnInit {
 
 
 
-   getDataLocations(response) {
+   getDataLocations(response: any) {
       for (var i = 0; i < response.length; i++) {
          let id = response[i].id;
          let nameci = response[i].nameci;
@@ -191,3 +218,4 @@ export class FinalReceiptComponent implements OnInit {
    }
 
 }
+

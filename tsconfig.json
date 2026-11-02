@@ -7,26 +7,34 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+   "baseUrl":  "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "module": "esnext",
+    "module": "ES2022",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es5",
+    "target": "ES2022",
     "skipLibCheck": true,
-    "strict": false,
+    "useDefineForClassFields": false,
+  "strict":  false,
+  "noImplicitAny": false,
+  "strictPropertyInitialization": false,
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
-      "es2018",
+      "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@angular/*": ["node_modules/@angular/*"],
+      "rxjs/*": ["node_modules/rxjs/*"]
+    }
   },
   // "files": [],
   // "references": [

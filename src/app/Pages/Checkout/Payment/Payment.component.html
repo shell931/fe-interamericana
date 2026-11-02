@@ -1,627 +1,110 @@
-<style type="text/css">
-    .contenedor {
-        width: 90%;
-        max-width: 1000px;
-        padding: 40px 20px;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* ---------- Estilos Generales de las Tarjetas ----------*/
-
-    .tarjeta {
-        width: 100%;
-        max-width: 550px;
-        position: relative;
-        color: #fff;
-        transition: .3s ease all;
-        transform: rotateY(0deg);
-        transform-style: preserve-3d;
-        cursor: pointer;
-        z-index: 2;
-    }
-
-    /* .tarjeta.active {
-        transform: rotateY(180deg);
-    } */
-
-    .tarjeta>div {
-        padding: 20px;
-        border-radius: 15px;
-        min-height: 220px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        box-shadow: 0 10px 10px 0 rgba(90, 116, 148, 0.3);
-    }
-
-    /* ---------- Tarjeta Delantera ----------*/
-
-    .tarjeta .delantera {
-        width: 100%;
-        background: url(assets/images/card/bg-tarjeta/bg-tarjeta-02.jpg);
-        background-size: cover;
-    }
-
-    .delantera .logo-marca {
-        text-align: right;
-        min-height: 50px;
-    }
-
-    .delantera .logo-marca img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        max-width: 80px;
-    }
-
-    .delantera .chip {
-        width: 100%;
-        max-width: 50px;
-        margin-bottom: 20px;
-    }
-
-    .delantera .grupo .label {
-        font-size: 15px;
-        color: #7d8994;
-        margin-bottom: 5px;
-    }
-
-    .delantera .grupo .numero,
-    .delantera .grupo .nombre,
-    .delantera .grupo .expiracion {
-        color: #fff;
-        font-size: 15px;
-        text-transform: uppercase;
-    }
-
-    .delantera .flexbox {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-
-    /* ---------- Tarjeta Trasera ----------*/
-
-    .trasera {
-        background: url(assets/images/card/bg-tarjeta/bg-tarjeta-02.jpg);
-        background-size: cover;
-        position: absolute;
-        top: 0;
-        transform: rotateY(180deg);
-        backface-visibility: hidden;
-    }
-
-    .trasera .barra-magnetica {
-        height: 40px;
-        background: #000;
-        width: 100%;
-        position: absolute;
-        top: 30px;
-        left: 0;
-    }
-
-    .trasera .datos {
-        margin-top: 60px;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .trasera .datos p {
-        margin-bottom: 5px;
-    }
-
-    .trasera .datos #firma {
-        width: 70%;
-    }
-
-    .trasera .datos #firma .firma {
-        height: 40px;
-        background: repeating-linear-gradient(skyblue 0, skyblue 5px, orange 5px, orange 10px);
-    }
-
-    .trasera .datos #firma .firma p {
-        line-height: 40px;
-        font-family: 'Liu Jian Mao Cao', cursive;
-        color: #000;
-        font-size: 30px;
-        padding: 0 10px;
-        text-transform: capitalize;
-    }
-
-    .trasera .datos #ccv {
-        width: 20%;
-    }
-
-    .trasera .datos #ccv .ccv {
-        background: #fff;
-        height: 40px;
-        color: #000;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .trasera .leyenda {
-        font-size: 14px;
-        line-height: 24px;
-    }
-
-    .trasera .link-banco {
-        font-size: 14px;
-        color: #fff;
-    }
-
-    /* ---------- Contenedor Boton ----------*/
-
-    .contenedor-btn .btn-abrir-formulario {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-        line-height: 20px;
-        background: #2364d2;
-        color: #fff;
-        position: relative;
-        top: -25px;
-        z-index: 3;
-        border-radius: 100%;
-        box-shadow: -5px 4px 8px rgba(24, 56, 182, 0.4);
-        padding: 5px;
-        transition: all .2s ease;
-        border: none;
-        cursor: pointer;
-    }
-
-    .contenedor-btn .btn-abrir-formulario:hover {
-        background: #1850b1;
-    }
-
-    .contenedor-btn .btn-abrir-formulario.active {
-        transform: rotate(45deg);
-    }
-
-    /* ---------- Formulario Tarjeta ----------*/
-
-    .formulario-tarjeta {
-        background: #fff;
-        width: 100%;
-        max-width: 700px;
-        padding: 150px 30px 30px 30px;
-        border-radius: 10px;
-        position: relative;
-        top: -150px;
-        z-index: 1;
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-        transition: clip-path .3s ease-out;
-    }
-
-    .formulario-tarjeta.active {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    }
-
-    .formulario-tarjeta label {
-        display: block;
-        color: #7d8994;
-        margin-bottom: 5px;
-        font-size: 16px;
-    }
-
-    .formulario-tarjeta input,
-    .formulario-tarjeta select,
-    .btn-enviar {
-        border: 2px solid #CED6E0;
-        font-size: 18px;
-        height: 50px;
-        width: 100%;
-        padding: 5px 12px;
-        transition: .3s ease all;
-        border-radius: 5px;
-    }
-
-    .formulario-tarjeta input:hover,
-    .formulario-tarjeta select:hover {
-        border: 2px solid #93BDED;
-    }
-
-    .formulario-tarjeta input:focus,
-    .formulario-tarjeta select:focus {
-        outline: rgb(4, 4, 4);
-        box-shadow: 1px 7px 10px -5px rgba(90, 116, 148, 0.3);
-    }
-
-    .formulario-tarjeta input {
-        margin-bottom: 20px;
-        text-transform: uppercase;
-    }
-
-    .formulario-tarjeta .flexbox {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .formulario-tarjeta .expira {
-        width: 100%;
-    }
-
-    .formulario-tarjeta .ccv {
-        min-width: 100px;
-    }
-
-    .formulario-tarjeta .grupo-select {
-        width: 100%;
-        margin-right: 15px;
-        position: relative;
-    }
-
-    .formulario-tarjeta select {
-        -webkit-appearance: none;
-    }
-
-    .formulario-tarjeta .grupo-select i {
-        position: absolute;
-        color: #CED6E0;
-        top: 18px;
-        right: 15px;
-        transition: .3s ease all;
-    }
-
-    .formulario-tarjeta .grupo-select:hover i {
-        color: #93bfed;
-    }
-
-    .formulario-tarjeta .btn-enviar {
-        border: none;
-        padding: 10px;
-        font-size: 22px;
-        color: #fff;
-        background: #2364d2;
-        box-shadow: 2px 2px 10px 0px rgba(0, 85, 212, 0.4);
-        cursor: pointer;
-    }
-
-    .formulario-tarjeta .btn-enviar:hover {
-        background: #1850b1;
-    }
-
-    .mobile_view {
-        width: 200px;
-    }
-
-    .button-pay {
-        width: 48%;
-    }
-
-    .flex_logo_ship {
-        display: flex;
-        justify-content: space-between
-    }
-
-    .size-form-payment {
-        width: 48rem;
-        margin: 0 auto;
-    }
-
-    .font-leyend {
-        font-size: 0.65000rem;
-    }
-
-    .image-leyend {
-        max-width: 15%;
-    }
-
-    @media (max-width: 767px) {
-        .mobile_view {
-            /* display: block; */
-            width: 80px;
-        }
-
-        .button-pay {
-            width: 100%;
-        }
-
-        .size-form-payment {
-            width: 100%;
-        }
-
-        .tarjet-dim {
-            margin-top: 20px;
-        }
-    }
-</style>
-
-<div class="container " fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="80" fxFlex.lg="80" fxFlex.xl="80"
-    fxLayoutAlign="center center"
+<div class="checkout-page"
     *ngIf="(embryoService.localStorageCartProducts && embryoService.localStorageCartProducts.length>0); else elseBlock">
-    <div fxFlex.xs="95" fxFlex.sm="95" fxFlex.md="90" fxFlex.lg="90" fxFlex.xl="90">
-        <form card container=".card-container" id="formulario-tarjeta" [formGroup]="paymentFormOne"
-            style="margin-bottom: 50px;">
-            <div class="row">
+    <div class="container">
+        <!-- Header -->
+        <br>
+        <div class="checkout-header">
+            <h1 class="checkout-title">Finalizar Compra</h1>
+            <div class="checkout-subtitle">Completa tu pedido de forma segura</div>
+        </div>
 
-                <div class="col-md-4 col-sm-12 col-xs-12 mt-2 mobile-view">
-                    <mat-card class="cardpage">
-                        <div class="view-cart text-left mb-2">
-                            <button class="button-option" mat-raised-button color="accent"
-                                (click)="toggleRightSidenav()">Detalle de la
-                                compra:
-                                {{getCartProducts() | currency : 'USD' : 'symbol' : '1.0-0'}}</button>
-                        </div>
-                        <div class="view-cart text-left ">
-                            <p><strong>Dirección de entrega:</strong></p>
-                            <mat-list-item class="text-left mt-5" *ngFor="let location of locationsGrid; last as last">
-                                <p>{{location.nameci}} - {{location.departament}}</p>
-                                <p>{{location.via}} #{{location.number}} - {{location.sn}}, {{location.neighborhood}}
-                                </p>
-                                <p><strong>Datos adicionales:</strong></p>
-                                <p>{{location.additional_data}}</p>
-                                <p>{{location.contact}} - {{location.phone}} </p>
-                                <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
-                            </mat-list-item>
-                        </div>
-                        <div class="view-cart text-left mb-5 mt-2">
-                            <button class="button-option" mat-raised-button color="accent"
-                                (click)="stablish_predermined(id_com)">Cambiar
-                                ubicación
-                                predeterminada</button>
-                        </div>
-                    </mat-card>
-
+        <div class="checkout-content">
+            <!-- Resumen del Pedido -->
+            <div class="order-summary">
+                <div class="summary-header">
+                    <h3>Resumen del Pedido</h3>
+                    <button class="view-details-btn" (click)="toggleRightSidenav()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        Ver detalles
+                    </button>
                 </div>
 
-                <!-- <div class="col-md-8 col-sm-12 col-xs-12 mt-2">
-                    <mat-card class="cardpage">
-                        <mat-tab-group (selectedTabChange)="selectedPaymentTabChange($event)">
-                            <mat-tab label="Tarjeta de crédito o débito">
-                                <div formGroupName="payment" class="row mt-5">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <img class="imd-styles m-1 cards_icon"
-                                                src="assets/images/cards_brand/amex.svg" alt="card">
-                                            <img class="imd-styles m-1 cards_icon"
-                                                src="assets/images/cards_brand/dinersclub.svg" alt="card">
-                                            <img class="imd-styles m-1 cards_icon"
-                                                src="assets/images/cards_brand/mastercard.svg" alt="card">
-                                            <img class="imd-styles m-1 cards_icon"
-                                                src="assets/images/cards_brand/visa.svg" alt="card">
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                                                <p class="class_label">Número de Tarjeta *</p>
-                                                <input type="text" placeholder="Número de Tarjeta"
-                                                    formControlName="card_number" card-number class="form-control"
-                                                    maxlength="19" (keypress)="numberOnly($event)" id="inputNumero">
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.card_number').hasError('required') && paymentFormOne.get('payment.card_number').touched">
-                                                    Este campo es obligatorio.</mat-error>
-                                            </div>
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2">
-                                                <p class="class_label">Nombre *</p>
-                                                <input type="text" placeholder="Nombre en la tarjeta"
-                                                    formControlName="user_card_name" card-name class="form-control"
-                                                    id="inputNombre">
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.user_card_name').hasError('required') && paymentFormOne.get('payment.user_card_name').touched">
-                                                    Este campo es obligatorio.</mat-error>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-2">
-                                                <p class="class_label">Mes *</p>
-                                                <select name="mes" id="selectMes" class="form-control"
-                                                    [(ngModel)]="selectedMonth" formControlName="monthCtrl">
-                                                    <option value="01">01</option>
-                                                    <option value="02">02</option>
-                                                    <option value="03">03</option>
-                                                    <option value="04">04</option>
-                                                    <option value="05">05</option>
-                                                    <option value="06">06</option>
-                                                    <option value="07">07</option>
-                                                    <option value="08">08</option>
-                                                    <option value="09">09</option>
-                                                    <option value="10">10</option>
-                                                    <option value="11">11</option>
-                                                    <option value="12">12</option>
-                                                </select>
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.monthCtrl').hasError('required') && paymentFormOne.get('payment.monthCtrl').touched">
-                                                    Este campo es obligatorio.</mat-error>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-2">
-                                                <p class="class_label">Año *</p>
-                                                <select name="year" id="selectYear" class="form-control"
-                                                    [(ngModel)]="selectedYear" formControlName="yearControl">
-                                                    <option value="2021">2021</option>
-                                                    <option value="2022">2022</option>
-                                                    <option value="2023">2023</option>
-                                                    <option value="2024">2024</option>
-                                                    <option value="2025">2025</option>
-                                                    <option value="2026">2026</option>
-                                                    <option value="2027">2027</option>
-                                                    <option value="2028">2028</option>
-                                                </select>
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.yearControl').hasError('required') && paymentFormOne.get('payment.yearControl').touched">
-                                                    Este campo es obligatorio.</mat-error>
-                                            </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-2">
-                                                <p class="class_label">CCV *</p>
-                                                <input type="text" placeholder="CVV" formControlName="cvv" card-cvc
-                                                    class="form-control" maxlength="4" (keypress)="numberOnly($event)">
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.cvv').hasError('required') && paymentFormOne.get('payment.cvv').touched">
-                                                    Este campo es obligatorio.</mat-error>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-2">
-                                                <p class="class_label">Cuotas *</p>
-                                                <input type="text" placeholder="Cuotas" formControlName="quota"
-                                                    class="form-control" maxlength="2" (keypress)="numberOnly($event)">
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.quota').hasError('required') && paymentFormOne.get('payment.quota').touched">
-                                                    Este campo es obligatorio.</mat-error>
-                                            </div>
-                                            <div class="col-12 mt-2" *ngIf="validate_ubication">
-                                                <label style="color:red">
-                                                    Debes registrar una ubicación en el menú de ubicaciones para poder
-                                                    realizar la
-                                                    compra
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div>
-                                            <section class="tarjeta tarjet-dim" id="tarjeta">
-                                                <div class="delantera">
-
-                                                    <div class="flex_logo_ship">
-                                                        <div>
-                                                            <img src="assets/images/card/chip-tarjeta.png" class="chip"
-                                                                alt="" style="width:40px">
-                                                        </div>
-                                                        <div align="right">
-                                                            <div class="logo-marca col-md-6 mobile_view"
-                                                                id="logo-marca">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="datos">
-                                                        <div class="grupo" id="numero">
-                                                            <p class="label">Número Tarjeta</p>
-                                                            <p class="numero">#### #### #### ####</p>
-                                                        </div>
-                                                        <div class="flexbox">
-                                                            <div class="grupo" id="nombre">
-                                                                <p class="label">Nombre Tarjeta</p>
-                                                                <p class="nombre">Nombre</p>
-                                                            </div>
-
-                                                            <div class="grupo" id="expiracion">
-                                                                <p class="label">Expiracion</p>
-                                                                <p class="expiracion"><span class="mes">MM</span> /
-                                                                    <span class="year">AA</span></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </section>
-                                        </div>
-                                        <div class="mt-3" align="center">
-                                            <p class="font-leyend">Pague de manera segura<img
-                                                    src="assets/images/pci/pci.svg" class="chip image-leyend" alt="">
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <button mat-raised-button color="accent" type="button" class="button-pay"
-                                            (click)="finalStep()">Pagar {{getCartProducts() | currency : 'USD' :
-                                            'symbol' : '1.0-0'}}</button>
-                                    </div>
-                                    <div class="col-md-6">
-
-                                    </div>
-                                </div>
-                            </mat-tab>
-                            <mat-tab label="Débito bancario / Pago en efectivo"
-                                *ngIf="bankCardsImages && bankCardsImages.length>0">
-                                <div class="mat-inner-tab netbanking-wrapper checkbox-small" formGroupName="payment">
-                                    <div class="header-mat-tab bg-grey text-center">
-                                        <div class="mb-4"> <img src="assets/images/online-shop.png" alt=""></div>
-                                        <h4 class="mb-5">Select Bank for NetBanking</h4>
-                                    </div>
-                                    <hr class="dark-border">
-                                    <div class="mb-5">
-                                        <div class="card-radio ">
-                                            <mat-radio-group formControlName="card_id">
-                                                <mat-radio-button *ngFor="let card of bankCardsImages"
-                                                    [value]="card?.id">
-                                                    <img [src]="card?.image" width="150" height="30" alt="Bank">
-                                                </mat-radio-button>
-                                            </mat-radio-group>
-
-                                        </div>
-                                    </div>
-                                    <div fxLayout='row wrap' class="pb-5">
-                                        <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="40" fxFlex.lg="40"
-                                            fxFlex.xl="40">
-                                            <h6>All Banks</h6>
-                                            <mat-form-field class="w-100">
-                                                <mat-select formControlName="bank_card_value">
-                                                    <mat-option value=null disabled="disabled" hidden>Select
-                                                    </mat-option>
-                                                    <mat-option value="option1">Option 1</mat-option>
-                                                    <mat-option value="option2">Option 2</mat-option>
-                                                    <mat-option value="option3">Option 3</mat-option>
-                                                </mat-select>
-                                                <mat-error
-                                                    *ngIf="paymentFormOne.get('payment.bank_card_value').hasError('required') && paymentFormOne.get('payment.bank_card_value')">
-                                                    This field should not be empty.</mat-error>
-                                            </mat-form-field>
-                                            <div>
-                                                <button mat-raised-button color="accent" (click)="finalStep()">Make
-                                                    Payment</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </mat-tab>
-                        </mat-tab-group>
-                    </mat-card>
-                </div> -->
-
-
-                <div class="col-md-8 col-sm-12 col-xs-12 mt-2">
-                    <mat-card class="cardpage">
-                        <div class="info-entrega">
-                            <h3><strong>Tu compra será enviada</strong></h3>
-                            <mat-list-item class="text-left" *ngFor="let location of locationsGrid; last as last">
-                                <p><strong>Dirección de entrega:</strong></p>
-                                <div>
-                                    <p>{{location.nameci}} - {{location.departament}}</p>
-                                    <p>{{location.via}} #{{location.number}} - {{location.sn}}, {{location.neighborhood}}</p>
-                                </div>
-                                <p><strong>Datos adicionales:</strong></p>
-                                <div>
-                                    <p>{{location.additional_data}}</p>
-                                    <p>{{location.contact}} - {{location.phone}} </p>
-                                </div>
-                                <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
-                            </mat-list-item>
-                        </div>
-                        <div class="row-between-links mb-3">
-                            <div class="bf-ui-separator" data-js="separator" data-id="separator"></div>
-                            <div class="action-block">
-                                <a class="link-action" (click)="toggleRightSidenav()">Detalle de la compra:
-                                    {{getCartProducts() | currency : 'USD' : 'symbol' : '1.0-0'}}</a>
-                            </div>
-                            <div class="bf-ui-separator" data-js="separator" data-id="separator"></div>
-                            <div class="action-block">
-                                <a class="link-action" (click)="stablish_predermined(id_com)">Cambiar ubicación
-                                    predeterminada</a>
-                            </div>
-                            <div class="bf-ui-separator" data-js="separator" data-id="separator"></div>
-                            <div class="action-block">
-                                <button mat-raised-button color="accent" type="button" class=" "
-                                    (click)="finalStep()">
-                                    Pagar {{getCartProducts() | currency : 'USD' : 'symbol' : '1.0-0'}}
-                                </button>
-                            </div>
-                        </div>
-                    </mat-card>
+                <div class="summary-total">
+                    <div class="total-row">
+                        <span class="total-label">Total a pagar</span>
+                        <span class="total-amount">{{getCartProducts() | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                    </div>
                 </div>
             </div>
-        </form>
+
+            <!-- Información de Entrega -->
+            <div class="delivery-info">
+                <div class="delivery-header">
+                    <div class="delivery-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+                        </svg>
+                    </div>
+                    <div class="delivery-content">
+                        <h3>Dirección de entrega</h3>
+                        <div class="delivery-address" *ngFor="let location of locationsGrid; last as last">
+                            <div class="address-details">
+                                <p class="city">{{location.nameci}} - {{location.departament}}</p>
+                                <p class="street">{{location.via}} #{{location.number}} - {{location.sn}},
+                                    {{location.neighborhood}}</p>
+                                <p class="additional" *ngIf="location.additional_data">{{location.additional_data}}</p>
+                                <p class="contact">{{location.contact}} - {{location.phone}}</p>
+                            </div>
+                            <mat-divider *ngIf="!last"></mat-divider>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="change-address-btn" (click)="stablish_predermined(id_com)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
+                    Cambiar dirección
+                </button>
+            </div>
+
+            <!-- Botón de Pago -->
+            <div class="payment-section">
+                <button class="pay-button" (click)="finalStep()">
+                    <div class="pay-button-content">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+                        </svg>
+                        <span>Pagar {{getCartProducts() | currency : 'USD' : 'symbol' : '1.0-0'}}</span>
+                    </div>
+                    <div class="pay-button-security">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z" />
+                        </svg>
+                        <span>Pago seguro</span>
+                    </div>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
 <ng-template #elseBlock>
-    <div class="section-gap-lg text-center">
-        <div class="mb-4">
-            <img src="assets/images/empty-cart.png" height="128" width="128" alt="cart-empty">
+    <div class="empty-checkout-state">
+        <div class="empty-checkout-content">
+            <div class="empty-checkout-icon">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                        fill="#34d399" />
+                </svg>
+            </div>
+            <h2 class="empty-checkout-title">Tu carrito está vacío</h2>
+            <p class="empty-checkout-description">Agrega algunos productos increíbles y vuelve aquí para finalizar tu
+                compra</p>
+            <button class="continue-shopping-btn" [routerLink]="['/']">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+                <span>Continuar Comprando</span>
+            </button>
         </div>
-        <h4> Your Shopping Bag is empty.</h4>
-        <a href="javascript:void(0)" class="primary-color" [routerLink]="['/']">Go for Shopping</a>
     </div>
 </ng-template>

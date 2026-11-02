@@ -1,7 +1,14 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastrService } from 'ngx-toastr';
 import { ApiService } from '../../../Services/api.service';
 import { MatSelect } from '@angular/material/select';
 import { Subject } from 'rxjs';
@@ -24,6 +31,18 @@ export interface City {
 
 @Component({
     selector: 'app-AddressEdit',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        NgSelectModule
+    ],
     templateUrl: './AddressEdit.component.html',
     styleUrls: ['./AddressEdit.component.scss']
 })
@@ -41,47 +60,47 @@ export class AddressEditComponent implements OnInit {
     contact: any;
     id_city: any;
     id_departament: any;
-    formLocationEdit: FormGroup;
+    formLocationEdit!: UntypedFormGroup;
     dep_id: any;
     citietlist: City[] = [];
-    depart$: Observable<Departament[]>;
-    city$: Observable<City[]>;
+    depart$!: Observable<Departament[]>;
+    city$!: Observable<City[]>;
 
 
     // START ANGULAR MAT SEARCH DEPARTAMENT    
-    public departamentCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public departamentFilterCtrl: FormControl = new FormControl();
-    public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieFilterCtrl: FormControl = new FormControl();
-    @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+    public departamentCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    @ViewChild('singleSelect', { static: true })
+    singleSelect!: MatSelect;
     private _onDestroy = new Subject<void>();
     // END ANGULAR MAT SEARCH DEPARTAMENT
     // START ANGULAR MAT SEARCH CITY
-    public cityCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public cityFilterCtrl: FormControl = new FormControl();
+    public cityCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public cityFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH CITY
     departments: Departament[] = [];
     cities: City[] = [];
     department_selected: Departament[] = [];
     departamentlist: Departament[] = [];
 
-    formData: FormGroup;
-    selectedValue;
-    selectedCityValue;
-    toastOption: ToastOptions = {
-        title: "Ubicación actualizada",
-        msg: "Ubicación ha sido actualizada!",
-        showClose: true,
-        timeout: 3000,
-        theme: "material"
-     };
+    formData!: UntypedFormGroup;
+    selectedValue: any;
+    selectedCityValue: any;
+    toastOption: any = this.toastyService.success(
+  "La ubicación ha sido actualizada!",
+  "Ubicación actualizada",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
+
 
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
-        private toastyService: ToastaService,
+        private formGroup: UntypedFormBuilder,
+        private toastyService: ToastrService,
         private apiService: ApiService,) {
 
     }
@@ -106,23 +125,23 @@ export class AddressEditComponent implements OnInit {
                 sn: ['', [Validators.required]],
                 // departmentControl: new FormControl('', [Validators.required]),
                 // cityControl: new FormControl('', [Validators.required]),
-                contact: new FormControl('', [Validators.required]),
-                phone: new FormControl('', [Validators.required]),
-                additional_data: new FormControl('', [Validators.required]),
+                contact: new UntypedFormControl('', [Validators.required]),
+                phone: new UntypedFormControl('', [Validators.required]),
+                additional_data: new UntypedFormControl('', [Validators.required]),
                 id: [''],
-                departamentCtrll: new FormControl('', [Validators.required]),
-                citieCtrl: new FormControl('', [Validators.required]),                
+                departamentCtrll: new UntypedFormControl('', [Validators.required]),
+                citieCtrl: new UntypedFormControl('', [Validators.required]),                
             });
-            this.apiService.getLocationClientFront(this.id).subscribe(res => {
+            this.apiService.getLocationClientFront(this.id).subscribe((res: any) => {
                 this.getDataUser(res, this.id)
-            }, error => console.log(error));
+            }, (error: any) => console.log(error));
         }
 
     }
 
 
 
-    getDataUser(response, id_location) {
+    getDataUser(response: { id: any; neighborhood: any; number: any; via: any; sn: any; additional_data: any; phone: any; id_city: any; nameci: any; id_departament: any; departament: any; contact: any; }, id_location: any) {
 
         this.id = response.id;
         this.neighborhood = response.neighborhood;
@@ -137,14 +156,14 @@ export class AddressEditComponent implements OnInit {
         this.departament = response.departament;
         this.contact = response.contact;
 
-        this.formLocationEdit.get('via').setValue(this.via)
-        this.formLocationEdit.get('number').setValue(this.number)
-        this.formLocationEdit.get('sn').setValue(this.sn)
-        this.formLocationEdit.get('neighborhood').setValue(this.neighborhood)
-        this.formLocationEdit.get('contact').setValue(this.contact)
-        this.formLocationEdit.get('phone').setValue(this.phone)
-        this.formLocationEdit.get('additional_data').setValue(this.additional_data)
-        this.formLocationEdit.get('id').setValue(this.id)
+        this.formLocationEdit.get('via')!.setValue(this.via)
+        this.formLocationEdit.get('number')!.setValue(this.number)
+        this.formLocationEdit.get('sn')!.setValue(this.sn)
+        this.formLocationEdit.get('neighborhood')!.setValue(this.neighborhood)
+        this.formLocationEdit.get('contact')!.setValue(this.contact)
+        this.formLocationEdit.get('phone')!.setValue(this.phone)
+        this.formLocationEdit.get('additional_data')!.setValue(this.additional_data)
+        this.formLocationEdit.get('id')!.setValue(this.id)
 
         // START ANGULAR MAT SEARCH DEPARTAMENT
         this.departments = [];
@@ -160,7 +179,7 @@ export class AddressEditComponent implements OnInit {
                 this.depart$ = this.getDepartment("", this.departments);
                 
             },
-            error => console.log(error)
+            (            error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH DEPARTAMENT
 
@@ -182,25 +201,25 @@ export class AddressEditComponent implements OnInit {
     }
 
 
-    getDepartment(term: string = null, algo): Observable<Departament[]> {
+    getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
 
-    getCity(term: string = null, algo): Observable<City[]> {
+    getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
 
-    setValueDepartmentSelect(departments, id_departmen) {
+    setValueDepartmentSelect(departments: string | any[], id_departmen: any) {
         let count;
         for (var i = 0; i < departments.length; i++) {
             departments[i].id_departament;
@@ -208,26 +227,31 @@ export class AddressEditComponent implements OnInit {
                 count = i;
             }
         }        
-        this.selectedValue = departments[count].id_departament;
+        this.selectedValue = departments[count!].id_departament;
     }
 
-    setValueCitiSelect(cities, id_city) {
+    setValueCitiSelect(cities: string | any[], id_city: any) {
         let count;
         for (var i = 0; i < cities.length; i++) {
             if (cities[i].id_city == id_city) {
                 count = i;
             }
         }        
-        console.log(cities[count]);
+        console.log(cities[count!]);
         
-        this.selectedCityValue = cities[count].id_city;
+        this.selectedCityValue = cities[count!].id_city;
     }
 
 
-    citieChangeAction(departament) {
+    citieChangeAction(departament: any) {
         this.selectedCityValue = null;
         // START ANGULAR MAT SEARCH CITIES
-        let id_dep = departament.id_departament;
+        let id_dep;
+        if (typeof departament === 'object' && departament.id_departament) {
+            id_dep = departament.id_departament;
+        } else {
+            id_dep = departament; // Assume it's just the ID
+        }
         // console.log(id_dep);
         this.cities = [];
         this.apiService.getCitiesFrontbyDepartments(id_dep).subscribe(
@@ -241,7 +265,7 @@ export class AddressEditComponent implements OnInit {
                 // this.citieCtrl.setValue(this.cities[10]);
                 this.city$ = this.getCity("", this.cities);
             },
-            error => console.log(error)
+            (            error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH CITIES
 
@@ -279,3 +303,4 @@ export class AddressEditComponent implements OnInit {
 
 
 }
+

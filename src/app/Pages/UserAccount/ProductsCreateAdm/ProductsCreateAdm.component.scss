@@ -1,55 +1,487 @@
-.mat-card-image {
-    border: 1px solid #eee;
+/* Contenedor Principal */
+.product-create-container {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  min-height: 100vh;
+  /* Asegura altura */
+}
+
+/* Header */
+.create-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.header-content b {
+  display: block;
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.create-status {
+  font-size: 12px;
+  color: #6c757d;
+  background: #e9ecef;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* Grid Layout: Form (Auto) | Imagenes (320px) */
+.create-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Tarjetas Blancas (Form y Dropzone) */
+.form-card,
+.images-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Formulario */
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-row.full {
+  grid-template-columns: 1fr;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 11px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.required {
+  color: #000;
+}
+
+/* Inputs Estilizados */
+.form-control {
+  height: 40px;
+  border: 1px solid #ced4da;
+  border-radius: 2px;
+  padding: 0 10px;
+  font-size: 13px;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: #79dc78;
+  box-shadow: 0 0 0 3px rgba(121, 220, 120, 0.1);
+  outline: none;
+}
+
+textarea.form-control.textarea {
+  height: auto;
+  min-height: 100px;
+  padding: 10px;
+  resize: vertical;
+}
+
+/* Overrides de ng-select para igualar inputs */
+::ng-deep .ng-select .ng-select-container {
+  min-height: 40px !important;
+  border-radius: 2px !important;
+  border-color: #ced4da !important;
+  font-size: 13px !important;
+}
+
+/* Dropzone (Columna Derecha) */
+.section-label {
+  display: block;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-dropzone {
+  border: 2px dashed #dee2e6 !important;
+  background: #f8f9fa !important;
+  border-radius: 2px !important;
+  min-height: 200px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.custom-dropzone:hover {
+  border-color: #79dc78 !important;
+  background: #f0fff4 !important;
+}
+
+.dropzone-content {
+  text-align: center;
+  color: #adb5bd;
+}
+
+.dropzone-content i {
+  font-size: 36px;
+  color: #79dc78;
+  margin-bottom: 5px;
+}
+
+.dropzone-content p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #495057;
+}
+
+.dropzone-content small {
+  font-size: 10px;
+}
+
+/* Validaciones */
+mat-error {
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.validation-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #e67e22;
+  margin-top: 10px;
+  background: #fff3cd;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.validation-msg.error {
+  color: #dc3545;
+  background: #f8d7da;
+}
+
+.validation-msg i {
+  font-size: 16px;
+}
+
+/* Botón Crear */
+.form-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.create-btn {
+  background: #79dc78 !important;
+  color: white !important;
+  border-radius: 2px !important;
+  padding: 0 20px !important;
+  height: 40px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  box-shadow: 0 4px 6px rgba(121, 220, 120, 0.2) !important;
+}
+
+/* Spinner Overlay */
+.overlay-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .create-content-grid {
+    grid-template-columns: 1fr;
+    /* 1 Columna en tablet */
+  }
+
+  .images-card {
+    order: -1;
+    /* Imágenes arriba */
+  }
+}
+
+@media (max-width: 500px) {
+  .product-create-container {
     padding: 10px;
-    border-radius: 10px;
-    float: right;
-    margin-right: 2rem;
+    background: #fff;
+  }
+
+  .form-card,
+  .images-card {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    /* Inputs apilados en móvil */
+    gap: 0.8rem;
+  }
+
+  .create-btn {
+    width: 100%;
+  }
 }
 
-mat-card {
-    box-shadow: none !important;
+
+.form-control::placeholder,
+.form-control::-webkit-input-placeholder {
+  font-family: inherit !important;
+  font-size: 12px;
+  font-weight: 400;
+  color: #adb5bd !important;
+  opacity: 1;
 }
 
-mat-card p {
-    box-shadow: none !important;
+::ng-deep .ng-select .ng-select-container {
+  min-height: 40px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #ced4da !important;
+  /* Borde visible gris */
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  /* Quitar sombras raras si las hay */
+  color: #495057 !important;
+  /* Texto oscuro */
 }
 
-.mat-line {
-    font-size: 1rem;
-    border-bottom: 1px solid #eee;
-    padding: 0.5em 0;
+/* Placeholder del dropdown (cuando está vacío) */
+::ng-deep .ng-select .ng-select-container .ng-placeholder {
+  color: #adb5bd !important;
+  /* Mismo gris que los inputs */
+  font-size: 12px !important;
+  font-family: inherit !important;
 }
 
-h4 {
-    font-size: 1.1rem;
-    font-weight: 500;
+/* Flecha del dropdown */
+::ng-deep .ng-select .ng-arrow-wrapper .ng-arrow {
+  border-color: #999 transparent transparent !important;
+  /* Flecha gris visible */
 }
 
-.mat-fab {
-    width: 30px;
-    height: 30px;
-    background: #79dc78 !important;
+/* Estado FOCUSED (cuando haces clic) */
+::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: #79dc78 !important;
+  /* Borde verde al activar */
+  box-shadow: 0 0 0 3px rgba(121, 220, 120, 0.1) !important;
+  /* Glow verde suave */
 }
 
-.mat-fab i {
-    font-size: 15px;
+/* Lista desplegable (Opciones) */
+::ng-deep .ng-dropdown-panel {
+  background: #ffffff !important;
+  border: 1px solid #dee2e6 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
 }
 
-.borrar {
-    background-repeat: no-repeat;
-    display: inline-block;
-    fill: currentColor;
-    height: 30px;
-    width: 30px;
-    position: absolute;
-    background: #ff5722;
-    border-radius: 30px;
-    color: #fff;
-    font-size: 20px;
-    padding-top: 5px;
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  background-color: #fff !important;
+  /* Opciones con fondo blanco */
+  color: #333 !important;
+  font-size: 13px !important;
 }
 
-.borrar i {
-    font-size: 15px;
-    color: #fff;
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover,
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+  background-color: #f8f9fa !important;
+  /* Hover gris muy claro */
+  color: #000 !important;
+}
+
+
+/* 1. CENTRADO VERTICAL DEL CONTENIDO */
+::ng-deep .ng-select .ng-select-container {
+  display: flex !important;
+  align-items: center !important;
+  /* Centra verticalmente el texto */
+  min-height: 40px !important;
+  height: 40px !important;
+  /* Altura fija para asegurar centrado */
+  padding-left: 8px !important;
+  /* Espacio a la izquierda */
+}
+
+::ng-deep .ng-select .ng-value-container:has(.ng-value) .ng-placeholder {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* 2. CORREGIR PLACEHOLDER QUE NO DESAPARECE */
+/* Cuando hay un valor seleccionado (.ng-has-value), OCULTAR el placeholder */
+::ng-deep .ng-select.ng-has-value .ng-placeholder {
+  display: none !important;
+  /* Fuerza bruta para ocultarlo */
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Asegurar que el VALOR SELECCIONADO se vea bien y centrado */
+::ng-deep .ng-select .ng-value-container .ng-value {
+  margin-bottom: 0 !important;
+  /* Quitar margenes viejos */
+  font-size: 13px !important;
+  color: #495057 !important;
+  line-height: normal !important;
+}
+
+/* Ajuste fino del input de texto dentro del select (para búsquedas) */
+::ng-deep .ng-select .ng-value-container .ng-input {
+  top: auto !important;
+  /* Resetear posición absoluta si molesta */
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .ng-select .ng-value-container .ng-input>input {
+  height: 100% !important;
+  line-height: normal !important;
+  padding: 0 !important;
+}
+
+/* Contenedor de botones limpio */
+.form-actions {
+  margin-top: 2rem;
+  /* Más aire arriba */
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  /* Asegurar contexto */
+  z-index: 10;
+  /* Que flote sobre otros elementos si es necesario */
+}
+
+/* Botón Crear Producto */
+.create-btn {
+  /* Aseguramos que no tenga márgenes negativos ni posiciones raras */
+  margin: 0 !important;
+  position: relative !important;
+  /* Estilo */
+  background: #79dc78 !important;
+  color: white !important;
+  height: 42px !important;
+  padding: 0 24px !important;
+  box-shadow: 0 4px 6px rgba(121, 220, 120, 0.25) !important;
+}
+
+/* Forzar estilo en todos los placeholders, incluyendo textarea */
+.form-control::placeholder,
+.form-control::-webkit-input-placeholder,
+textarea.form-control::placeholder {
+  font-family: inherit !important;
+  /* Heredar la fuente del label */
+  font-size: 12px !important;
+  /* Tamaño exacto */
+  font-weight: 400 !important;
+  /* Peso normal */
+  color: #adb5bd !important;
+  /* Color gris suave unificado */
+  opacity: 1 !important;
+}
+
+/* Asegurarse que el propio texto al escribir también coincida */
+textarea.form-control {
+  font-family: inherit !important;
+  font-size: 13px !important;
+  color: #495057 !important;
+}
+
+.create-content-grid {
+  display: grid;
+  /* Aquí mantenemos tu ancho grande para PC */
+  grid-template-columns: 1fr 420px !important;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* 2. TABLET (Pantallas medianas 768px - 992px) */
+@media (max-width: 992px) {
+  .create-content-grid {
+    /* Cambiamos a una sola columna fluida */
+    grid-template-columns: 100% !important;
+    gap: 1.5rem;
+  }
+
+  /* La tarjeta de imágenes pasa arriba o abajo (según prefieras) */
+  .images-card {
+    order: -1;
+    /* Pone las imágenes al principio en tablet */
+    width: 100% !important;
+  }
+}
+
+/* 3. MÓVIL (Pantallas pequeñas < 768px) */
+@media (max-width: 768px) {
+  .create-content-grid {
+    display: flex;
+    /* Flex es más seguro en móvil que Grid para stacks simples */
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-card,
+  .images-card {
+    width: 100% !important;
+    /* Ocupar todo el ancho de la pantalla */
+    padding: 1rem !important;
+    /* Reducir padding interno */
+    box-sizing: border-box;
+    /* Evitar scroll horizontal */
+  }
+
+  /* Dropzone fluido en móvil */
+  .custom-dropzone {
+    width: 100% !important;
+    min-height: 150px !important;
+    /* Un poco menos alto en móvil */
+  }
+}
+
+/* Hacer que el dropzone ocupe todo ese nuevo espacio */
+.images-card {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.custom-dropzone {
+  width: 100% !important;
+  max-width: 100% !important;
 }

@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { EmbryoService } from '../../Services/Embryo.service';
 import { ApiService } from '../../Services/api.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Invoice, BalanceDetail } from '../../Models/Invoice';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
 
 export interface Observacions {
@@ -14,6 +16,12 @@ export interface Observacions {
 
 @Component({
    selector: 'embryo-TransfersDetailSidebar',
+   standalone: true,
+   imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule
+   ],
    templateUrl: './TransfersDetailSidebar.component.html',
    styleUrls: ['./TransfersDetailSidebar.component.scss']
 })
@@ -25,8 +33,8 @@ export class TransfersDetailSidebarComponent implements OnInit {
 
    public show: boolean = false;
 
-   public obser = new FormControl('', Validators.required);
-   public newForm = new FormGroup({
+   public obser = new UntypedFormControl('', Validators.required);
+   public newForm = new UntypedFormGroup({
       obser: this.obser,
    });
 
@@ -52,10 +60,17 @@ export class TransfersDetailSidebarComponent implements OnInit {
       this.val_request = localStorage.getItem('val_request');
       this.val_transfer = localStorage.getItem('val_transfer');
       let medetTrs = localStorage.getItem('detail_transfer');
-      let obj = JSON.parse(medetTrs); 
-      if(obj){
-         return obj;
-      }   
+      try{
+         if(medetTrs){
+            let obj = JSON.parse(medetTrs);
+            if(obj){
+               return obj;
+            }
+         }
+      }catch(e){
+         console.log('parse detail_transfer failed', e);
+      }
+      return null;
    }
 
    sendBinnacle() {
@@ -77,7 +92,7 @@ export class TransfersDetailSidebarComponent implements OnInit {
             result => {
                let id_invoice = localStorage.getItem('id_invoice_popup');
                this.apiService.getBinnacle(id_invoice, 'st').subscribe(
-                  result => {
+                  (                  result: any) => {
                      localStorage.removeItem("messajes");
                      let myJSONinvDetail = JSON.stringify(result);
                      localStorage.setItem('messajes', myJSONinvDetail);
@@ -93,3 +108,4 @@ export class TransfersDetailSidebarComponent implements OnInit {
 
 
 }
+

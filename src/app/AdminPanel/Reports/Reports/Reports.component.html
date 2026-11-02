@@ -1,6 +1,6 @@
 <div fxLayout="column">   
    <mat-card *ngIf="buySellChartContent">
-      <div fxLayout="row" class="mb-5" fxLayoutAlign="space-between center">
+      <div class="flex-row" class="mb-5" fxLayoutAlign="space-between center">
          <div class="dash-title">
             {{'Buy' | translate }} / {{ 'Sell' | translate}}
          </div>
@@ -53,9 +53,9 @@
                         <ng-container matColumnDef="type">
                            <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Type</th>
                            <td class="text-nowrap px-3" mat-cell *matCellDef="let element">
-                              <mat-chip-list>
-                                 <mat-chip color="{{element.typeColor}}" selected>{{element.type}}</mat-chip>
-                              </mat-chip-list>
+                              <mat-chip-set>
+                                 <mat-chip [color]="element.typeColor" selected>{{element.type}}</mat-chip>
+                              </mat-chip-set>
                            </td>   
                         </ng-container>
                         <ng-container matColumnDef="amount">
@@ -103,9 +103,9 @@
                            <ng-container matColumnDef="type">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Type</th>
                               <td class="text-nowrap px-3" mat-cell *matCellDef="let element">
-                                 <mat-chip-list>
-                                    <mat-chip color="{{element.typeColor}}" selected>{{element.type}}</mat-chip>
-                                 </mat-chip-list>
+                                 <mat-chip-set>
+                                    <mat-chip [color]="element.typeColor" selected>{{element.type}}</mat-chip>
+                                 </mat-chip-set>
                               </td>
                            </ng-container>
                            <ng-container matColumnDef="amount">
@@ -119,9 +119,9 @@
                            <ng-container matColumnDef="status">
                               <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Status</th>
                               <td class="text-nowrap px-3" mat-cell *matCellDef="let element">
-                                 <mat-chip-list>
-                                    <mat-chip color="{{element.statusColor}}" selected>{{element.status}}</mat-chip>
-                                 </mat-chip-list> 
+                                 <mat-chip-set>
+                                    <mat-chip [color]="element.statusColor" selected>{{element.status}}</mat-chip>
+                                 </mat-chip-set> 
                               </td>
                            </ng-container>
                            <tr mat-header-row *matHeaderRowDef="displayedTransferColumns"></tr>
@@ -152,9 +152,9 @@
                         <ng-container matColumnDef="type">
                            <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Type</th>
                            <td class="text-nowrap px-3" mat-cell *matCellDef="let element">
-                              <mat-chip-list>
-                                 <mat-chip color="{{element.typeColor}}" selected>{{element.type}}</mat-chip>
-                              </mat-chip-list> 
+                              <mat-chip-set>
+                                 <mat-chip [color]="element.typeColor" selected>{{element.type}}</mat-chip>
+                              </mat-chip-set> 
                            </td>   
                         </ng-container>
                         <ng-container matColumnDef="companyName">
@@ -168,9 +168,9 @@
                         <ng-container matColumnDef="status">
                            <th class="text-nowrap px-3" mat-header-cell *matHeaderCellDef>Status</th>
                            <td class="text-nowrap px-3" mat-cell *matCellDef="let element">
-                              <mat-chip-list>
-                                 <mat-chip color="{{element.statusColor}}" selected>{{element.status}}</mat-chip>
-                              </mat-chip-list> 
+                              <mat-chip-set>
+                                 <mat-chip [color]="element.statusColor" selected>{{element.status}}</mat-chip>
+                              </mat-chip-set> 
                            </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedExpenseColumns"></tr>

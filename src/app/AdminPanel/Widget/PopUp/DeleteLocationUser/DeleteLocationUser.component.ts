@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -8,12 +11,14 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 @Component({
    selector: 'app-delete-location-user-dialog',
    templateUrl: './DeleteLocationUser.component.html',
-   styleUrls: ['./DeleteLocationUser.component.scss']
+   styleUrls: ['./DeleteLocationUser.component.scss'],
+   standalone: true,
+   imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule]
 })
 
 export class DeleteLocationUserComponent implements OnInit {
 
-   data: string;
+   data: string = '';
 
    constructor(
       public dialogRef: MatDialogRef<DeleteLocationUserComponent>,
@@ -25,23 +30,20 @@ export class DeleteLocationUserComponent implements OnInit {
    ngOnInit() {
    }
 
-   yes(id_location) {
+   yes(id_location: any) {
       this.dialogRef.close("yes");
       const id_user_front = localStorage.getItem('id_user_front');
       let myObj_user_client = { "predetermined": "True", "id_user_front": id_user_front };
       const body = JSON.stringify(myObj_user_client);
       this.apiService.deleteLocationAction(id_location).subscribe(
-         result => {
+         (result: any) => {
             console.log(result);
             window.location.reload();
-            
-            // this.router.navigate(['/account/address']).then(() => {
-            //    window.location.reload();
-            // });
          },
-         error => {
+         (error: any) => {
             console.log(error)
          }
       );
    }
 }
+

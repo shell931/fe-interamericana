@@ -6,7 +6,7 @@ import { SessionRoutes } from './Session.routing';
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
@@ -50,7 +50,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
    imports: [
       CommonModule,
       RouterModule.forChild(SessionRoutes),
-      FlexLayoutModule,
+      LayoutModule,
       MatCardModule, 
       MatButtonModule,
       MatMenuModule, 
@@ -91,3 +91,5 @@ import { NgSelectModule } from '@ng-select/ng-select';
    ]
 })
 export class SessionModule { }
+
+

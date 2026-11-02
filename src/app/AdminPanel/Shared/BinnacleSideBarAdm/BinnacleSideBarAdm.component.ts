@@ -4,18 +4,33 @@ import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Invoice, BalanceDetail } from '../../../Models/Invoice';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-
+import { UntypedFormControl, UntypedFormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, DatePipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 export interface Observacions {
    observation: any,
-
 }
 
 @Component({
    selector: 'embryo-BinnacleSideBarAdm',
    templateUrl: './BinnacleSideBarAdm.component.html',
-   styleUrls: ['./BinnacleSideBarAdm.component.scss']
+   styleUrls: ['./BinnacleSideBarAdm.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      MatCardModule,
+      MatButtonModule,
+      MatIconModule,
+      MatFormFieldModule,
+      MatInputModule,
+      DatePipe
+   ]
 })
 export class BinnacleSideBarAdmComponent implements OnInit {
 
@@ -34,8 +49,8 @@ export class BinnacleSideBarAdmComponent implements OnInit {
    searchValue: any = '';
    public show: boolean = false;
     
-   public obser = new FormControl('', Validators.required);
-   public newForm = new FormGroup({
+   public obser = new UntypedFormControl('', Validators.required);
+   public newForm = new UntypedFormGroup({
       obser: this.obser,
    });
 
@@ -114,3 +129,4 @@ export class BinnacleSideBarAdmComponent implements OnInit {
 
 
 }
+

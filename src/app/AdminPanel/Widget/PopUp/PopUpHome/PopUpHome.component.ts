@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { of } from 'rxjs/observable/of';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 
@@ -8,7 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
    selector: 'PopUpHome-dialog',
@@ -19,50 +19,47 @@ import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta
 export class PopUpHomeComponent implements OnInit {
 
    // data: string;
-   gallery: string;
+   gallery: string = '';
    adminprList: any[] = [];
    adminProductList: any[] = [];
-   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
    dataSource = new MatTableDataSource<any>(this.adminProductList);
-   toastOption: ToastOptions = {
-      title: "Predeterminada",
-      msg: "La ubicación ha quedado predeterminada!",
-      showClose: true,
-      timeout: 9000,
-      theme: "material"
-
-  };
+   toastOption:any = this.toastyService.success(
+  "La ubicación ha quedado predeterminada!",
+  "Ubicación predeterminada",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
 
    constructor(
       public dialogRef: MatDialogRef<PopUpHomeComponent>,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
+      private toastyService: ToastrService,
    ) { }
 
    ngOnInit() {
    }
 
-   product_aprobed(id_prod) {
+   product_aprobed(id_prod: any) {
       let state = 2;
       this.apiService.updateStateProduct(state, id_prod).subscribe(res => this.onClose(res));
    }
 
-   product_reject(id_prod) {
+   product_reject(id_prod: any) {
       let state = 3;
       this.apiService.updateStateProduct(state, id_prod).subscribe(res => this.onClose(res));
    }
 
-   onClose(response) {
-         this.dialogRef.close();
+   onClose(response: any) {
+      this.dialogRef.close();
    }
 
-   deleteLocation(id) {
+   deleteLocation(id: any) {
       //Open the dialog
       this.apiService.deleteLocationUserDialog(id);
    }
 
-   predetermined(id) {
+   predetermined(id: any) {
       const id_user_front = localStorage.getItem('id_user_front');
       let myObj_user_client = { "predetermined": "True", "id_user_front": id_user_front };
       const body = JSON.stringify(myObj_user_client);
@@ -79,7 +76,8 @@ export class PopUpHomeComponent implements OnInit {
       );
    }
 
-   editLocation(id){
+
+   editLocation(id: any){
 
       this.router.navigate(['/account/address/edit/'+id]).then(() => {
          // window.location.reload();
@@ -90,4 +88,5 @@ export class PopUpHomeComponent implements OnInit {
 
 
 }
+
 

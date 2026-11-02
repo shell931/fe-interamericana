@@ -4,31 +4,21 @@
             <mat-nav-list>
                 <div class="close-btn-sidebar">
                     <a href="javascript:void(0)" (click)="embryoService.sidenavOpen = false">
-                        <i class="material-icons">
-                            close
-                        </i>
+                        <mat-icon>close</mat-icon>
                     </a>
                 </div>
             </mat-nav-list>
         </mat-sidenav>
-        <!-- <mat-sidenav class="em-sidebar" #paymentSidenav position="end" mode="over">
-        </mat-sidenav>         -->
-        <mat-sidenav class="em-sidebar" #paymentSidenav [(opened)]="embryoService.paymentSidenavOpen" position="end" mode="over">
-            <embryo-PaymentDetailSideBar></embryo-PaymentDetailSideBar>
-        </mat-sidenav>
 
-
-
-        <HeaderOne *ngIf="this.currentUrl != '/home-two' && this.currentUrl != '/home-three'"></HeaderOne>
-        <div class="main">
-            <router-outlet (activate)="onActivate($event)"></router-outlet>
-        </div>
-        <FooterOne></FooterOne>
-    </mat-sidenav-container>
-    <mat-sidenav-container>
-        <mat-sidenav class="em-sidebar" #ubicationSidenav [(opened)]="embryoService.ubicationSidenavOpen" position="end" mode="over">
-            <embryo-UbicationDetailSideBar></embryo-UbicationDetailSideBar>
-        </mat-sidenav>
+        
+        <!-- Main content area -->
+        <mat-sidenav-content>
+            <HeaderOne *ngIf="this.currentUrl != '/home-two' && this.currentUrl != '/home-three'"></HeaderOne>
+            <div class="main">
+                <router-outlet (activate)="onActivate($event)"></router-outlet>
+            </div>
+            <FooterOne></FooterOne>
+        </mat-sidenav-content>
     </mat-sidenav-container>
 
     <mat-sidenav-container>
@@ -36,11 +26,4 @@
             <embryo-BalanceDetailSideBar></embryo-BalanceDetailSideBar>
         </mat-sidenav>
     </mat-sidenav-container>
-
-    <!-- <mat-sidenav-container>
-        <mat-sidenav class="em-sidebar" #binnacleSidenav [(opened)]="embryoService.binnacleSidenavOpen" position="end" mode="over">
-            <embryo-BinnacleSideBar></embryo-BinnacleSideBar>
-        </mat-sidenav>
-    </mat-sidenav-container> -->
-
 </div>

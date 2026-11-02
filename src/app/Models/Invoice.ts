@@ -60,3 +60,4 @@ export interface BalanceDetail {
     total_balance: any
     
 }
+

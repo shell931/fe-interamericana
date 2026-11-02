@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 // import { NgAisModule } from 'angular-instantsearch';
@@ -11,7 +11,7 @@ import { FilterPipe } from './StoreList/StoreList.component';
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatTreeModule} from '@angular/material/tree';
 
@@ -40,6 +40,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 
 
@@ -51,7 +52,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 		NgxPaginationModule,
 		CommonModule,
 		RouterModule.forChild(StoreListRoutes),
-		FlexLayoutModule,
+		LayoutModule,
 		MatCardModule,
 		MatButtonModule,
 		MatMenuModule,
@@ -76,6 +77,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 		MatRadioModule,
 		MatDialogModule,
 		MatGridListModule,
+		MatAutocompleteModule,
+		MatPaginatorModule,
 		GlobalModule,
 		TemplatesModule,
 		// NgAisModule,
@@ -89,6 +92,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 		StoreListComponent,
 		StoreListCategoriesComponent,
 		FilterPipe
-	]
+	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class StoreListModule { }
+
+

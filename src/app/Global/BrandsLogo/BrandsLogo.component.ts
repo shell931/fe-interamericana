@@ -1,11 +1,14 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { EmbryoService } from '../../Services/Embryo.service';
 
 @Component({
   selector: 'embryo-BrandsLogo',
   templateUrl: './BrandsLogo.component.html',
-  styleUrls: ['./BrandsLogo.component.scss']
+  styleUrls: ['./BrandsLogo.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class BrandslogoComponent implements OnInit, OnChanges {
 
@@ -86,3 +89,4 @@ export class BrandslogoComponent implements OnInit, OnChanges {
    
 
 }
+

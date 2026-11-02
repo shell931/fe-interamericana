@@ -4,7 +4,7 @@
        <mat-grid-list cols="1" rowHeight="1:1">
          <mat-grid-tile>
            <a class="p-link" [routerLink]="['/products', singleProduct?.type, singleProduct?.id]">
-             <img width="626" height="800" [src]="singleProduct?.image" alt="Deal Of The Day">
+            <img class="img_size" [src]="singleProduct?.image" alt="Deal Of The Day">
            </a>
          </mat-grid-tile>
        </mat-grid-list>
@@ -30,7 +30,7 @@
          <ng-container *ngIf="i < 3">
             <mat-grid-tile id="{{i}}_img" class="selected_img" [ngClass]="{ 'border-active': i === 0 }">
               <a class="p-link" href="javascript:void(0)" (click)="getOfferImagePath(path, i)">
-                <img width="626" height="800" alt="deal of the day grid" src="{{path}}" alt="">
+                <img class="img_size" alt="deal of the day grid" src="{{path}}" alt="">
               </a>
             </mat-grid-tile>
          </ng-container>

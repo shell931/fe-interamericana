@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'embryo-CtaGroup',
   templateUrl: './CTA-Group.component.html',
-  styleUrls: ['./CTA-Group.component.scss']
+  styleUrls: ['./CTA-Group.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule]
 })
 export class CTAGroupComponent implements OnInit {
 
@@ -40,3 +44,4 @@ export class CTAGroupComponent implements OnInit {
    }
 
 }
+

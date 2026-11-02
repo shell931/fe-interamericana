@@ -2,24 +2,47 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 import { Router } from '@angular/router';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
 import { ApiService } from '../../../Services/api.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Products } from '../../../Models/Products';
 import { Transactions } from '../../../Models/Transactions';
 import { environment } from '../../../../environments/environment';
 import { Workbook } from 'exceljs';
 import * as fs from 'file-saver';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, FormControl, FormsModule } from '@angular/forms';
+import { DatePipe, CurrencyPipe } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'Transactions',
 	templateUrl: './Transactions.component.html',
-	styleUrls: ['./Transactions.component.scss']
+	styleUrls: ['./Transactions.component.scss'],
+	standalone: true,
+	imports: [
+		CommonModule,
+		FormsModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatCardModule,
+		MatButtonModule,
+		MatIconModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatDatepickerModule,
+		CurrencyPipe
+	]
 })
 
 
@@ -30,17 +53,23 @@ export class TransactionsComponent implements OnInit {
 	transactionList: any[] = [];
 	adminTransactionList: any[] = [];
 	get_pr: any[] = [];
-	transactionsGrid: Transactions;
+	transactionsGrid: Transactions | any;
 	dataList: any[] = [];
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-	initial_date:any;
-	finish_date:any;
+	@ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+	initial_date: any;
+	finish_date: any;
+
+	// Add missing properties for template binding
+	dateInit: any;
+	dateEnd: any;
+	newVar: any;
+	newVarE: any;
 
 	dataSource = new MatTableDataSource<any>(this.adminTransactionList);
 	displayedColumns: string[] = ['action', 'reference', 'name_state', 'created_at', 'quot', 'brand', 'num_aprob', 'cod_reply', 'messaje_reply', 'num_recibo', 'total_tx'];
 
-	campaignOne: FormGroup;
-	campaignTwo: FormGroup;
+	campaignOne: UntypedFormGroup;
+	campaignTwo: UntypedFormGroup;
 
 	constructor(
 		private apiService: ApiService,
@@ -48,19 +77,20 @@ export class TransactionsComponent implements OnInit {
 	) {
 	}
 
-	ngOnInit() {
-		this.addBodyClass();
-		this.apiService.getAllTransactions().subscribe(res => this.getAllTransactionsData(res));
-	}
+		ngOnInit() {
+			this.addBodyClass();
+			this.apiService.getAllTransactions().subscribe((res: any) => this.getAllTransactionsData(res), (error: any) => console.log(error));
+		}
 
 
-	addBodyClass() {
-		window.addEventListener('load', function () {
-			document.querySelector('body').classList.add("loaded")
-		});
-	}
+		addBodyClass() {
+			window.addEventListener('load', function () {
+				const body = document.querySelector('body');
+				if (body) body.classList.add("loaded");
+			});
+		}
 
-	getAllTransactionsData(response) {
+		getAllTransactionsData(response: any) {
 		console.log(response);
 
 		this.transactionList = response;
@@ -110,7 +140,7 @@ export class TransactionsComponent implements OnInit {
 		this.apiService.PopUpAdminTransaction(this.transactionsGrid);
 	}
 
-	downloadExcel() {
+		downloadExcel() {
 		let getDateInit = (document.getElementById("dateInit") as HTMLInputElement).value
 		getDateInit = getDateInit.replace("/", "")
 		getDateInit = getDateInit.replace("/", "") 
@@ -125,7 +155,7 @@ export class TransactionsComponent implements OnInit {
 			"initial_date": this.initial_date,
 			"finish_date": this.finish_date,
 		}
-		this.apiService.getDataExportableTransaction(jsondata).subscribe(res => {
+		this.apiService.getDataExportableTransaction(jsondata).subscribe((res: any) => {
 			let workbook = new Workbook();
 			let worksheet = workbook.addWorksheet("Employee Data");
 			let header = ["Tienda","Creacion", "Cuotas", "Franquicia", "Num Aprob", "Num Recibo", "Cod Respuesta", "Mensaje Respu",
@@ -133,7 +163,7 @@ export class TransactionsComponent implements OnInit {
 				"Numero Contacto", "Descripcion venta", "Num tarj", "Bin"]
 			let headerRow = worksheet.addRow(header);
 			let myJSON = JSON.stringify(res);
-			let obj = JSON.parse(myJSON);		
+			let obj = JSON.parse(myJSON || '[]');		
 	
 			for (let x1 of obj) {
 				let x2 = Object.keys(x1);
@@ -152,3 +182,4 @@ export class TransactionsComponent implements OnInit {
 		);
 	}
 }
+

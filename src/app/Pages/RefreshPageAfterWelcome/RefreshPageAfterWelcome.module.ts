@@ -7,14 +7,15 @@ import { RefreshPageAfterWelcomeComponent } from './RefreshPageAfterWelcome/Refr
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatTreeModule} from '@angular/material/tree';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+// Temporarily commented out - incompatible with Angular Material 20
+// import { MaterialFileInputModule } from 'ngx-material-file-input';
 
 
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -56,7 +57,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 		NgxPaginationModule,
 		CommonModule,
 		RouterModule.forChild(RefreshPageAfterWelcomeRoutes),
-		FlexLayoutModule,
+		LayoutModule,
 		MatCardModule,
 		MatButtonModule,
 		MatMenuModule,
@@ -87,7 +88,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 		ReactiveFormsModule,
 		NgxMatSelectSearchModule,
 		NgxDropzoneModule,
-		MaterialFileInputModule,
+		// MaterialFileInputModule, // Commented out - incompatible with Angular Material 20
 		NgSelectModule
 	],
 	exports:[
@@ -102,3 +103,5 @@ import { NgSelectModule } from '@ng-select/ng-select';
 	]
 })
 export class RefreshPageAfterWelcomeModule { }
+
+

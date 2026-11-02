@@ -1,21 +1,35 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 import { EmbryoService } from '../../../Services/Embryo.service';
+import { PopupManagerService } from '../../../Services/popup-manager.service';
+import { CommonSignInComponent } from '../../../Global/CommonSignIn/CommonSignIn.component';
 
 @Component({
   selector: 'app-Signin',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    RouterModule,
+    MatCardModule,
+    CommonSignInComponent
+  ],
   templateUrl: './Signin.component.html',
   styleUrls: ['./Signin.component.scss']
 })
 export class SigninComponent implements OnInit {
 
 
-   constructor(public embryoService : EmbryoService) { }
+   constructor(public embryoService : EmbryoService,
+               private popupManager : PopupManagerService) { }
 
    ngOnInit() {
    }
 
    public toggleRightSidenav() {
-      this.embryoService.paymentSidenavOpen = !this.embryoService.paymentSidenavOpen;
+      this.popupManager.tryOpenPopup('cart');
    }
 
    public getCartProducts() {
@@ -34,3 +48,4 @@ export class SigninComponent implements OnInit {
    }
 
 }
+

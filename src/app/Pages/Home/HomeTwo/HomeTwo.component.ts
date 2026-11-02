@@ -20,10 +20,10 @@ export class HomeTwoComponent implements OnInit {
 
    public lighteningDeals() {
       this.embryoService.getProducts().valueChanges()
-         .subscribe(res => this.getLighteningDealsResponse(res));
+         .subscribe((res: any) => this.getLighteningDealsResponse(res));
    }
 
-   public getLighteningDealsResponse(res) {
+   public getLighteningDealsResponse(res: any) {
       let productsArray : any = [];
       this.lighteningDealsProducts = null;
       productsArray.push(this.last(res.men));
@@ -34,23 +34,24 @@ export class HomeTwoComponent implements OnInit {
       this.lighteningDealsProducts = productsArray;
    }
 
-   last(array) {
+   last(array: any) {
       return array[array.length - 1];
    }
 
    public getProducts() {
       this.embryoService.getProducts().valueChanges()
-         .subscribe(res => this.getProductsResponse(res));
+         .subscribe((res: any) => this.getProductsResponse(res));
    }
 
-   public getProductsResponse(res) {
+   public getProductsResponse(res: any) {
       this.topProducts = null;
       let products = ((res.men.concat(res.women)).concat(res.gadgets)).concat(res.accessories);
       this.topProducts = products;
    }
 
-   public addToCart(value) {
+   public addToCart(value: any) {
       this.embryoService.addToCart(value);
    }
 
 }
+

@@ -1,10 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'embryo-HeaderUserProfileDropdown',
     templateUrl: './HeaderUserProfileDropdown.component.html',
-    styleUrls: ['./HeaderUserProfileDropdown.component.scss']
+    styleUrls: ['./HeaderUserProfileDropdown.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule
+    ]
 })
 export class HeaderUserProfileDropdownComponent implements OnInit {
 
@@ -51,3 +63,4 @@ export class HeaderUserProfileDropdownComponent implements OnInit {
     }
 
 }
+

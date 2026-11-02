@@ -1,15 +1,35 @@
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../Services/api.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'embryo-ForgotPassword',
     templateUrl: './ForgotPassword.component.html',
-    styleUrls: ['./ForgotPassword.component.scss']
+    styleUrls: ['./ForgotPassword.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule
+    ]
 })
 export class ForgotPasswordComponent implements OnInit {
 
-    forgotForm: FormGroup;
+    forgotForm: UntypedFormGroup;
     emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
     public validate_same_email: boolean = false;
     public validate_user: boolean = false;
@@ -20,7 +40,7 @@ export class ForgotPasswordComponent implements OnInit {
 
     constructor(
 
-        public formBuilder: FormBuilder,
+        public formBuilder: UntypedFormBuilder,
         private apiService: ApiService,
 
     ) { }
@@ -90,3 +110,4 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
 }
+

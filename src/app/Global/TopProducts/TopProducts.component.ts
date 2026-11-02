@@ -1,9 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatButtonModule } from '@angular/material/button';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'embryo-TopProducts',
   templateUrl: './TopProducts.component.html',
-  styleUrls: ['./TopProducts.component.scss']
+  styleUrls: ['./TopProducts.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatChipsModule,
+    MatButtonModule,
+    CurrencyPipe
+  ]
 })
 export class TopProductsComponent implements OnInit {
 
@@ -42,3 +57,4 @@ export class TopProductsComponent implements OnInit {
    }
 
 }
+

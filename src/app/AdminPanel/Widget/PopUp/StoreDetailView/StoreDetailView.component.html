@@ -1,4 +1,4 @@
-<perfect-scrollbar class="m-0 p-0 invoice-popup">
+<cdk-virtual-scroll-viewport style="height: 600px">
    <div class="bg-white final-receipt-page">
       <div class="final-receipt">
          <mat-card class="pt-0 w-100 m-0">
@@ -30,7 +30,7 @@
                               </div>
                               <div *ngIf="doc.extension == 'pdf'">
                                  {{doc.extension}}
-                                 <pdf-viewer [src]="pdfSrc" [render-text]="true" style="display: block;"></pdf-viewer>
+                                 <a [href]="doc.url_document" target="_blank">Open PDF</a>
                               </div>
                            </div>
                            <div class="col-4">
@@ -45,19 +45,13 @@
                         <div *ngIf="doc.extension == 'png'">
                            <img src="{{doc.url_document}}" alt="">
                         </div>
-                        <!-- <img src="{{docs_data.url_document}}" width="300px" height="300px" alt="Success"> -->
-                        <!-- <ngx-doc-viewer url="{{docs.url_document}}" viewer="google"  style="width:100%;height:93vh;"></ngx-doc-viewer> -->
-                        <!-- <p mat-line class="demo-2"> {{location.neighborhood}}</p>
-                        <p mat-line class="demo-2"> {{location.nameci}} - {{location.departament}}</p>
-                        <p mat-line class="demo-2"> {{location.additional_data}} </p>
-                        <p mat-line class="demo-2"> {{location.contact}} - {{location.phone}} </p> -->
                         <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
                      </mat-list-item>
                   </mat-list>
 
 
-                  <div fxLayout="row wrap" fxLayoutAlign="start center" class="col-gap">
-                     <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100"
+                  <div style="display: flex; flex-flow: row wrap;">
+                     <div style="flex: 1 1 100%; box-sizing: border-box; max-width: 100%;"
                         class="size_card">
 
                      </div>
@@ -67,4 +61,4 @@
          </mat-card>
       </div>
    </div>
-</perfect-scrollbar>
+</cdk-virtual-scroll-viewport>

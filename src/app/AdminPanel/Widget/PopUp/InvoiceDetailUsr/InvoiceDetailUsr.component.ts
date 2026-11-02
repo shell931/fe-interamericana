@@ -1,19 +1,22 @@
 import { Component, OnInit ,Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule, DatePipe } from '@angular/common';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Invoice } from '../../../../Models/Invoice';
 import { environment } from '../../../../../../src/environments/environment';
 
 @Component({
    selector: 'InvoiceDetailUsr-dialog',
    templateUrl: './InvoiceDetailUsr.component.html',
-   styleUrls: ['./InvoiceDetailUsr.component.scss']
+   styleUrls: ['./InvoiceDetailUsr.component.scss'],
+   standalone: true,
+   imports: [CommonModule, MatDialogModule, DatePipe]
    })
 
 export class InvoiceDetailUsrComponent implements OnInit {
@@ -34,7 +37,7 @@ export class InvoiceDetailUsrComponent implements OnInit {
       public dialogRef : MatDialogRef<InvoiceDetailUsrComponent>,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
+      private toastyService: ToastrService,
       ){} 
 
    ngOnInit() {
@@ -47,6 +50,28 @@ export class InvoiceDetailUsrComponent implements OnInit {
       this.total = obj.total_price
       this.img_product_rout = environment.api.baseBucketImageUrl;
       
+   }
+
+   onClose() {
+      this.dialogRef.close();
+   }
+
+   getStatusClass(status: string): string {
+      if (!status) return '';
+      
+      const statusLower = status.toLowerCase();
+      if (statusLower.includes('aprobado') || statusLower.includes('completado') || statusLower.includes('entregado')) {
+         return 'status-approved';
+      } else if (statusLower.includes('pendiente') || statusLower.includes('procesando')) {
+         return 'status-pending';
+      } else if (statusLower.includes('rechazado') || statusLower.includes('cancelado')) {
+         return 'status-rejected';
+      }
+      return 'status-default';
+   }
+
+   trackByProduct(index: number, item: any): any {
+      return item.product_code || index;
    }
 
    // product_aprobed(id_prod){
@@ -73,4 +98,5 @@ export class InvoiceDetailUsrComponent implements OnInit {
    // }
 
 }
+
 

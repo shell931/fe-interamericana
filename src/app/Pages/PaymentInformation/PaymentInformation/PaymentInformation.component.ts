@@ -12,10 +12,23 @@ import { MatPaginator } from '@angular/material/paginator';
 
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+
+// Angular imports for standalone component
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { GlobalModule } from '../../../Global/Global.module';
+import { TemplatesModule } from '../../../Templates/Templates.module';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 // models
 import { CategoryStore } from '../../../Models/CategoryStore';
 import { SocietyType } from '../../../Models/SocietyType';
@@ -45,18 +58,33 @@ export interface Identifiers {
 
 @Component({
     selector: 'app-PaymentInformation',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        GlobalModule,
+        TemplatesModule
+    ],
     templateUrl: './PaymentInformation.component.html',
     styleUrls: ['./PaymentInformation.component.scss']
 })
 
 export class PaymentInformationComponent implements OnInit {
 
-    category$: Observable<CategoryStore[]>;
-    society$: Observable<SocietyType[]>;
-    depart$: Observable<Departament[]>;
-    city$: Observable<City[]>;
-    bank$: Observable<Bank[]>;
-    account_type$: Observable<TypeAccount[]>;
+    category$!: Observable<CategoryStore[]>;
+    society$!: Observable<SocietyType[]>;
+    depart$!: Observable<Departament[]>;
+    city$!: Observable<City[]>;
+    bank$!: Observable<Bank[]>;
+    account_type$!: Observable<TypeAccount[]>;
     selectedPersonId = '5a15b13c36e7a7f00cf0d7cb';
     cam_com_docu: any;
     doc_identi_docu: any;
@@ -64,7 +92,7 @@ export class PaymentInformationComponent implements OnInit {
     bank_certification_docu: any;
     widthMin: Number = 700;
     heightMin: Number = 700;
-    registerForm: FormGroup;
+    registerForm!: UntypedFormGroup;
     emailPattern: string = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$";
     storecategorylist: CategoryStore[] = [];
     storecategory: CategoryStore[] = [];
@@ -79,11 +107,11 @@ export class PaymentInformationComponent implements OnInit {
     typeaccountlist: TypeAccount[] = [];
     typeaccounts: TypeAccount[] = [];
     files_identifier_doc: File[] = [];
-    selectedFiles_identifier_doc: FileList;
+    selectedFiles_identifier_doc!: FileList;
     files_rut: File[] = [];
-    selectedFiles_rut: FileList;
+    selectedFiles_rut!: FileList;
     files_cam_com: File[] = [];
-    selectedFiles_cam_com: FileList;
+    selectedFiles_cam_com!: FileList;
     variable: any[] = [];
     name: any;
     selectedCity: any;
@@ -94,61 +122,58 @@ export class PaymentInformationComponent implements OnInit {
     public validate_user: boolean = false;
     identifierstlist: Identifiers[] = [];
     identifiers: Identifiers[] = [];
-    identifier$: Observable<Identifiers[]>;
+    identifier$!: Observable<Identifiers[]>;
     selectIdentifiers: any;
 
     public show: boolean = false;
     public show_spinner: boolean = false;
-    toastIconMax: ToastOptions = {
-        title: "Logo comercio",
-        msg: "Subir solo un logo para el comercio!",
-        showClose: true,
-        timeout: 4000,
-        theme: "material"
-    };
-    toastRejectPixelsImg: ToastOptions = {
-        title: "Dimension de imagen",
-        msg: "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
-        showClose: true,
-        timeout: 8000,
-        theme: "material"
-    };
+       toastIconMax: any = this.toastyService.warning(
+  "Subir solo un logo para el comercio!",
+  "Logo comercio",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
+    toastRejectPixelsImg: any = this.toastyService.error(
+  "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
+  "Dimension de imagen",
+  { timeOut: 8000, closeButton: true, progressBar: true }
+);
 
-    public identifiersFilterCtrl: FormControl = new FormControl();
+
+    public identifiersFilterCtrl: UntypedFormControl = new UntypedFormControl();
     private _onDestroy = new Subject<void>();
     // START ANGULAR MAT SEARCH CATEGORY STORE
-    public categorystoreCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public categorystoreFilterCtrl: FormControl = new FormControl();
-    public filteredcategorystore: CategoryStore[];
+    public categorystoreCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public categorystoreFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public filteredcategorystore!: CategoryStore[];
     // END ANGULAR MAT SEARCH CATEGORY STORE
     // START ANGULAR MAT SEARCH SOCIETY TYPE
-    public societytypeCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public societytypeFilterCtrl: FormControl = new FormControl();
+    public societytypeCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public societytypeFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH SOCIETY TYPE
     // START ANGULAR MAT SEARCH BANK
-    public bankCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public bankFilterCtrl: FormControl = new FormControl();
+    public bankCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public bankFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH BANK
 
     // START ANGULAR MAT SEARCH BANK
-    public typeaccountCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public typeaccountFilterCtrl: FormControl = new FormControl();
+    public typeaccountCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public typeaccountFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH BANK
 
     // END ANGULAR MAT SEARCH DEPARTMENT AND CITIES
-    public departamentCtrll: FormControl = new FormControl(null, [Validators.required]);
-    public departamentFilterCtrl: FormControl = new FormControl();
-    public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieFilterCtrl: FormControl = new FormControl();
+    public departamentCtrll: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH DEPARTMENT AND CITIES
 
     constructor(private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
+        private formGroup: UntypedFormBuilder,
         public embryoService: EmbryoService,
         private apiService: ApiService,
         private changeDetectorRef: ChangeDetectorRef,
-        private toastyService: ToastaService,
+        private toastyService: ToastrService,
     ) { }
 
     ngOnInit() {
@@ -260,24 +285,24 @@ export class PaymentInformationComponent implements OnInit {
                 postal_code: ['', [Validators.required]],
                 doc_identi: ['', [Validators.required]],
                 rut: ['', [Validators.required]],
-                cam_com: new FormControl('', [Validators.required]),
+                cam_com: new UntypedFormControl('', [Validators.required]),
                 responsible: ['', [Validators.required]],
                 account_number: ['', [Validators.required]],
-                bankCtrl: new FormControl('', [Validators.required]),
-                typeaccountCtrl: new FormControl('', [Validators.required]),
-                bank_certification: new FormControl('', [Validators.required]),
-                check_legal_docs: new FormControl('', [(control) => {
+                bankCtrl: new UntypedFormControl('', [Validators.required]),
+                typeaccountCtrl: new UntypedFormControl('', [Validators.required]),
+                bank_certification: new UntypedFormControl('', [Validators.required]),
+                check_legal_docs: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                check_aprube_terms_conds: new FormControl('', [(control) => {
+                check_aprube_terms_conds: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                categorystoreCtrl: new FormControl('', [Validators.required]),
-                societytypeCtrl: new FormControl('', [Validators.required]),
-                departamentCtrll: new FormControl('', [Validators.required]),
-                citieCtrl: new FormControl('', [Validators.required]),
+                categorystoreCtrl: new UntypedFormControl('', [Validators.required]),
+                societytypeCtrl: new UntypedFormControl('', [Validators.required]),
+                departamentCtrll: new UntypedFormControl('', [Validators.required]),
+                citieCtrl: new UntypedFormControl('', [Validators.required]),
             });
 
         } else {
@@ -288,7 +313,7 @@ export class PaymentInformationComponent implements OnInit {
                 email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
                 password: ['', [Validators.required]],
                 number_identifier_person: ['', [Validators.required]],
-                identifiersCtrl: new FormControl('', [Validators.required]),
+                identifiersCtrl: new UntypedFormControl('', [Validators.required]),
                 name_store: ['', [Validators.required]],
                 name_legal: ['', [Validators.required]],
                 phone: ['', [Validators.required]],
@@ -301,89 +326,89 @@ export class PaymentInformationComponent implements OnInit {
                 postal_code: ['', [Validators.required]],
                 doc_identi: ['', [Validators.required]],
                 rut: ['', [Validators.required]],
-                cam_com: new FormControl('', [Validators.required]),
+                cam_com: new UntypedFormControl('', [Validators.required]),
                 responsible: ['', [Validators.required]],
                 account_number: ['', [Validators.required]],
-                bankCtrl: new FormControl('', [Validators.required]),
-                typeaccountCtrl: new FormControl('', [Validators.required]),
-                bank_certification: new FormControl('', [Validators.required]),
-                check_legal_docs: new FormControl('', [(control) => {
+                bankCtrl: new UntypedFormControl('', [Validators.required]),
+                typeaccountCtrl: new UntypedFormControl('', [Validators.required]),
+                bank_certification: new UntypedFormControl('', [Validators.required]),
+                check_legal_docs: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                check_aprube_terms_conds: new FormControl('', [(control) => {
+                check_aprube_terms_conds: new UntypedFormControl('', [(control) => {
                     return !control.value ? { 'required': true } : null;
                 }]
                 ),
-                categorystoreCtrl: new FormControl('', [Validators.required]),
-                societytypeCtrl: new FormControl('', [Validators.required]),
-                departamentCtrll: new FormControl('', [Validators.required]),
-                citieCtrl: new FormControl('', [Validators.required]),
+                categorystoreCtrl: new UntypedFormControl('', [Validators.required]),
+                societytypeCtrl: new UntypedFormControl('', [Validators.required]),
+                departamentCtrll: new UntypedFormControl('', [Validators.required]),
+                citieCtrl: new UntypedFormControl('', [Validators.required]),
             });
         }
 
 
     }
 
-    getIdentifiers(term: string = null, algo): Observable<Identifiers[]> {
+    getIdentifiers(term: string = '', algo: Identifiers[]): Observable<Identifiers[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { type_identifier: string; }) => x.type_identifier.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
 
-    getCategories(term: string = null, algo): Observable<CategoryStore[]> {
+    getCategories(term: string = '', algo: CategoryStore[]): Observable<CategoryStore[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { name_category: string; }) => x.name_category.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getSocietyType(term: string = null, algo): Observable<SocietyType[]> {
+    getSocietyType(term: string = '', algo: SocietyType[]): Observable<SocietyType[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.society_type.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { society_type: string; }) => x.society_type.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getDepartment(term: string = null, algo): Observable<Departament[]> {
+    getDepartment(term: string = '', algo: Departament[]): Observable<Departament[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { departament: string; }) => x.departament.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getCity(term: string = null, algo): Observable<City[]> {
+    getCity(term: string = '', algo: City[]): Observable<City[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { city: string; }) => x.city.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getBank(term: string = null, algo): Observable<Bank[]> {
+    getBank(term: string = '', algo: Bank[]): Observable<Bank[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.bank.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { bank: string; }) => x.bank.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getTypeAccount(term: string = null, algo): Observable<TypeAccount[]> {
+    getTypeAccount(term: string = '', algo: TypeAccount[]): Observable<TypeAccount[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.type_account.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { type_account: string; }) => x.type_account.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
 
-    citieChangeAction(departament) {
+    citieChangeAction(departament: any) {
         // START ANGULAR MAT SEARCH CITIES
         let get_data_dep = departament;
         let id_dep = get_data_dep.id_departament;
@@ -411,37 +436,36 @@ export class PaymentInformationComponent implements OnInit {
     }
 
     //START SET EVENT FROM DROPZONE COMPLEMENT
-    selectFile(event) {
+    selectFile(event: { addedFiles: number | any[]; }) {
         let index = this.files_identifier_doc.length != event.addedFiles ? 0 : this.files_identifier_doc.length;
         console.log(this.files_identifier_doc.length);
         if (this.files_identifier_doc.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
+        } if (Array.isArray(event.addedFiles)) {
+            event.addedFiles.forEach((item: File) => {
                 this.onValidatePixels(item)
                     .then((value: boolean) => {
-                        if (value) {
+                        if (value === true) {
                             this.files_identifier_doc.push(item);
                         } else {
                             this.toastyService.error(this.toastRejectPixelsImg);
                         }
-
                     });
             });
 
         }
     }
 
-    selectFileRut(event) {
+    selectFileRut(event: { addedFiles: number | any[]; }) {
         let index = this.files_rut.length != event.addedFiles ? 0 : this.files_rut.length;
         console.log(this.files_rut.length);
         if (this.files_rut.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
+        } else if (Array.isArray(event.addedFiles)) {
+            event.addedFiles.forEach((item: File) => {
                 this.onValidatePixels(item)
                     .then((value: boolean) => {
-                        if (value) {
+                        if (value === true) {
                             this.files_rut.push(item);
                         } else {
                             this.toastyService.error(this.toastRejectPixelsImg);
@@ -452,16 +476,16 @@ export class PaymentInformationComponent implements OnInit {
         }
     }
 
-    selectFileCamcom(event) {
+    selectFileCamcom(event: { addedFiles: number | any[]; }) {
         let index = this.files_cam_com.length != event.addedFiles ? 0 : this.files_cam_com.length;
         console.log(this.files_cam_com.length);
         if (this.files_cam_com.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
+        } else if (Array.isArray(event.addedFiles)) {
+            event.addedFiles.forEach((item: File) => {
                 this.onValidatePixels(item)
                     .then((value: boolean) => {
-                        if (value) {
+                        if (value === true) {
                             this.files_cam_com.push(item);
                         } else {
                             this.toastyService.error(this.toastRejectPixelsImg);
@@ -473,7 +497,7 @@ export class PaymentInformationComponent implements OnInit {
     }
 
 
-    onValidatePixels(file: File) {
+    onValidatePixels(file: File): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const Img = new Image();
             Img.src = URL.createObjectURL(file);
@@ -483,14 +507,15 @@ export class PaymentInformationComponent implements OnInit {
                 const width = e.path[0].width;
                 if (height >= this.heightMin || width >= this.widthMin) {
                     resolve(true);
+                } else {
+                    resolve(false);
                 }
-                resolve(false);
             };
         });
 
     }
 
-    onRemove(event) {
+    onRemove(event: File) {
         console.log(event);
         this.files_identifier_doc.splice(this.files_identifier_doc.indexOf(event), 1);
     }
@@ -532,7 +557,7 @@ export class PaymentInformationComponent implements OnInit {
             if (this.show == true) {
                 email = registerForm.email;
             } else {
-                email = localStorage.getItem('user_email');
+                email = localStorage.getItem('user_email')|| '';
             }
             myObj_MemberShip = {
                 "logo_store_up": "some_value",
@@ -555,7 +580,7 @@ export class PaymentInformationComponent implements OnInit {
             if (this.show == true) {
 
                 this.apiService.ValidateUserExist(registerForm.email).subscribe(
-                    result => {
+                    (                    result: boolean) => {
                         console.log(result);
                         if (result == true) {
                             this.validate_user = true;
@@ -617,14 +642,15 @@ export class PaymentInformationComponent implements OnInit {
                                                                         result => {
                                                                             myObj_login = { "username": registerForm.email, "password": registerForm.password }
                                                                             this.apiService.loginUser(myObj_login).subscribe(
-                                                                                (result_login: TokenObj) => {
-                                                                                    let user_id = result_login["user_id"];
-                                                                                    localStorage.setItem('mr-token-front', result_login.token);
-                                                                                    localStorage.setItem('id_user_front', result_login.user_id);
-                                                                                    localStorage.setItem('id_type_user', result_login.type_user);
-                                                                                    localStorage.setItem('personal_name', result_login.personal_name);
-                                                                                    localStorage.setItem('user_email', result_login.user_email);
-                                                                                    localStorage.setItem('id-store', result_login.id_store);
+                                                                                (result_login) => {
+                                                                               const login = result_login as TokenObj;
+                                                                                    let user_id = login["user_id"];
+                                                                                    localStorage.setItem('mr-token-front', login.token);
+                                                                                    localStorage.setItem('id_user_front', login.user_id);
+                                                                                    localStorage.setItem('id_type_user', login.type_user);
+                                                                                    localStorage.setItem('personal_name', login.personal_name);
+                                                                                    localStorage.setItem('user_email', login.user_email);
+                                                                                    localStorage.setItem('id-store', login.id_store);
                                                                                     this.router.navigate(['/sell/response']).then(() => {
                                                                                         this.show_spinner = false;
                                                                                         window.location.reload();
@@ -653,7 +679,7 @@ export class PaymentInformationComponent implements OnInit {
 
                         }
                     },
-                    error =>
+                    (                    error: any) =>
                         console.log(error)
                 );
             } else {
@@ -736,3 +762,4 @@ export class PaymentInformationComponent implements OnInit {
     }
 
 }
+

@@ -1,16 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
+import { ReactiveFormsModule, UntypedFormControl, FormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { Subject } from 'rxjs';
 import { ApiService } from '../../../Services/api.service';
-import { FormControl } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-// import { AnyARecord } from 'dns';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import { environment } from '../../../../../src/environments/environment';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import * as $ from 'jquery';
+import { AppLogoComponent } from '../../../Global/AppLogo/AppLogo.component';
+import { HeaderCartComponent } from '../../../Global/HeaderCart/HeaderCart.component';
+import { WishListComponent } from '../../../Global/WishList/WishList.component';
+import $ from 'jquery';
 export interface Prod {
    image: string;
    name: string;
@@ -40,12 +50,31 @@ interface subcategoryNode {
 @Component({
    selector: 'HeaderOne',
    templateUrl: './HeaderOne.component.html',
-   styleUrls: ['./HeaderOne.component.scss']
+   styleUrls: ['./HeaderOne.component.scss', './footer-mobile-cart.css'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      RouterModule,
+      ReactiveFormsModule,
+      FormsModule,
+      MatMenuModule,
+      MatButtonModule,
+      MatAutocompleteModule,
+      MatOptionModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatIconModule,
+      // MatDialogModule is not required for service usage in TS here
+      AppLogoComponent,
+      HeaderCartComponent,
+      WishListComponent
+   ]
 })
-export class HeaderOneComponent implements OnInit {
+export class HeaderOneComponent implements OnInit, OnDestroy {
 
    get_product: Prod[] = [];
    toggleActive: boolean = false;
+   isMobileMenuOpen: boolean = false;
    cartProducts: any;
    popupResponse: any;
    wishlistProducts: any;
@@ -77,14 +106,23 @@ export class HeaderOneComponent implements OnInit {
    url = "/products/accessories/118";
 
    // Variables to search
-   products;
+   products: any[] = [];
    startAt = new Subject()
    endAt = new Subject()
    lastkeypress: number = 0;
 
-   myControl = new FormControl();
+   myControl = new UntypedFormControl('');
    options: string[] = [];
-   data: any;
+   data: any = '';
+
+   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+
+   /** Clear the search input and suggestions */
+   clearSearch() {
+      try { this.myControl.setValue(''); } catch {}
+      this.data = '';
+      this.options = [];
+   }
 
 
    public show: boolean = false;
@@ -94,34 +132,67 @@ export class HeaderOneComponent implements OnInit {
    public show_acces_sell: boolean = false;
    public show_info: boolean = true;
 
-   constructor(
+   // Auto-hide header variables
+   private lastScrollTop = 0;
+   private scrollThreshold = 5; // Minimum scroll distance to trigger hide/show
+   private headerElement: HTMLElement | null = null;
+   private isHeaderHidden = false;
+   private scrollTimeout: any;
+
+   // Route detection for cart page
+   public isOnCartPage = false;
+
+  constructor(
       public embryoService: EmbryoService,
       private apiService: ApiService,
       private router: Router,
+      private dialog: MatDialog,
    ) { }
 
    ngOnInit() {
+      // Clear search input to ensure placeholder shows
+      this.clearSearch();
+      this.data = '';
 
       this.addBodyClass();
+      this.initAutoHideHeader();
+
+      // Check current route and set cart page flag
+      this.checkCurrentRoute();
+
+      // Subscribe to route changes
+      this.router.events.subscribe((event) => {
+         if (event instanceof NavigationEnd) {
+            this.checkCurrentRoute();
+            this.blurSearchInput(); // ensure keyboard hides after navigation
+            this.clearSearch(); // clear search value when navigating to home or any page
+         }
+      });
+
+      // Additional initialization for header
+      setTimeout(() => {
+         this.ensureHeaderVisibility();
+      }, 500);
 
       this.apiService.getStoreCategories().subscribe(res => this.getCategoriesMenu(res, this.id));
       const token_front = localStorage.getItem('mr-token-front');
       const id_type_user = localStorage.getItem('id_type_user');
       const store = localStorage.getItem('id-store');
       this.id_store = store;
+
       if (token_front) {
          this.show_add = false;
          if (id_type_user == "2") {
             // it's a store
             this.show_store_pr = true;
+            this.show = false;
             this.apiService.getStoreData(this.id_store).subscribe(res => {
                this.getDataStore(res)
-
-
             }, error => console.log(error));
          } else {
             // it's not a store
             this.show = true;
+            this.show_store_pr = false;
          }
          if (store == "null") {
             this.show_acces_sell = true;
@@ -136,30 +207,35 @@ export class HeaderOneComponent implements OnInit {
          this.show_acces_sell = true;
       }
    }
+   private blurSearchInput() {
+      try { this.searchInput?.nativeElement.blur(); } catch {}
+      try { (document.activeElement as HTMLElement)?.blur?.(); } catch {}
+   }
 
+   // Navigate to Sign In (promo dialog removed for Interamericana)
+   public openSignInWithPromo(event?: Event) {
+      try { event?.preventDefault?.(); } catch {}
+      this.router.navigate(['/session/signin']);
+   }
 
+trackByFn(index: number, item: any): any {
+  return item || index;
+}
+
+trackByCategoryId(index: number, item: any): any {
+  return item?.id || index;
+}
    addBodyClass() {
 
-      window.addEventListener('load',function(){
-         document.querySelector('body').classList.add("loaded")
-       });
+         window.addEventListener('load', function () {
+             const b = document.querySelector('body');
+             if (b) b.classList.add("loaded");
+          });
 
 
-       $(document).ready(function(){
-         // menu click event
-         $('.menuBtn').click(function() {
-
-
-            $('.fixedheader').addClass('absoluted');
-
-            $(this).toggleClass('act');
-               if($(this).hasClass('act')) {
-                  $('.mainMenu').addClass('act');
-               }
-               else {
-                  $('.mainMenu').removeClass('act');
-               }
-         });
+       $(document).ready(() => {
+         // Auto-hide header functionality is handled by initAutoHideHeader() in ngOnInit
+         // Mobile menu functionality is now handled by Angular (toggleMobileMenu method)
       });
 
 
@@ -219,6 +295,62 @@ export class HeaderOneComponent implements OnInit {
       this.embryoService.sidenavOpen = !this.embryoService.sidenavOpen;
    }
 
+   public toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+   }
+
+   public closeMobileMenu() {
+      this.isMobileMenuOpen = false;
+   }
+
+   @HostListener('document:keydown.escape', ['$event'])
+   onEscapeKey(event: KeyboardEvent) {
+      if (this.isMobileMenuOpen) {
+         this.closeMobileMenu();
+      }
+   }
+
+
+   public onMenuClick(menuItem: string) {
+   }
+
+   public onCommerceMenuClick(menuItem: string) {
+   }
+
+   public closeMobileMenuOnBackdrop(event: Event) {
+      // Cerrar si el click es en el backdrop (mainMenu) o fuera del contenido
+      const target = event.target as HTMLElement;
+      const currentTarget = event.currentTarget as HTMLElement;
+
+      // Si el click es en el div mainMenu directamente (backdrop) o fuera de la lista
+      if (target === currentTarget || target.classList.contains('mainMenu')) {
+         this.isMobileMenuOpen = false;
+      }
+
+      // También cerrar si el click es fuera de .table-cell (el contenido)
+      if (!target.closest('.table-cell') && target.closest('.mainMenu')) {
+         this.isMobileMenuOpen = false;
+      }
+   }
+
+   public directRemoveProduct(value: any) {
+      // ELIMINAR DIRECTAMENTE
+      this.embryoService.removeLocalCartProduct(value);
+   }
+
+   public handleUpdateQuantity(value: any) {
+      // Actualizar cantidad sin mostrar notificaciones
+      this.embryoService.updateCartProductQuantity(value);
+   }
+
+   public handleEditProduct(value: any) {
+      // Primero remover el producto anterior
+      this.embryoService.removeLocalCartProduct(value);
+
+      // Luego agregar el producto con la nueva cantidad
+      this.embryoService.addToCart(value);
+   }
+
    public openConfirmationPopup(value: any) {
       let message = "Estas seguro de eliminar este item?";
       this.embryoService.confirmationPopup(message).
@@ -243,52 +375,54 @@ export class HeaderOneComponent implements OnInit {
    }
 
    public openWishlistConfirmationPopup(value: any) {
-      let message = "Are you sure you want to add all products?";
-      this.embryoService.confirmationPopup(message).
-         subscribe(res => { this.popupResponse = res },
-            err => console.log(err),
-            () => this.getPopupResponse(this.popupResponse, value, 'wishlist')
-         );
+      // Eliminar directamente sin segundo diálogo de confirmación
+      this.embryoService.removeLocalWishlistProduct(value);
    }
 
-   public selectedCurrency(value) {
+   public selectedCurrency(value: any) {
       this.embryoService.currency = value;
    }
 
-   public selectedLanguage(value) {
+   public selectedLanguage(value: any) {
       this.embryoService.language = value;
    }
 
-   public addToCart(value) {
+   public addToCart(value: any) {
       this.embryoService.addToCart(value, 'wishlist');
    }
 
-   public search($event) {
+   public search($event: any) {
       if ($event.timeStamp - this.lastkeypress > 200) {
-         console.log($event.target.value);
-         this.apiService.getProductsWithoutAuth().subscribe(res => this.getProductData(res));
+         this.apiService.getProductsWithoutAuth().subscribe((res: any) => this.getProductData(res));
       }
       this.lastkeypress = $event.timeStamp
    }
 
 
 
-   getPosts(string_search) {
+   getPosts(string_search: string) {
+      // Hide mobile keyboard on iOS by removing focus before navigation
+      try { this.searchInput?.nativeElement.blur(); } catch {}
+      try { (document.activeElement as HTMLElement)?.blur?.(); } catch {}
       this.router.navigate(['/search/' + string_search])
          .then(() => {
-
+            window.scrollTo({ top: 0 });
          });
    }
 
-   getPostsEnter(event) {
-      let string_search = this.myControl.value;
+   getPostsEnter(event: any) {
+      try { event?.preventDefault?.(); } catch {}
+      const string_search = (this.myControl.value as string) || '';
+      // Hide mobile keyboard on iOS by removing focus before navigation
+      try { this.searchInput?.nativeElement.blur(); } catch {}
+      try { (document.activeElement as HTMLElement)?.blur?.(); } catch {}
       this.router.navigate(['/search/' + string_search])
          .then(() => {
-
+            window.scrollTo({ top: 0 });
          });
    }
 
-   public updated(event) {
+   public updated(event: any) {
       let key_arrow = event.keyCode;
       if (key_arrow == 37 || key_arrow == 38 || key_arrow == 39 || key_arrow == 40) {
          return false;
@@ -322,7 +456,7 @@ export class HeaderOneComponent implements OnInit {
    }
 
 
-   getCategoriesMenu(response, id_store) {
+   getCategoriesMenu(response: any, id_store: any) {
       this.get_categories = [];
       for (var i = 0; i < response.length; i++) {
           // let subcategor = this.createSubcategories(response[i].rel_categories, id_store);
@@ -335,11 +469,10 @@ export class HeaderOneComponent implements OnInit {
       }
 
       this.dataSourceTree.data = this.get_categories;
-      console.log(this.dataSourceTree.data);
   }
 
 
-   getProductData(response) {
+   getProductData(response: any) {
       this.get_product = [];
 
       let length
@@ -381,6 +514,121 @@ export class HeaderOneComponent implements OnInit {
          window.location.reload();
      });
    }
+
+   // Auto-hide header methods
+   private initAutoHideHeader() {
+      // Wait for DOM to be ready
+      setTimeout(() => {
+         // Try multiple selectors to find the header
+         this.headerElement = document.querySelector('header.kompraloheader') ||
+                             document.querySelector('#header') ||
+                             document.querySelector('header') ||
+                             document.querySelector('.header-middle');
+
+         if (this.headerElement) {
+            // Add initial styles
+            this.headerElement.style.transition = 'transform 0.3s ease-in-out';
+            this.headerElement.style.transform = 'translateY(0)';
+            this.isHeaderHidden = false;
+         }
+      }, 200);
+   }
+
+   @HostListener('window:scroll', ['$event'])
+   onWindowScroll() {
+      // Clear any existing timeout
+      if (this.scrollTimeout) {
+         clearTimeout(this.scrollTimeout);
+      }
+
+      // Re-find header element if not found initially
+      if (!this.headerElement) {
+         this.headerElement = document.querySelector('header.kompraloheader') ||
+                             document.querySelector('#header') ||
+                             document.querySelector('header') ||
+
+                             document.querySelector('.header-middle');
+      }
+
+      if (!this.headerElement) return;
+
+      const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDifference = Math.abs(currentScrollTop - this.lastScrollTop);
+
+      // Always show header when at the top of the page
+      if (currentScrollTop <= 50) {
+         if (this.isHeaderHidden) {
+            this.headerElement.style.transform = 'translateY(0)';
+            this.isHeaderHidden = false;
+         }
+         this.lastScrollTop = currentScrollTop;
+         return;
+      }
+
+      // Only trigger if scroll difference is significant
+      if (scrollDifference < this.scrollThreshold) return;
+
+      // Hide when scrolling down, show when scrolling up
+      if (currentScrollTop > this.lastScrollTop && currentScrollTop > 100) {
+         // Scrolling down - hide header
+         if (!this.isHeaderHidden) {
+            this.headerElement.style.transform = 'translateY(-100%)';
+            this.isHeaderHidden = true;
+         }
+      } else if (currentScrollTop < this.lastScrollTop) {
+         // Scrolling up - show header (always show when scrolling up)
+         if (this.isHeaderHidden) {
+            this.headerElement.style.transform = 'translateY(0)';
+            this.isHeaderHidden = false;
+         }
+      }
+
+      this.lastScrollTop = currentScrollTop;
+
+      // Set timeout to ensure header shows after scroll stops
+      this.scrollTimeout = setTimeout(() => {
+         if (this.headerElement && this.isHeaderHidden) {
+            this.headerElement.style.transform = 'translateY(0)';
+            this.isHeaderHidden = false;
+         }
+      }, 150);
+   }
+
+   // Ensure header is visible and properly initialized
+   private ensureHeaderVisibility() {
+      if (!this.headerElement) {
+         this.headerElement = document.querySelector('header.kompraloheader') ||
+                             document.querySelector('#header') ||
+                             document.querySelector('header') ||
+
+                             document.querySelector('.header-middle');
+      }
+
+      if (this.headerElement) {
+         this.headerElement.style.transition = 'transform 0.3s ease-in-out';
+         this.headerElement.style.transform = 'translateY(0)';
+         this.isHeaderHidden = false;
+      }
+   }
+
+   // Check if current route is cart page
+   private checkCurrentRoute() {
+      const currentUrl = this.router.url;
+      this.isOnCartPage = currentUrl === '/cart' || currentUrl.startsWith('/cart');
+   }
+
+   ngOnDestroy() {
+      // Clean up if needed
+      if (this.scrollTimeout) {
+         clearTimeout(this.scrollTimeout);
+      }
+      if (this.headerElement) {
+         this.headerElement.style.transform = 'translateY(0)';
+         this.headerElement.style.transition = '';
+      }
+   }
+
 }
+
 
 

@@ -1,6 +1,15 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ChangeDetectorRef } from '@angular/core';
+import { HomePageOneSliderComponent } from '../../../Global/Slider/HomePageOneSlider/HomePageOneSlider.component';
+import { SubscribeOneComponent } from '../../../Global/Subscribe/SubscribeOne/SubscribeOne.component';
+import { BrandslogoComponent } from '../../../Global/BrandsLogo/BrandsLogo.component';
+import { FeaturesComponent } from '../../../Global/Features/Features.component';
+import { DealOfTheDayComponent } from '../../../Global/DealOfTheDay/DealOfTheDay.component';
+import { SalesComponent } from '../../../Global/Sales/Sales.component';
 
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -8,7 +17,19 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 @Component({
    selector: 'app-homeone',
    templateUrl: './HomeOne.component.html',
-   styleUrls: ['./HomeOne.component.scss']
+   styleUrls: ['./HomeOne.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      RouterModule,
+      MatTabsModule,
+      HomePageOneSliderComponent,
+      SubscribeOneComponent,
+      BrandslogoComponent,
+      FeaturesComponent,
+      DealOfTheDayComponent,
+      SalesComponent
+   ]
 })
 export class HomeoneComponent implements OnInit, AfterViewChecked {
 
@@ -90,8 +111,8 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
    pips          : boolean = true;
    tooltips      : boolean = true;
    category      : any;
-   pageTitle     : string;
-   subPageTitle  : string;
+   pageTitle: string = '';
+   subPageTitle: string | null = null;
 
    constructor(
       private route: ActivatedRoute,
@@ -108,8 +129,8 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
    }
 
    ngOnInit() {
-      this.route.params.subscribe(params => {
-         this.route.queryParams.forEach(queryParams => {
+      this.route.params.subscribe((params: any) => {
+         this.route.queryParams.forEach((queryParams: any) => {
             this.category = queryParams['category'];
             this.type = null;
             this.type = params['type'];
@@ -119,8 +140,8 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
    }
 
    public getPageTitle() {
-      this.pageTitle = null;
-      this.subPageTitle = null;
+      this.pageTitle ;
+      this.subPageTitle ;
       
       switch (this.type || this.category) {
          case undefined:
@@ -140,7 +161,7 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
          
          default:
             this.pageTitle = "Products";
-            this.subPageTitle = null;
+            this.subPageTitle = "Explore our products.";
             break;
       }
    }
@@ -149,17 +170,16 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
    //    this.embryoService.addToCart(value);
    // }
 
-   public addToWishList(value) {
+   public addToWishList(value: any) {
       this.embryoService.addToWishlist(value);
    }
    
-   public transformHits(hits) {
-      hits.forEach(hit => {
+   public transformHits(hits: any[]) {
+      hits.forEach((hit: { stars: boolean[]; rating: number; }) => {
          hit.stars = [];
-         for (let i = 1; i <= 5; i) {
-           hit.stars.push(i <= hit.rating);
-           i += 1;
-         }
+                for (let i = 1; i <= 5; i++) {
+                   hit.stars.push(i <= hit.rating);
+                }
       });
       return hits;
    }
@@ -169,26 +189,26 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
    }
 
    public getFeaturedProducts() {
-      this.embryoService.getProducts().valueChanges().subscribe(res => { this.productsArray = res });
+      this.embryoService.getProducts().valueChanges().subscribe((res: any) => { this.productsArray = res });
    }
 
    public getBlogList() {
-      this.embryoService.getBlogList().valueChanges().subscribe(res => { this.blogList = res });
+      this.embryoService.getBlogList().valueChanges().subscribe((res: any) => { this.blogList = res });
    }
 
-   public addToCart(value) {
+   public addToCart(value: any) {
       this.embryoService.addToCart(value);
    }
 
    public getProductRevies() {
-      this.embryoService.getProductReviews().valueChanges().subscribe(res => { this.productReviews = res });
+      this.embryoService.getProductReviews().valueChanges().subscribe((res: any) => { this.productReviews = res });
    }
 
-   public addToWishlist(value) {
+   public addToWishlist(value: any) {
       this.embryoService.addToWishlist(value);
    }
 
-   public onFeaturedSelectedTab(tabIndex) {
+   public onFeaturedSelectedTab(tabIndex: number) {
       this.productsSliderData = null;
       switch (tabIndex) {
          case 0:
@@ -215,7 +235,7 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
       return true;
    }
 
-   public onNewArrivalsSelectedTab(tabIndex) {
+   public onNewArrivalsSelectedTab(tabIndex: number) {
       this.newProductsSliderData = null;
       switch (tabIndex) {
          case 0:
@@ -242,3 +262,4 @@ export class HomeoneComponent implements OnInit, AfterViewChecked {
       return true;
    }
 }
+

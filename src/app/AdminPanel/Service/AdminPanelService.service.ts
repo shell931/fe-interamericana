@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs';
 
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DeleteListDialogComponent} from '../Widget/PopUp/DeleteListDialog/DeleteListDialog.component';
@@ -89,3 +88,4 @@ export class AdminPanelServiceService {
 		return dialogRef.afterClosed();
 	}
 }
+

@@ -121,3 +121,4 @@ export class HomePageTwoSliderComponent implements OnInit, OnChanges {
    }
 
 }
+

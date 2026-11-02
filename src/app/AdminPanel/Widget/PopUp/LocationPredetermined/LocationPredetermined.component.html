@@ -1,4 +1,4 @@
-<perfect-scrollbar class="m-0 p-0 invoice-popup">
+<cdk-virtual-scroll-viewport class="m-0 p-0 invoice-popup" style="height: 500px;">
    <div class="bg-white final-receipt-page">
       <div class="final-receipt">
          <mat-card class="pt-0 w-100 m-0">
@@ -41,9 +41,8 @@
                         </div>
                      </div>
                   </mat-card>
-                  <div fxLayout="row wrap" fxLayoutAlign="start center" class="col-gap">
-                     <div fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100"
-                        class="size_card">
+                  <div class="fx-layout-row-wrap fx-layout-align-start-center col-gap">
+                     <div class="fx-flex-xs-100 fx-flex-sm-100 fx-flex-md-100 fx-flex-lg-100 fx-flex-xl-100 size_card">
 
 
 
@@ -61,5 +60,5 @@
       <!-- final-receipt -->
    </div>
    <!-- final-receipt-page -->
-</perfect-scrollbar>
+</cdk-virtual-scroll-viewport>
 <!-- invoice-popup -->

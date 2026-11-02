@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 // import { MenuItems } from '../../../Core/menu/menu-items/menu-items';
 
 @Component({
   selector: 'FooterOne',
   templateUrl: './FooterOne.component.html',
-  styleUrls: ['./FooterOne.component.scss']
+  styleUrls: ['./FooterOne.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule
+  ]
 })
 export class FooterOneComponent implements OnInit {
 
@@ -28,3 +36,4 @@ export class FooterOneComponent implements OnInit {
  
 
 }
+

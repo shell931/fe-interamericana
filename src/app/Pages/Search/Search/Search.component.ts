@@ -11,6 +11,31 @@ import { environment } from '../../../../../src/environments/environment';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 
+// Angular imports for standalone component
+import { CommonModule, CurrencyPipe, AsyncPipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+// Angular Material imports
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
+// CDK imports
+import { CdkTreeModule } from '@angular/cdk/tree';
+
+// Schema import
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+// External modules - NgxPaginationModule removed for standalone compatibility
+import { GlobalModule } from '../../../Global/Global.module';
+import { TemplatesModule } from '../../../Templates/Templates.module';
+
 export interface Prod {
     image: string;
     name: string;
@@ -39,10 +64,36 @@ interface ExampleFlatNode {
     expandable: boolean;
     name: string;
     level: number;
+    // Additional fields returned by the transformer — make them optional to keep compatibility
+    id?: number;
+    name_category?: string;
+    icon?: any;
+    type?: string;
 }
 
 @Component({
     selector: 'app-Search',
+    standalone: true,
+    imports: [
+        CommonModule,
+        CurrencyPipe,
+        AsyncPipe,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        MatCardModule,
+        MatListModule,
+        MatTreeModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        CdkTreeModule,
+        GlobalModule,
+        TemplatesModule
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './Search.component.html',
     styleUrls: ['./Search.component.scss']
 })
@@ -65,25 +116,45 @@ export class SearchComponent implements OnInit {
     treeControlN = new FlatTreeControl<ExampleFlatNode>(
         node => node.level, node => node.expandable);
 
-    treeFlattener = new MatTreeFlattener(
-        this._transformer, node => node.level, node => node.expandable, node => node.children);
-    dataSourceN = new MatTreeFlatDataSource(this.treeControlN, this.treeFlattener);
+    treeFlattener: MatTreeFlattener<subcategoryNode, ExampleFlatNode, ExampleFlatNode> = new MatTreeFlattener<subcategoryNode, ExampleFlatNode, ExampleFlatNode>(
+        (node: subcategoryNode, level: number) => {
+            const flat: ExampleFlatNode = {
+                expandable: !!node.children && node.children.length > 0,
+                name: node.name_category,
+                level: level,
+                id: node.id,
+                name_category: node.name_category,
+                icon: node.icon,
+                type: node.type
+            };
+            return flat;
+        },
+        (node: ExampleFlatNode) => node.level,
+        (node: ExampleFlatNode) => node.expandable,
+        (node: subcategoryNode) => node.children);
+
+    dataSourceN = new MatTreeFlatDataSource<subcategoryNode, ExampleFlatNode>(this.treeControlN, this.treeFlattener);
 
 
 
 
     treeControl = new NestedTreeControl<subcategoryNode>(node => node.children);
     dataSourceTree = new MatTreeNestedDataSource<subcategoryNode>();
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
     productsGrid: Prod[] = [];
     dataSource = new MatTableDataSource<Prod>(this.productsGrid);
-    obs: Observable<any>;
+    obs!: Observable<any>;
     id: any;
     get_product: Prod[] = [];
     get_categories: subcategoryNode[] = [];
     loaded = false;
     get_subca: any[] = [];
     p: any;
+    product: any; // Added for template compatibility
+    rate: number = 0; // Added for rating component
+
+    // Mobile categories drawer state
+    mobileCategoriesOpen: boolean = false;
 
     constructor(private route: ActivatedRoute,
         private router: Router,
@@ -97,50 +168,61 @@ export class SearchComponent implements OnInit {
 
     hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-    ngOnInit() {
-        this.route.params.subscribe(res => {
-            this.id = res.id;
-            this.apiService.FilterProducts(this.id).subscribe(res => this.getProductData(res));
-        })
-        this.apiService.getCategories().subscribe(res => this.getCategoriesMenu(res));
+    toggleCategory(node: ExampleFlatNode) {
+        this.treeControlN.toggle(node);
     }
 
-    SearchByCategories(type, id_category) {
+    /** Toggle mobile categories drawer */
+    toggleMobileCategories(): void {
+        this.mobileCategoriesOpen = !this.mobileCategoriesOpen;
+    }
+
+    ngOnInit() {
+        this.route.params.subscribe((res: any) => {
+            this.id = res.id;
+            this.apiService.FilterProducts(this.id).subscribe((res: any) => this.getProductData(res), (error: any) => console.log(error));
+        })
+        this.apiService.getCategories().subscribe((res: any) => this.getCategoriesMenu(res), (error: any) => console.log(error));
+    }
+
+    SearchByCategories(type: any, id_category: any) {
         localStorage.removeItem("id_category_prod_search");
         localStorage.removeItem("type_cate_subcate_search");
-        localStorage.setItem('id_category_prod_search', id_category);
-        localStorage.setItem('type_cate_subcate_search', type);
+        localStorage.setItem('id_category_prod_search', String(id_category));
+        localStorage.setItem('type_cate_subcate_search', String(type));
 
         if (type == "category") {
-            this.apiService.getProductsbyCategory(id_category).subscribe(res => this.getProductData(res));
+            this.apiService.getProductsbyCategory(id_category).subscribe((res: any) => this.getProductData(res));
         } else {
-            this.apiService.getProductsbySubcategory(id_category).subscribe(res => this.getProductData(res));
+            this.apiService.getProductsbySubcategory(id_category).subscribe((res: any) => this.getProductData(res));
         }
     }
 
-    getCategoriesMenu(response) {
+    getCategoriesMenu(response: any) {
         this.get_categories = [];
         for (var i = 0; i < response.length; i++) {
-            let subcategor = this.createSubcategories(response[i].rel_categories);
-            if (response[i].active) {
-                this.get_categories.push(
-                    {
-                        id: response[i].id,
-                        name_category: response[i].name_category,
-                        type: 'category',
-                        children: subcategor,
-                        icon: response[i].icon,
-                        active: response[i].active
-                    });
-                console.log(this.get_categories);
+            // Interamericana: mostrar solo categorías activas
+            if (!response[i].active) {
+                continue;
             }
+
+            let subcategor = this.createSubcategories(response[i].rel_categories);
+            this.get_categories.push(
+                {
+                    id: response[i].id,
+                    name_category: response[i].name_category,
+                    type: 'category',
+                    children: subcategor,
+                    icon: response[i].icon,
+                    active: response[i].active
+                });
         }
         this.dataSourceN.data = this.get_categories;
-        // Expand all tree nodes automatically
+        // Interamericana: árbol de categorías expandido por defecto
         this.treeControlN.expandAll();
     }
 
-    createSubcategories(subcate) {
+    createSubcategories(subcate: any) {
         this.get_subca = [];
         for (var i = 0; i < subcate.length; i++) {
             this.get_subca.push(
@@ -154,7 +236,7 @@ export class SearchComponent implements OnInit {
         return this.get_subca;
     }
 
-    getProductData(response) {
+    getProductData(response: any) {
         this.get_product = [];
         for (var i = 0; i < response.length; i++) {
             let get_image = environment.api.baseBucketImageUrl + response[i].image;
@@ -193,9 +275,10 @@ export class SearchComponent implements OnInit {
         this.loaded = true;
     }
 
-    public checkCartAlready(singleProduct) {
-        let products = JSON.parse(localStorage.getItem("cart_item")) || [];
-        if (!products.some((item) => item.name == singleProduct.name)) {
+    public checkCartAlready(singleProduct: any) {
+        const cartStored = localStorage.getItem("cart_item") || '[]';
+        let products = JSON.parse(cartStored) || [];
+        if (!products.some((item: any) => item.name == singleProduct.name)) {
             return true;
         }
     }
@@ -216,7 +299,8 @@ export class SearchComponent implements OnInit {
             "route_product": value.route_product
         };
 
-        let products = JSON.parse(localStorage.getItem("cart_item")) || [];
+        const cartString = localStorage.getItem("cart_item") || '[]';
+        let products = JSON.parse(cartString) || [];
         if (products.length > 0) {
             this.embryoService.addToCart(myObj_product);
             // let id_store_storage;
@@ -229,7 +313,7 @@ export class SearchComponent implements OnInit {
             // else {
             //     //   const dialogRef = this.dialog.open(DialogContentProductDiferentStoreDetail, {
             //     //      width: '500px',
-            //     //    });
+            //     //    });      
             //     //   dialogRef.afterClosed().subscribe(result => {
             //     //      console.log(`Dialog result: ${result}`);
             //     //   });
@@ -240,7 +324,7 @@ export class SearchComponent implements OnInit {
 
     }
 
-    public productAddToWishlist(value: any) {
+    public productAddToWishlist(value: any, index?: string) {
         this.embryoService.addToWishlist(value);
     }
 
@@ -248,3 +332,4 @@ export class SearchComponent implements OnInit {
 
 
 }
+

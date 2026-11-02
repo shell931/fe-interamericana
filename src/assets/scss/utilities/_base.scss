@@ -376,3 +376,85 @@ body .mat-drawer-content {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Flex Layout Utilities - Replacement for @angular/flex-layout */
+.fx-layout-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.fx-layout-row-wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.fx-layout-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.fx-layout-align-start-center {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.fx-layout-align-center-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.fx-layout-align-end-center {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.fx-layout-align-space-between-center {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fx-flex {
+    flex: 1;
+}
+
+.fx-flex-100 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* Responsive flex utilities */
+@media (max-width: 599px) {
+    .fx-flex-xs-100 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 959px) {
+    .fx-flex-sm-100 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+    .fx-flex-md-100 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1919px) {
+    .fx-flex-lg-100 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 1920px) {
+    .fx-flex-xl-100 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

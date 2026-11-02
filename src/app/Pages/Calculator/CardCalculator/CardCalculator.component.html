@@ -1,26 +1,34 @@
-<mat-card class="p-0 mat-card-calculator">
-  <mat-card-header class="card-header px-2 py-2 border-0">
-    <mat-card-title class="mb-0 font-bold">{{title}}</mat-card-title>
+<mat-card class="calculator-card-modern">
+  <mat-card-header class="card-header-modern">
+    <div class="card-header-content">
+      <div class="card-icon">
+        <i class="fa" [ngClass]="title.includes('Descuentos') ? 'fa-percentage' : 'fa-hand-holding-usd'"></i>
+      </div>
+      <mat-card-title class="card-title-modern">{{title}}</mat-card-title>
+    </div>
   </mat-card-header>
-  <mat-card-content class="card-content px-2 pt-2 pb-1 m-0">
-    <div class="pb-1" *ngFor="let item of items">
-      <div class="row">
-        <div class="col-9">
-          {{item.text}}
+  
+  <mat-card-content class="card-content-modern">
+    <div class="items-list">
+      <div class="item-row" *ngFor="let item of items; let i = index">
+        <div class="item-info">
+          <span class="item-text">{{item.text}}</span>
         </div>
-        <div class="col-3 text-right">
-          {{item.value | currency : 'USD' : 'symbol' : '1.0-0'}}
+        <div class="item-value">
+          {{item.value | currency : 'USD' : 'symbol' : '1.2-2'}}
         </div>
       </div>
     </div>
   </mat-card-content>
-  <mat-card-footer class="card-footer m-0 px-2 py-2 border-0">
-    <div class="row">
-      <div class="col-9 font-bold">
-        {{footer?.text}}
+  
+  <mat-card-footer class="card-footer-modern" *ngIf="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <i class="fa fa-calculator"></i>
+        <span class="footer-text">{{footer?.text}}</span>
       </div>
-      <div class="col-3 text-right">
-        {{footer?.value | currency : 'USD' : 'symbol' : '1.0-0'}}
+      <div class="footer-value">
+        {{footer?.value | currency : 'USD' : 'symbol' : '1.2-2'}}
       </div>
     </div>
   </mat-card-footer>

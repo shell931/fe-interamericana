@@ -1,228 +1,99 @@
 <div class="main-container">
-    <div class="container">
+
+    <!-- Carrusel a ancho completo fuera del container -->
+    <swiper-container
+        class="slider_home"
+        loop="true"
+        autoplay="true"
+        autoplay-delay="3000"
+        pagination="true"
+        pagination-clickable="true"
+        navigation="true"
+        slides-per-view="1"
+        space-between="0"
+        effect="slide"
+        speed="600"
+        auto-height="true"
+    >
+        <swiper-slide>
+            <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner.jpg"
+                 alt="Repuestos de carro y autopartes - Interamericana" loading="lazy" />
+        </swiper-slide>
+        <swiper-slide>
+            <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner2.jpg"
+                 alt="Escobillas de grafito, rodamientos y farolas para carros" loading="lazy" />
+        </swiper-slide>
+    </swiper-container>
+
+    <div class="container container-wide">
+
         <!-- Header principal con SEO -->
-        <header class="page-header mt-4">
+        <header class="page-header visually-hidden">
             <h1 class="page-title">{{ getPageTitle() }}</h1>
             <p class="page-description">{{ getPageDescription() }}</p>
         </header>
 
         <div class="box-content1">
-            <swiper [config]="config" class="slider_home">
-                <div class="swiper-wrapper">
-                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner.jpg"
-                         alt="Repuestos de carro y autopartes - Interamericana"
-                         class="swiper-slide" />
 
-                    <img src="assets/kompralostyle/image/catalog/slideshow/home3/sliderbanner2.jpg"
-                         alt="Escobillas de grafito, rodamientos y farolas para carros"
-                         class="swiper-slide" />
-                </div>
-
-                <div class="swiper-pagination"></div>
-
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </swiper>
         </div>
-        <!-- banner-->
-        <!-- <section class="banners1 banners" fxShow="false" fxHide.gt-sm="false" aria-label="Promociones de repuestos automotrices">
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
-                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn1.jpg" alt="Promociones especiales en escobillas de grafito"> </figure>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
-                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn2.jpg" alt="Ofertas en rodamientos para carro"> </figure>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bannerefect">
-                    <figure> <img src="assets/kompralostyle/image/catalog/banners/id3-bn3.jpg" alt="Descuentos en farolas y luces para carros"> </figure>
-                </div>
-            </div>
-        </section> -->
-        <!-- /banner-->
 
-        <div class="row mt-5">
+        <!-- Contenedor de servicios eliminado y reemplazado por diálogo promocional -->
 
-            <!-- Productos destacados-->
-            <section class="col-lg-12 col-md-12 col-sm-12 col-xs-12" aria-label="Productos destacados">
 
-                <!-- Botón personalizado -->
-                <div class="text-center mb-4">
-                    <button class="custom-btn" (click)="extendGridStructure()">
+        <!-- Main Layout with Sidebar -->
+        <div class="destacados-grid sin-sidebar">
+            <!-- Main Content Area -->
+            <section class="products-area" aria-label="Productos destacados">
+                <h2 class="section-title">{{ getSectionTitle() }}</h2>
+                <p class="section-description">{{ getSectionDescription() }}</p>
+
+                <!-- Interamericana: acceso directo al catálogo completo -->
+                <div class="ver-mas-productos-section" style="text-align: center; margin: 0 0 20px;">
+                    <button class="btn btn-block transparent-btn" (click)="extendGridStructure()">
                         VER TODOS LOS PRODUCTOS
                     </button>
                 </div>
-
-                <div layout="row" layout-wrap>
-
-                    <div class="col-lg-12 pl-0">
-                        <h2 class="titulo">
-                            <span>{{ getSectionTitle() }}</span>
-                        </h2>
-                        <p class="section-description">{{ getSectionDescription() }}</p>
-                    </div>
-
-                    <div fxLayout="row wrap" fxLayoutAlign="center start">
-                        <mat-card class="example-card card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="50%"
-                            *ngFor="let card of productsGrid">
-
-                            <mat-card-content class="product-content producto_destacado relative">
-
-                                <a class="p-link link_producto" *ngIf="!card?.id" [routerLink]="[card?.route_product]">
-                                    <img class="img_size image_pixeled" mat-card-image [defaultImage]="card?.image"
-                                        [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)">
-                                </a>
-
-                                <a class="p-link" *ngIf="card?.id"
-                                    [routerLink]="['/products', card?.type, card?.id_product]">
-                                    <img class="img_size image_pixeled" mat-card-image [src]="card?.image"
-                                        [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)">
-                                </a>
-                                <div class="right-block">
-                                    <h6 class="titulo_producto"><a *ngIf="product?.id_product"
-                                            [routerLink]="['/products', card?.type, card?.id_product]"
-                                            class="title-link">{{card?.name}}</a>
-                                    </h6>
-
-                                    <h6 class="titulo_producto"><a *ngIf="!product?.id_product"
-                                            [routerLink]="['/products/accessories/card?.id_product']"
-                                            class="title-link">{{card?.name}}</a>
-                                    </h6>
-
-                                    <p class="price price-container-custom">
-                                        <span class="price-new price-new-custom">{{card?.price | currency : 'USD' :
-                                            'symbol' :
-                                            '1.0-0'}}</span>
-                                    </p>
-
-                                    <div class="rating-star">
-                                        <embryo-Rating [rate]="card.rating"></embryo-Rating>
-                                    </div>
-                                    <button (click)="productAddToWishlist(card, i+'-wishlist')" type="button"
-                                        class="wishlist btn-button" title="Añadir a lista de deseos"><i
-                                            class="fa fa-heart-o"></i>
-                                    </button>
-
-                                    <div class="btn_comprar" *ngIf="checkCartAlready(card)">
-                                        <embryo-AddToCardButton [product]="product"
-                                            (addToCart)="addToCartProduct($event)">
-
-                                        </embryo-AddToCardButton>
-                                        <ng-container *ngIf="card">
-                                            <button mat-fab (click)="addToCartProduct(card)" class="btn-button"><i
-                                                    class="fa fa-cart-plus" aria-hidden="true"></i></button>
-                                        </ng-container>
-                                    </div>
-                                    <div class="btn_comprar" *ngIf="!checkCartAlready(card)">
-                                        <button class="btn-button" mat-fab *ngIf="card?.id_product"
-                                            [routerLink]="['/products', card?.type, card?.id_product]"><i
-                                                class="fa fa-eye" aria-hidden="true"></i> </button>
-                                        <button class="btn-button" mat-fab *ngIf="!card?.id_product"
-                                            [routerLink]="[card?.route_product]"><i class="fa fa-eye"
-                                                aria-hidden="true"></i> </button>
-                                    </div>
-                                    <span class="deliveryicon">
-                                        <img src="assets/images/shipping-fast-solid.svg" /> Envío a todo el país</span>
-                                </div>
-
-                            </mat-card-content>
-                        </mat-card>
-                    </div>
-
+                
+                <!-- Featured Products Grid -->
+                <div class="products-grid" fxLayout="row wrap">
+                    <!-- Interamericana: card propia (clases ia-product-card), estilo del sitio original -->
+                    <article class="ia-product-card" *ngFor="let card of productsGrid; let i = index">
+                        <div class="ia-product-card__media">
+                            <a *ngIf="!card?.id" [routerLink]="[card?.route_product]">
+                                <img class="ia-product-card__img" [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)" (error)="onImageError($event)">
+                            </a>
+                            <a *ngIf="card?.id" [routerLink]="['/products', card?.type, card?.id_product]">
+                                <img class="ia-product-card__img" [src]="card?.image" [defaultImage]="card?.image" [lazyLoad]="card?.image" [alt]="getProductImageAlt(card)" (error)="onImageError($event)">
+                            </a>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--wishlist" [class.is-active]="checkWishlistAlready(card)" [id]="i+'-wishlist'" (click)="productAddToWishlist(card, i+'-wishlist')" title="Añadir a lista de deseos">
+                                <i [class]="checkWishlistAlready(card) ? 'fa fa-heart' : 'fa fa-heart-o'" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--cart" *ngIf="checkCartAlready(card)" (click)="addToCartProduct(card)" title="Añadir al carrito">
+                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ia-product-card__action ia-product-card__action--cart" *ngIf="!checkCartAlready(card) && card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]" title="Ver producto">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="ia-product-card__body">
+                            <h6 class="ia-product-card__title">
+                                <a *ngIf="card?.id_product" [routerLink]="['/products', card?.type, card?.id_product]">{{ card?.name }}</a>
+                                <a *ngIf="!card?.id_product" [routerLink]="[card?.route_product]">{{ card?.name }}</a>
+                            </h6>
+                            <p class="ia-product-card__price">{{ card?.price | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
+                            <span class="ia-product-card__shipping"><img src="assets/images/shipping-fast-solid.svg" alt="" /> Envío a todo el país</span>
+                        </div>
+                    </article>
                 </div>
-
+                
+                <!-- VER TODOS LOS PRODUCTOS BUTTON -->
+                <div class="ver-mas-productos-section" style="text-align: center; margin: 30px 0;">
+                    <button class="btn btn-block transparent-btn" (click)="extendGridStructure()">
+                        VER TODOS LOS PRODUCTOS
+                    </button>
+                </div>
             </section>
-            <!-- /Productos destacados-->
-
         </div>
-
-        <div class="text-center mb-4 mt-4">
-            <button class="custom-btn" (click)="extendGridStructure()">
-                VER TODOS LOS PRODUCTOS
-            </button>
-        </div>
-
-        <!-- Tiendas -->
-        <!-- <div class="tiendas_grid">
-            <div class="col-lg-12 mt-5 pl-0">
-                <h3 class="titulo"><span>Nuestras Tiendas</span>
-                </h3>
-            </div>
-            <div fxLayout="row wrap">
-                <mat-card class="card_store_prod" fxFlex="20%" fxFlex.xs="50%" fxFlex.sm="33%"
-                    *ngFor="let card of obsStore | async | paginate: { itemsPerPage: 10, currentPage: p }  ">
-                    <mat-card-content>
-                        <a class="p-link link_tiendas" *ngIf="!card?.id" [routerLink]="[card?.route_store]">
-                            <img mat-card-image [defaultImage]="card?.logo_store" [lazyLoad]="card?.logo_store">
-                        </a>
-                        <mat-card-header>
-                            <mat-card-subtitle>
-                                <h5 class="card-title item-title">{{card?.name_store }}</h5>
-                            </mat-card-subtitle>
-                        </mat-card-header>
-                        <p class="desc_tienda">
-                            {{card?.description }}
-                        </p>
-                        <a class="p-link" *ngIf="!card?.id" [routerLink]="[card?.route_store]">
-                            <span class="float-end btn-comprar-card mt-2">Ver Productos<i
-                                    class="fa fa-plus px-1"></i></span>
-                        </a>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-
-            <a class="btn btn-block transparent-btn" (click)="extendGridStructure()">VER MAS TIENDAS</a>
-
-            <div class="row">
-                <div class="col-md-4 col-sm-12 col-xs-12 ">
-                    <img _ngcontent-embryo-seo-pre-c396=""
-                        src="assets/kompralostyle/image/catalog/banners/banners-audifonos.png" alt="image">
-                </div>
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <img _ngcontent-embryo-seo-pre-c396=""
-                        src="assets/kompralostyle/image/catalog/banners/banners-celulares.png" alt="image">
-                </div>
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <img _ngcontent-embryo-seo-pre-c396=""
-                        src="assets/kompralostyle/image/catalog/banners/banners-acccelulares.png" alt="image">
-                </div>
-            </div>
-        </div> -->
-        <!-- /Tiendas -->
-
-        <!-- <div class="row" align="center">
-            <div class="col-md-4 col-sm-12 col-xs-12 ">
-                <img class="icon_home" _ngcontent-embryo-seo-pre-c396=""
-                    src="assets/kompralostyle/image/catalog/banners/reclamacion.svg" alt="image">
-                <p>
-                    <b>1. Indica tu inconformidad</b>
-                </p>
-                <p>
-                    Si tienes alguna inconformidad con tu producto, garantizaremos el retorno de tu dinero.
-                </p>
-            </div>
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <img class="icon_home" _ngcontent-embryo-seo-pre-c396=""
-                    src="assets/kompralostyle/image/catalog/banners/charla.svg" alt="image">
-                <p>
-                    <b>2. Respuesta y atención del vendedor</b>
-                </p>
-                <p>
-                    Establecemos un plazo para la respuesta y atención del vendedor, nuestro equipo intervendrá por una
-                    respuesta
-                    oportuna.
-                </p>
-            </div>
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <img class="icon_home" _ngcontent-embryo-seo-pre-c396=""
-                    src="assets/kompralostyle/image/catalog/banners/reclamacion.svg" alt="image">
-                <p>
-                    <b>3. Si no hay solución devolvemos tu dinero </b>
-                </p>
-                <p>
-                    En menos de 24 horas tu dinero estará de vuelta.
-                </p>
-            </div>
-        </div> -->
 
     </div>
 </div>

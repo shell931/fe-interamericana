@@ -1,11 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../../Services/api.service';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../../src/environments/environment';
 
 @Component({
     selector: 'app-StoreAdm',
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule
+    ],
     templateUrl: './StoreAdm.component.html',
     styleUrls: ['./StoreAdm.component.scss']
 })
@@ -39,7 +51,7 @@ export class StoreAdmComponent implements OnInit {
     constructor(
         public router: Router,
         private apiService: ApiService,
-        private toastyService: ToastaService,
+        private toastyService: ToastrService,
     ) { }
 
     ngOnInit() {
@@ -52,17 +64,17 @@ export class StoreAdmComponent implements OnInit {
             this.router.navigate(['/session/signin']);
         } else {
 
-            this.apiService.getStoreData(this.id_store).subscribe(res => {
+            this.apiService.getStoreData(this.id_store).subscribe((res: any) => {
                 this.getDataStore(res)
 
-            }, error => console.log(error));
+            }, (error: any) => console.log(error));
 
         }
 
     }
 
 
-    getDataStore(response) {
+    getDataStore(response: { address: any; description: any; email: any; logo_store: any; manager: any; name_store: any; number_identifier: any; state_store: any; telephone: any; id_departament: any; city_id: any; storecategories: any; logo_store_up: string; city: any; departament: any; storecategories_description: any; }) {
         console.log(response);
         
 
@@ -99,3 +111,4 @@ export class StoreAdmComponent implements OnInit {
 
 
 }
+

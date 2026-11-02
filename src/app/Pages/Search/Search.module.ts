@@ -4,11 +4,10 @@ import { RouterModule } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import { SearchRoutes } from './Search.routing';
-import { SearchComponent } from './Search/Search.component';
 import { GlobalModule } from '../../Global/Global.module';
 import { TemplatesModule } from '../../Templates/Templates.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import {NgxPaginationModule} from 'ngx-pagination';
 import {CdkTreeModule} from '@angular/cdk/tree';
@@ -22,6 +21,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -44,22 +44,20 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
   
 
 @NgModule({
-	bootstrap: [
-		SearchComponent
-	  ],
 	imports: [
 		MatTreeModule,
 		CdkTreeModule,
 		NgxPaginationModule,
 		CommonModule,
 		RouterModule.forChild(SearchRoutes),
-		FlexLayoutModule,
+		LayoutModule,
 		MatCardModule,
 		MatButtonModule,
 		MatMenuModule,
 		MatToolbarModule,
 		MatIconModule,
 		MatInputModule,
+		MatFormFieldModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
 		MatProgressSpinnerModule,
@@ -91,7 +89,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 	
 	  ],
 	declarations: [
-		SearchComponent,
+		// SearchComponent is now standalone - removed from declarations
 	]
 })
 export class SearchModule { }
+
+

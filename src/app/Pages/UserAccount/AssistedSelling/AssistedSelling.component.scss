@@ -1,4 +1,20 @@
-@import '../../../../assets/scss/_table_general.scss';
+// @use '../../../../assets/scss/_table_general.scss';
+
+/* Tarjeta styles moved from inline CSS */
+.tarjeta .delantera {
+    width: 100%;
+    background: url('../../../../assets/images/card/bg-tarjeta/bg-tarjeta-02.jpg');
+    background-size: cover;
+}
+
+.trasera {
+    background: url('../../../../assets/images/card/bg-tarjeta/bg-tarjeta-02.jpg');
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
 
 .dash-title {
   font-size: 1rem;

@@ -16,7 +16,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { AccountComponent } from './Account/Account.component';			
 import { AccountSettingComponent } from './AccountSetting/AccountSetting.component';
@@ -47,8 +47,11 @@ import { AdminAccountRoutes} from './AdminAccount.routing';
 		FormsModule,
 		ReactiveFormsModule,
 		MatTableModule,
-		FlexLayoutModule,
+		LayoutModule,
 		MatCheckboxModule
 	]
 })
 export class AdminAccountModule { }
+
+
+

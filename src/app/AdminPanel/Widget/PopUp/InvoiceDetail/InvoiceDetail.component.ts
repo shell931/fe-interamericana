@@ -1,20 +1,39 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs/observable/of';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 import { Invoice } from '../../../../Models/Invoice';
 import { environment } from '../../../../../../src/environments/environment';
 
 @Component({
    selector: 'InvoiceDetail-dialog',
    templateUrl: './InvoiceDetail.component.html',
-   styleUrls: ['./InvoiceDetail.component.scss']
+   styleUrls: ['./InvoiceDetail.component.scss'],
+   standalone: true,
+   imports: [
+     CommonModule,
+     ReactiveFormsModule,
+     MatDialogModule,
+     MatFormFieldModule,
+     MatInputModule,
+     MatButtonModule,
+     MatProgressSpinnerModule,
+     MatIconModule,
+     ScrollingModule
+   ]
 })
 
 export class InvoiceDetailComponent implements OnInit {
@@ -26,7 +45,7 @@ export class InvoiceDetailComponent implements OnInit {
    total: any;
    img_product_rout: any;
    cam_com: any;
-   ShippmentForm: FormGroup;
+   ShippmentForm: UntypedFormGroup;
    id_invoice: any;
    public show: boolean = false;
 
@@ -39,8 +58,8 @@ export class InvoiceDetailComponent implements OnInit {
       public dialogRef: MatDialogRef<InvoiceDetailComponent>,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
-      private formGroup: FormBuilder,
+      private toastyService: ToastrService,
+      private formGroup: UntypedFormBuilder,
    ) { }
 
    ngOnInit() {
@@ -56,7 +75,7 @@ export class InvoiceDetailComponent implements OnInit {
       // this.total = obj.total_price
 
       this.ShippmentForm = this.formGroup.group({
-         cam_com: new FormControl('', [Validators.required]),
+         cam_com: new UntypedFormControl('', [Validators.required]),
       });
 
    }
@@ -148,4 +167,5 @@ export class InvoiceDetailComponent implements OnInit {
    }
 
 }
+
 

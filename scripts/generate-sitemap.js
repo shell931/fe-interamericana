@@ -184,7 +184,8 @@ const sitemap = generateSitemap(domain, basePath);
 const robots = generateRobotsTxt(domain, basePath);
 
 // Escribir archivos
-const distPath = path.join(__dirname, '../dist/interamericana');
+// Angular 20 (@angular/build:application) emite los archivos públicos en dist/<proyecto>/browser
+const distPath = path.join(__dirname, '../dist/interamericana/browser');
 const srcPath = path.join(__dirname, '../src');
 
 // Crear directorio si no existe
@@ -201,4 +202,4 @@ fs.writeFileSync(path.join(distPath, 'sitemap.xml'), sitemap);
 fs.writeFileSync(path.join(distPath, 'robots.txt'), robots);
 
 console.log(`✅ Sitemap y robots.txt generados para: ${domain}${basePath}`);
-console.log(`📁 Archivos creados en: src/ y dist/interamericana/`);
+console.log(`📁 Archivos creados en: src/ y dist/interamericana/browser/`);

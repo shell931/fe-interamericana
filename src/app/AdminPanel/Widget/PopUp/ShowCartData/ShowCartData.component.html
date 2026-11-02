@@ -1,4 +1,4 @@
-<perfect-scrollbar class="">
+<cdk-virtual-scroll-viewport style="height: 400px;">
    <div class="">
       <div class="">
          <mat-card class="">
@@ -13,7 +13,7 @@
                            <td>{{prod.name}}</td>
                            <td>{{prod.quantity}}</td>                           
                            <td>{{prod.price | currency:embryoService?.currency}}</td>
-                           <td>{{prod.price_cant | currency:embryoService?.currency}}</td>
+                           <td>{{(prod.price * prod.quantity) | currency:embryoService?.currency}}</td>
                         </tr>
                      </tbody>
                      <tr>
@@ -30,5 +30,5 @@
       <!-- final-receipt -->
    </div>
    <!-- final-receipt-page -->
-</perfect-scrollbar>
+</cdk-virtual-scroll-viewport>
 <!-- invoice-popup -->

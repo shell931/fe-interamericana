@@ -15,7 +15,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatDividerModule} from '@angular/material/divider';
 
 import { WidgetModule } from '../Widget/Widget.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
 	declarations: [ReportsComponent],
@@ -32,7 +32,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 		WidgetModule,
 		MatTabsModule,
       MatChipsModule,
-      FlexLayoutModule
+      LayoutModule
 	]
 })
 export class ReportsModule { }
+
+
+

@@ -3,8 +3,13 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 import { EmbryoService } from '../../../Services/Embryo.service';
 import { ApiService } from '../../../Services/api.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-
+import { UntypedFormControl, UntypedFormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface Observacions {
    observation: any,
@@ -14,7 +19,17 @@ export interface Observacions {
 @Component({
    selector: 'embryo-TransfersDetailAdmSidebar',
    templateUrl: './TransfersDetailAdmSidebar.component.html',
-   styleUrls: ['./TransfersDetailAdmSidebar.component.scss']
+   styleUrls: ['./TransfersDetailAdmSidebar.component.scss'],
+   standalone: true,
+   imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatCardModule,
+      MatIconModule
+   ]
 })
 export class TransfersDetailAdmSidebarSidebarComponent implements OnInit {
 
@@ -25,8 +40,8 @@ export class TransfersDetailAdmSidebarSidebarComponent implements OnInit {
 
    public show: boolean = false;
 
-   public obser = new FormControl('', Validators.required);
-   public newForm = new FormGroup({
+   public obser = new UntypedFormControl('', Validators.required);
+   public newForm = new UntypedFormGroup({
       obser: this.obser,
    });
 
@@ -92,3 +107,4 @@ export class TransfersDetailAdmSidebarSidebarComponent implements OnInit {
       }
    }
 }
+

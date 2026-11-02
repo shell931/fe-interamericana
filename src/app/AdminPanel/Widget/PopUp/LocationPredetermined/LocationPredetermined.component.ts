@@ -1,5 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { of } from 'rxjs/observable/of';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 import { delay } from 'rxjs/operators';
 import { ApiService } from '../../../../Services/api.service';
 
@@ -8,52 +14,59 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
    selector: 'predetermined-dialog',
    templateUrl: './LocationPredetermined.component.html',
-   styleUrls: ['./LocationPredetermined.component.scss']
+   styleUrls: ['./LocationPredetermined.component.scss'],
+   standalone: true,
+   imports: [
+     CommonModule,
+     MatCardModule,
+     MatButtonModule,
+     MatMenuModule,
+     MatIconModule,
+     ScrollingModule
+   ]
 })
 
 export class LocationPredeterminedComponent implements OnInit {
 
-   data: string;
-   gallery: string;
+   data: any[] = [];
+   gallery: string = '';
    adminprList: any[] = [];
    adminProductList: any[] = [];
-   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
    dataSource = new MatTableDataSource<any>(this.adminProductList);
-   toastOption: ToastOptions = {
-      title: "Predeterminada",
-      msg: "La ubicación ha quedado predeterminada!",
-      showClose: true,
-      timeout: 3000,
-      theme: "material"
-  };
+   toastOption: any = this.toastyService.success(
+  "La ubicación ha quedado predeterminada!",
+  " Ubicación Predeterminada",
+  { timeOut: 4000, closeButton: true, progressBar: true }
+);
 
    constructor(
       public dialogRef: MatDialogRef<LocationPredeterminedComponent>,
       private apiService: ApiService,
       private router: Router,
-      private toastyService: ToastaService,
+      private toastyService: ToastrService,
    ) { }
 
    ngOnInit() {
    }
 
-   product_aprobed(id_prod) {
+   product_aprobed(id_prod: any) {
       let state = 2;
       this.apiService.updateStateProduct(state, id_prod).subscribe(res => this.onClose(res));
    }
 
-   product_reject(id_prod) {
+   product_reject(id_prod: any) {
       let state = 3;
       this.apiService.updateStateProduct(state, id_prod).subscribe(res => this.onClose(res));
    }
 
-   onClose(response) {
-      if (response.result == 200) {
+   onClose(response: any) {
+      if (response && response.result == 200) {
          this.dialogRef.close("yes");
 
          this.router.navigate(['/admin-panel/admin_products']).then(() => {
@@ -66,12 +79,12 @@ export class LocationPredeterminedComponent implements OnInit {
       }
    }
 
-   deleteLocation(id) {
+   deleteLocation(id: any) {
       //Open the dialog
       this.apiService.deleteLocationUserDialog(id);
    }
 
-   predetermined(id) {
+   predetermined(id: any) {
       const id_user_front = localStorage.getItem('id_user_front');
       let myObj_user_client = { "predetermined": "True", "id_user_front": id_user_front };
       const body = JSON.stringify(myObj_user_client);
@@ -88,15 +101,13 @@ export class LocationPredeterminedComponent implements OnInit {
       );
    }
 
-   editLocation(id){
-      
+   editLocation(id: any){
       this.router.navigate(['/account/address/edit/'+id]).then(() => {
          // window.location.reload();
-         
       });
-
    }
 
 
 }
+
 

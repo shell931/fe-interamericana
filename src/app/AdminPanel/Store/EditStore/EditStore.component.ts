@@ -1,16 +1,19 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgxDropzoneModule, NgxDropzoneChangeEvent } from 'ngx-dropzone';
+import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ApiService } from '../../../Services/api.service';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { MatSelect } from '@angular/material/select';
-import { Subject } from 'rxjs/Subject';
-import { take, takeUntil } from 'rxjs/operators';
-
-
 
 export interface Departament {
     id_departament: string;
@@ -33,9 +36,21 @@ export interface CategoryStore {
 @Component({
     selector: 'app-EditStore',
     templateUrl: './EditStore.component.html',
-    styleUrls: ['./EditStore.component.scss']
+    styleUrls: ['./EditStore.component.scss'],
+    standalone: true, // Force rebuild
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
+        NgxDropzoneModule,
+        MatProgressSpinnerModule,
+    ]
 })
-
 export class EditStoreComponent implements OnInit {
 
 
@@ -44,7 +59,7 @@ export class EditStoreComponent implements OnInit {
     citietlist: City[] = [];
     cities: City[] = [];
     files: File[] = [];
-    selectedFiles: FileList;
+    selectedFiles!: FileList;
     id_store: any;
     address: any;
     description: any;
@@ -56,9 +71,9 @@ export class EditStoreComponent implements OnInit {
     number_identifier: any;
     state_store: any;
     telephone: any;
-    selectedValue;
-    selectedCityValue;
-    selectedCategoryValue;
+    selectedValue: any;
+    selectedCityValue: any;
+    selectedCategoryValue: any;
     id_city: any;
     id_departament: any;
     id_category: any;
@@ -69,64 +84,61 @@ export class EditStoreComponent implements OnInit {
     storecategory: CategoryStore[] = [];
 
     // START ANGULAR MAT SEARCH DEPARTAMENT
-    public departamentCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public citieCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public departamentFilterCtrl: FormControl = new FormControl();
-    public citieFilterCtrl: FormControl = new FormControl();
-    @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+    public departamentCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public citieCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public departamentFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    public citieFilterCtrl: UntypedFormControl = new UntypedFormControl();
+    @ViewChild('singleSelect', { static: true })
+    singleSelect!: MatSelect;
     private _onDestroy = new Subject<void>();
     // END ANGULAR MAT SEARCH DEPARTAMENT
 
     // START ANGULAR MAT SEARCH CATEGORY STORE
-    public categorystoreCtrl: FormControl = new FormControl(null, [Validators.required]);
-    public categorystoreFilterCtrl: FormControl = new FormControl();
+    public categorystoreCtrl: UntypedFormControl = new UntypedFormControl(null, [Validators.required]);
+    public categorystoreFilterCtrl: UntypedFormControl = new UntypedFormControl();
     // END ANGULAR MAT SEARCH CATEGORY STORE
 
 
-    storeForm: FormGroup;
+    storeForm!: UntypedFormGroup;
     emailPattern: any = /\S+@\S+\.\S+/;
     formBuilder: any;
-    toastOption: ToastOptions = {
-        title: "Tienda Actualizada",
-        msg: "La tienda ha sido actualizada!",
-        showClose: true,
-        timeout: 4000,
-        theme: "material"
-    };
-    toastIconMax: ToastOptions = {
-        title: "Logo comercio",
-        msg: "Subir solo un logo para el comercio!",
-        showClose: true,
-        timeout: 4000,
-        theme: "material"
-    };
-    toastvalidateimg: ToastOptions = {
-        title: "Logo",
-        msg: "Ingresar logo!",
-        showClose: true,
-        timeout: 8000,
-        theme: "material"
-    };
 
-    toastRejectPixelsImg: ToastOptions = {
-        title: "Dimension de imagen",
-        msg: "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
-        showClose: true,
-        timeout: 8000,
-        theme: "material"
-    };
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private formGroup: FormBuilder,
-        private toastyService: ToastaService,
+        private formGroup: UntypedFormBuilder,
+        private toastyService: ToastrService,
         private apiService: ApiService,
-        private _formBuilder: FormBuilder) { }
+        private _formBuilder: UntypedFormBuilder) { }
 
+
+    toastOption: any = this.toastyService.success(
+        "La tienda ha sido actualizada en el sistema!",
+        "Tienda actualizada",
+        { timeOut: 4000, closeButton: true, progressBar: true }
+    );
+    toastIconMax: any = this.toastyService.warning(
+        "Subir solo un logo para el comercio!",
+        "Logo comercio",
+        { timeOut: 4000, closeButton: true, progressBar: true }
+    );
+
+
+    toastvalidateimg: any = this.toastyService.warning(
+        "Ingresar logo!",
+        "Logo",
+        { timeOut: 4000, closeButton: true, progressBar: true }
+    );
+
+    toastRejectPixelsImg: any = this.toastyService.warning(
+        "No pudimos subir algunas de tus imágenes\n Deben tener formato jpg o png\n Deben tener más de 700 píxeles en uno de sus lados.",
+        "Dimension de imagen",
+        { timeOut: 8000, closeButton: true, progressBar: true }
+    );
 
     ngOnInit() {
-        this.route.params.subscribe(res => {
+        this.route.params.subscribe((res: Params) => {
             this.id_store = res.id_store;
         })
         console.log(this.id_store);
@@ -138,17 +150,17 @@ export class EditStoreComponent implements OnInit {
             number_identifier: ['', [Validators.required]],
             manager: ['', [Validators.required]],
             description: ['', [Validators.required]],
-            departmentControl: new FormControl('', [Validators.required]),
-            cityControl: new FormControl('', [Validators.required]),
-            categorystoreCtrl: new FormControl('', [Validators.required]),
+            departmentControl: new UntypedFormControl('', [Validators.required]),
+            cityControl: new UntypedFormControl('', [Validators.required]),
+            categorystoreCtrl: new UntypedFormControl('', [Validators.required]),
         });
 
-        this.apiService.getStoreData(this.id_store).subscribe(res => {
+        this.apiService.getStoreData(this.id_store).subscribe((res: any) => {
             this.getDataStore(res, this.id_store)
-        }, error => console.log(error));
+        }, (error: any) => console.log(error));
     }
 
-    getDataStore(response, id_location) {
+    getDataStore(response: { address: any; description: any; email: any; logo_store: any; manager: any; name_store: any; number_identifier: any; state_store: any; telephone: any; id_departament: any; city_id: any; storecategories: any; }, id_location: any) {
 
         this.address = response.address;
         this.description = response.description;
@@ -166,13 +178,13 @@ export class EditStoreComponent implements OnInit {
         this.logo_store = 'https://store-ever-icon-store.s3.us-east-2.amazonaws.com/' + this.logo_store;
 
 
-        this.storeForm.get('name_store').setValue(this.name_store)
-        this.storeForm.get('address').setValue(this.address)
-        this.storeForm.get('telephone').setValue(this.telephone)
-        this.storeForm.get('email').setValue(this.email)
-        this.storeForm.get('number_identifier').setValue(this.number_identifier)
-        this.storeForm.get('manager').setValue(this.manager)
-        this.storeForm.get('description').setValue(this.description)
+        this.storeForm.get('name_store')?.setValue(this.name_store)
+        this.storeForm.get('address')?.setValue(this.address)
+        this.storeForm.get('telephone')?.setValue(this.telephone)
+        this.storeForm.get('email')?.setValue(this.email)
+        this.storeForm.get('number_identifier')?.setValue(this.number_identifier)
+        this.storeForm.get('manager')?.setValue(this.manager)
+        this.storeForm.get('description')?.setValue(this.description)
 
         // START ANGULAR MAT SEARCH DEPARTAMENT
         this.departments = [];
@@ -192,7 +204,7 @@ export class EditStoreComponent implements OnInit {
                         this.filterDepartament();
                     });
             },
-            error => console.log(error)
+            (error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH DEPARTAMENT
 
@@ -209,7 +221,7 @@ export class EditStoreComponent implements OnInit {
                 this.setValueCitiSelect(this.cities, this.id_city);
                 this.citieCtrl.setValue(this.cities[10]);
             },
-            error => console.log(error)
+            (error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH CITIES
 
@@ -232,7 +244,7 @@ export class EditStoreComponent implements OnInit {
     }
 
 
-    setValueCategorySelect(categories, id_category) {
+    setValueCategorySelect(categories: string | any[], id_category: any) {
         let count;
         for (var i = 0; i < categories.length; i++) {
             categories[i].id;
@@ -240,12 +252,12 @@ export class EditStoreComponent implements OnInit {
                 count = i;
             }
         }
-        this.selectedCategoryValue = categories[count];
+        this.selectedCategoryValue = categories[count!];
     }
 
 
 
-    setValueDepartmentSelect(departments, id_departmen) {
+    setValueDepartmentSelect(departments: string | any[], id_departmen: any) {
         let count;
         for (var i = 0; i < departments.length; i++) {
             departments[i].id_departament;
@@ -253,27 +265,27 @@ export class EditStoreComponent implements OnInit {
                 count = i;
             }
         }
-        this.selectedValue = departments[count];
+        this.selectedValue = departments[count!];
     }
 
-    setValueCitiSelect(cities, id_city) {
+    setValueCitiSelect(cities: string | any[], id_city: any) {
         let count;
         for (var i = 0; i < cities.length; i++) {
             if (cities[i].id_city == id_city) {
                 count = i;
             }
         }
-        this.selectedCityValue = cities[count];
+        this.selectedCityValue = cities[count!];
     }
 
     //START SET EVENT FROM DROPZONE COMPLEMENT
-    selectFile(event) {
-        let index = this.files.length != event.addedFiles ? 0 : this.files.length;
+    selectFile(event: NgxDropzoneChangeEvent) {
+        // event.addedFiles is an array of File; index variable not needed
         console.log(this.files.length);
         if (this.files.length > 0) {
             this.toastyService.error(this.toastIconMax);
-        } else {
-            event.addedFiles.map((item) => {
+        } else if (Array.isArray(event.addedFiles)) {
+            event.addedFiles.map((item: any) => {
                 this.onValidatePixels(item)
                     .then((value: boolean) => {
                         if (value) {
@@ -281,25 +293,27 @@ export class EditStoreComponent implements OnInit {
                         } else {
                             this.toastyService.error(this.toastRejectPixelsImg);
                         }
-
                     });
             });
-
         }
     }
 
 
-    onValidatePixels(file: File) {
-        return new Promise((resolve, reject) => {
+    onValidatePixels(file: File): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
             const Img = new Image();
             Img.src = URL.createObjectURL(file);
             Img.onload = (e: any) => {
                 console.log(e);
-                const height = e.target.height;
-                const width = e.path[0].width;
+                const height = e.target?.height ?? 0;
+                const width = e.path?.[0]?.width ?? e.target?.width ?? 0;
                 if (height >= this.heightMin || width >= this.widthMin) {
                     resolve(true);
+                } else {
+                    resolve(false);
                 }
+            };
+            Img.onerror = () => {
                 resolve(false);
             };
         });
@@ -307,7 +321,7 @@ export class EditStoreComponent implements OnInit {
     }
 
 
-    onRemove(event) {
+    onRemove(event: File) {
         console.log(event);
         this.files.splice(this.files.indexOf(event), 1);
     }
@@ -337,7 +351,7 @@ export class EditStoreComponent implements OnInit {
 
 
 
-    citieChangeAction(departament) {
+    citieChangeAction(departament: { value: any; }) {
 
         this.selectedCityValue = null;
         // START ANGULAR MAT SEARCH CITIES
@@ -355,7 +369,7 @@ export class EditStoreComponent implements OnInit {
                 }
                 this.citieCtrl.setValue(this.cities[10]);
             },
-            error => console.log(error)
+            (error: any) => console.log(error)
         );
         // END ANGULAR MAT SEARCH CITIES
 
@@ -375,11 +389,11 @@ export class EditStoreComponent implements OnInit {
                 "number_identifier": values_store.number_identifier, "manager": values_store.manager,
                 "state_store": "true", "city": values_store.cityControl.id_city,
                 "description": values_store.description,
-                "logo_store": this.logo_store_save, "storecategories":values_store.categorystoreCtrl.id
+                "logo_store": this.logo_store_save, "storecategories": values_store.categorystoreCtrl.id
             };
 
             this.apiService.updateStore(myObj_store, this.id_store).subscribe(
-                result => {
+                (result: { [x: string]: any; }) => {
 
                     if (this.files.length > 0) {
                         let store_id = result["id_store"];
@@ -396,7 +410,7 @@ export class EditStoreComponent implements OnInit {
                     }
 
                 },
-                error => console.log(error)
+                (error: any) => console.log(error)
             );
             // END UPDATE STORE ON DB
             if (this.files.length > 0) {
@@ -419,5 +433,6 @@ export class EditStoreComponent implements OnInit {
     }
 
 }
+
 
 

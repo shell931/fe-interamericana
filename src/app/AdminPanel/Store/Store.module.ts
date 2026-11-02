@@ -29,12 +29,12 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';         
+import { MatPaginator } from '@angular/material/paginator';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatPaginatorModule} from '@angular/material/paginator';
 
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { StoreComponent } from './Store/Store.component';
 import { AddStoreComponent } from './AddStore/AddStore.component';
@@ -48,7 +48,6 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 
 // modules to mat-select-search
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {A11yModule} from '@angular/cdk/a11y';
 import {BidiModule} from '@angular/cdk/bidi';
 import {ObserversModule} from '@angular/cdk/observers';
@@ -64,11 +63,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
    declarations: [
-      StoreComponent, AddStoreComponent, EditStoreComponent, StoreValidationComponent
-      
+      StoreComponent, AddStoreComponent, EditStoreComponent
    ],
 	imports: [
-      MatExpansionModule, 
+      MatExpansionModule,
 		MatIconModule,
 		MatButtonModule,
 		MatCardModule,
@@ -76,7 +74,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
       CommonModule,
       MatFormFieldModule,
       MatInputModule,
-      FlexLayoutModule,
+      LayoutModule,
       MatPaginatorModule,
       RouterModule.forChild(StoreRoutes),
       FormsModule,
@@ -89,7 +87,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
       // imports to mat-select-search
       SweetAlert2Module.forRoot(),
       NgSelectModule
-      
-	]
+
+	],
+   exports: [
+      StoreComponent, AddStoreComponent, EditStoreComponent
+   ]
 })
 export class StoreModule { }
+
+

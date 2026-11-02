@@ -209,19 +209,19 @@ const HeaderOneItems = [
   //   ]
   // },
 
-  // {
-  //   state: 'storelist',
-  //   name: "TIENDAS OFICIALES",
-  //   type: "link",
-  //   icon: 'perm_contact_calendar'
-  // },
+  {
+    state: 'storelist',
+    name: "TIENDAS OFICIALES",
+    type: "link",
+    icon: 'perm_contact_calendar'
+  },
 
-  // {
-  //   state: 'contact',
-  //   name: "VENDER",
-  //   type: "link",
-  //   icon: 'perm_contact_calendar'
-  // },
+  {
+    state: 'contact',
+    name: "VENDER",
+    type: "link",
+    icon: 'perm_contact_calendar'
+  },
 
   // {
   //   state: 'auth',
@@ -386,3 +386,4 @@ export class MenuItems {
     return FooterOneItems;
   }
 }
+

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule, CurrencyPipe, AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -28,12 +28,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatBadgeModule} from '@angular/material/badge';
-
-
-
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BarRatingModule } from 'ngx-bar-rating';
 import { UserAccountRoutes } from './UserAccount.routing';
 import { AccountComponent } from './Account/Account.component';
 import { ProfileComponent } from './Profile/Profile.component';
@@ -61,21 +59,18 @@ import { AddressCreateComponent } from './AddressCreate/AddressCreate.component'
 import { OrderHistoryComponent } from './OrderHistory/OrderHistory.component';
 import { GridProductComponent } from './GridProduct/GridProduct.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-
-import { NgSelectModule } from '@ng-select/ng-select';
-
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { FilterPipe } from './ProductsAdm/ProductsAdm.component';
-
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-
-import {MatPaginatorModule} from '@angular/material/paginator';
-
+// import { NgxPaginationModule } from 'ngx-pagination'; // Temporarily commented due to Ivy compatibility
 import { BinnacleSideBarComponent } from '../../Layouts/BinnacleSideBar/BinnacleSideBar.component';
 import { TransfersDetailSidebarComponent } from '../../Layouts/TransfersDetailSidebar/TransfersDetailSidebar.component';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { FilterPipe } from './ProductsAdm/ProductsAdm.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import {MatPaginatorModule} from '@angular/material/paginator';
+
+// Temporarily commented out - incompatible with Angular Material 20
+// // Temporarily commented out - incompatible with Angular Material 20
+// import { MaterialFileInputModule } from 'ngx-material-file-input';
+
 
 @NgModule({
   imports: [
@@ -83,7 +78,6 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
     RouterModule.forChild(UserAccountRoutes),
     MatBadgeModule,
     MatButtonModule, 
-    FlexLayoutModule,
     MatCardModule, 
     MatMenuModule, 
     MatToolbarModule, 
@@ -107,42 +101,52 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
     MatRadioModule,
     MatDialogModule,
     MatGridListModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMatSelectSearchModule,
     NgSelectModule,
+    BarRatingModule,
+    NgxMatSelectSearchModule,
     NgxDropzoneModule,
-    NgxPaginationModule,
+    // NgxPaginationModule, // Temporarily commented due to Ivy compatibility
     MatPaginatorModule,
     SweetAlert2Module.forRoot(),
-    PerfectScrollbarModule,
-    MaterialFileInputModule
+
+    // MaterialFileInputModule // Commented out - incompatible with Angular Material 20
+  ],
+  providers: [
+    CurrencyPipe,
+    AsyncPipe
   ],
   declarations: [
-    BinnacleSideBarComponent,
-    TransfersDetailSidebarComponent,
-     AccountComponent, 
-     ProfileComponent, 
-     EditProfileComponent, 
-     CardsComponent, 
-     AddressComponent, 
-     StoreAdmComponent,
-     StoreAdmEditComponent,
-     AddressEditComponent,
-     AddressCreateComponent,
-     OrderHistoryComponent,
-     GridProductComponent,
-     ProductsAdm,
-     FilterPipe,
-     ProductsCreateAdmComponent,
-     ProductEditAdmComponent,
-     InvoiceAdmComponent,
-     InvoiceAdmDetailComponent,     
-     TransfersComponent,
-     TransfersViewComponent,
-     AssistedSellingComponent,
-     BalanceStatusComponent,
-     BalanceResponseComponent
-   ]
+    // Components are standalone and imported where needed
+    // BinnacleSideBarComponent,
+    // TransfersDetailSidebarComponent,
+    // AccountComponent, 
+    // ProfileComponent, 
+    // EditProfileComponent, 
+    // CardsComponent, 
+    // AddressComponent, 
+    // StoreAdmComponent,
+    // StoreAdmEditComponent,
+    // AddressEditComponent,
+    // AddressCreateComponent,
+    // OrderHistoryComponent,
+    // GridProductComponent,
+    // ProductsAdm,
+    // FilterPipe,
+    // ProductsCreateAdmComponent,
+    // ProductEditAdmComponent,
+    // InvoiceAdmComponent,
+    // InvoiceAdmDetailComponent,     
+    // TransfersComponent,
+    // TransfersViewComponent,
+    // AssistedSellingComponent,
+    // BalanceStatusComponent,
+    // BalanceResponseComponent
+   ],
+   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UserAccountModule { }
+

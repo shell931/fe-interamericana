@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SitemapService } from '../../Services/sitemap.service';
 import { ApiService } from '../../Services/api.service';
-import { Response } from '@angular/http';
 
 @Component({
   selector: 'app-sitemap',
-  template: '',
-  styleUrls: []
+  standalone: true,
+  template: ''
 })
 export class SitemapComponent implements OnInit {
 
@@ -22,17 +21,17 @@ export class SitemapComponent implements OnInit {
 
   private generateSitemap() {
     // Obtener productos de la API para generar URLs dinámicas
-    this.apiService.getProductsWithoutAuth().subscribe(
-      (products: any) => {
+    this.apiService.getProductsWithoutAuth().subscribe({
+      next: (products: any) => {
         const sitemap = this.sitemapService.generateCompleteSitemap(products);
         this.serveSitemap(sitemap);
       },
-      (error) => {
+      error: () => {
         console.warn('No se pudieron cargar productos para sitemap, usando sitemap básico');
         const sitemap = this.sitemapService.generateSitemapXml();
         this.serveSitemap(sitemap);
       }
-    );
+    });
   }
 
   private serveSitemap(sitemapContent: string) {

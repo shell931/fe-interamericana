@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../Services/loader.service';
 
 @Component({
   selector: 'app-loader',
   templateUrl: './Loader.component.html',
-  styleUrls: ['./Loader.component.scss']
+  styleUrls: ['./Loader.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule
+  ]
 })
 export class LoaderComponent implements OnInit {
   loading: boolean = false;
@@ -18,11 +23,5 @@ export class LoaderComponent implements OnInit {
       }
     );
   }
-
-  // Función simple para manejar rutas de assets en producción
-  getAssetUrl(path: string): string {
-    // En desarrollo: http://localhost:4200/assets/...
-    // En producción: https://domain.com/interamericana/assets/...
-    return path;
-  }
 }
+

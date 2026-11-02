@@ -9,9 +9,9 @@ import {formatNumber} from '@angular/common';
 })
 export class CalculatorService {
 
-  public calculator: Calculator;
+  public calculator: Calculator = new Calculator();
 
-  public calcParams;
+  public calcParams: any;
 
   constructor(
     private httpService: HttpClient
@@ -25,7 +25,7 @@ export class CalculatorService {
   public async calculate(purchaseValue: number, vatPercentage: number, calculatorTypeId: number = 1): Promise<Calculator> {
     try {
       const response = await this.getCalculatorParameters();
-      this.calcParams = response.find(data => data.id === calculatorTypeId);
+      this.calcParams = response.find((data: any) => data.id === calculatorTypeId);
       this.calculator = new Calculator();
 
       this.calculator.title = this.calcParams?.data?.TITLE;
@@ -60,6 +60,8 @@ export class CalculatorService {
       return this.calculator;
     } catch (e) {
       console.log('Error in calculate');
+      return this.calculator;
     }
   }
 }
+

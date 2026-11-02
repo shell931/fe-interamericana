@@ -7,11 +7,17 @@ import { ApiService } from '../../../Services/api.service';
 import { Invoice } from '../../../Models/Invoice';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
-import { FormControl, FormGroup, FormBuilder, FormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, FormArray, Validators, ValidatorFn, AbstractControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
-
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export interface Group {
     id: string;
@@ -23,39 +29,51 @@ export interface isActive {
     desc: string;
 }
 
-
 @Component({
     selector: 'app-UsersEdit',
     templateUrl: './UsersEdit.component.html',
-    styleUrls: ['./UsersEdit.component.scss']
+    styleUrls: ['./UsersEdit.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        NgSelectModule,
+        AsyncPipe
+    ]
 })
 
 export class UsersEditComponent implements OnInit {
 
-    userForm: FormGroup;
+    userForm!: UntypedFormGroup;
     emailPattern: any = /\S+@\S+\.\S+/;
     groups: Group[] = [];
     status: isActive[] = [];
     grouplist: Group[] = [];
-    group$: Observable<Group[]>;
+    group$!: Observable<Group[]>;
     selectedGroup: any;
-    public groupFilterCtrl: FormControl = new FormControl();
+    public groupFilterCtrl: UntypedFormControl = new UntypedFormControl();
 
     isActive: isActive[] = [];
     isActivelist: isActive[] = [];
-    isactive$: Observable<isActive[]>;
+    isactive$!: Observable<isActive[]>;
     selectedisActive: any;
-    public isActiveFilterCtrl: FormControl = new FormControl();
+    public isActiveFilterCtrl: UntypedFormControl = new UntypedFormControl();
 
     id: any;
-    selectedValue;
-    selectedValueisActive;
+    selectedValue: any;
+    selectedValueisActive: any;
 
     constructor(
         public service: AdminPanelServiceService,
         private apiService: ApiService,
         private route: ActivatedRoute,
-        private formGroup: FormBuilder,
+        private formGroup: UntypedFormBuilder,
         private sanitizer: DomSanitizer
 
     ) { }
@@ -74,26 +92,26 @@ export class UsersEditComponent implements OnInit {
             isActive: ['', [Validators.required]],
         });
 
-        this.apiService.getUserById(this.id).subscribe(res => {
+        this.apiService.getUserById(this.id).subscribe((res: any) => {
             this.getDataUser(res, this.id)
-        }, error => console.log(error));
+        }, (error: any) => console.log(error));
 
     }
 
 
-    getDataUser(response, id_user) {
+    getDataUser(response: { data: { group_id: any; first_name: any; last_name: any; username: any; is_active: any; }; }, id_user: any) {
 
 
         console.log(response.data.group_id);
 
-        this.userForm.get('first_name').setValue(response.data.first_name)
-        this.userForm.get('last_name').setValue(response.data.last_name)
-        this.userForm.get('email').setValue(response.data.username)
+    this.userForm.get('first_name')?.setValue(response.data.first_name)
+    this.userForm.get('last_name')?.setValue(response.data.last_name)
+    this.userForm.get('email')?.setValue(response.data.username)
 
         // START ANGULAR MAT SEARCH GROPUS     
         this.groups = [];
         this.apiService.getGroupsList().subscribe(
-            (data: Group[]) => {
+            (data: any) => {
                 this.grouplist = data;
                 for (var i in this.grouplist) {
                     let get_id = this.grouplist[i]['id'];
@@ -119,46 +137,50 @@ export class UsersEditComponent implements OnInit {
             }
         ];
         this.setValueStatusSelect(this.status, response.data.is_active);
-        this.isactive$ = this.getState("", this.status);
+    this.isactive$ = this.getState("", this.status);
     }
 
 
-    setValueGroupSelect(groups, group_id) {
-        let count;
+    setValueGroupSelect(groups: any[], group_id: any) {
+        let count: number | undefined;
         for (var i = 0; i < groups.length; i++) {
-            groups[i].id;
             if (groups[i].id == group_id) {
                 count = i;
+                break;
             }
         }
-        this.selectedValue = groups[count].id;
+        if (typeof count !== 'undefined') {
+            this.selectedValue = groups[count].id;
+        }
     }
 
 
-    setValueStatusSelect(status, is_active) {
-        let count;
+    setValueStatusSelect(status: any[], is_active: any) {
+        let count: number | undefined;
         for (var i = 0; i < status.length; i++) {
-            status[i].active;
             if (status[i].active == is_active) {
                 count = i;
+                break;
             }
         }
-        this.selectedValueisActive = status[count].active;
+        if (typeof count !== 'undefined') {
+            this.selectedValueisActive = status[count].active;
+        }
     }
 
 
-    getGroups(term: string = null, algo): Observable<Group[]> {
+    getGroups(term: string = '', algo: Group[]): Observable<Group[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.name.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: { name: string; }) => x.name.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
 
-    getState(term: string = null, algo): Observable<isActive[]> {
+    getState(term: string = '', algo: isActive[]): Observable<isActive[]> {
         let items = algo;
         if (term) {
-            items = items.filter(x => x.state.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
+            items = items.filter((x: isActive) => x.desc.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
         return of(items).pipe(delay(500));
     }
@@ -198,3 +220,4 @@ export class UsersEditComponent implements OnInit {
 
 
 }
+

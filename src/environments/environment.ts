@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  domain: 'http://localhost:4200',
+  domain: 'http://localhost:4216',
   basePath: '/interamericana',
   api: {
     // baseUrl: 'https://ofertas-swiftly.com/api/',
@@ -18,10 +18,11 @@ export const environment = {
     key: '2204119136',
     hash: 'bdd05095c22502bbd11161c206a99785c0d44abedc9b11cb9f96af4267e0993b342ef0d88956a356517bda1005c1ae437e609d789416200a746d2f438888fc95',
     productinfo: 'Compra en interamericana',
-    url_response: 'http://localhost:4200/checkout/final-receipt',
+    url_response: 'http://localhost:4216/checkout/final-receipt',
     url_webhook: 'https://38d30d8e0158.ngrok-free.app/api/payment-webhook/'
   },
 };
+
 
 /*
  * In development mode, to ignore zone related error stack frames such as
@@ -30,3 +31,4 @@ export const environment = {
  * because it will have performance impact when throw error
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+

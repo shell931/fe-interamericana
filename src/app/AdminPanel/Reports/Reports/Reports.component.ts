@@ -1,11 +1,36 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminPanelServiceService } from '../../Service/AdminPanelService.service';
 import {TimerObservable} from "rxjs/observable/TimerObservable";
+import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
+import { BuySellChartComponent } from '../../Widget/Charts/BuySellChart/BuySellChart.component';
 
 @Component({
 	selector: 'app-reports',
 	templateUrl: './Reports.component.html',
-	styleUrls: ['./Reports.component.scss']
+	styleUrls: ['./Reports.component.scss'],
+	standalone: true,
+	imports: [
+		CommonModule,
+		MatCardModule,
+		MatTabsModule,
+		MatTableModule,
+		MatChipsModule,
+		MatMenuModule,
+		MatIconModule,
+		MatButtonModule,
+		TranslateModule,
+		BuySellChartComponent,
+		DatePipe,
+		CurrencyPipe
+	]
 })
 
 export class ReportsComponent implements OnInit {
@@ -47,3 +72,4 @@ export class ReportsComponent implements OnInit {
       }
    }
 }
+

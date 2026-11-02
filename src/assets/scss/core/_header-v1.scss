@@ -178,16 +178,7 @@ menu {
     color: $font-color !important;
 }
 
-body .mat-menu-panel {
-    min-width: 300px;
-    max-width: 300px;
-    i {
-        vertical-align: middle;
-    }
-    span {
-        display: inline-block;
-    }
-}
+/* mat-menu-panel reglas movidas al componente específico */
 
 .cart-menu-list {
     border-bottom: 1px solid #d5d5d5;
@@ -238,12 +229,7 @@ body .mat-menu-panel {
     }
 }
 
-.drop-wrap {
-    display: block !important;
-    max-height: 320px;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
+/* .drop-wrap regla movida al componente específico */
 
 .logo-site {
     align-self: center;
@@ -299,10 +285,7 @@ body .mat-menu-panel {
             margin: 0;
         }
     }
-    body .mat-menu-panel {
-        min-width: 210px;
-        max-width: 210px;
-    }
+    /* mat-menu-panel móvil en componente específico */
 }
 
 //Mega Menu

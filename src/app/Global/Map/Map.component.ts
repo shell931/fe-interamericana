@@ -1,10 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 declare var google: any;
 
 @Component({
   selector: 'embryo-Map',
   templateUrl: './Map.component.html',
-  styleUrls: ['./Map.component.scss']
+  styleUrls: ['./Map.component.scss'],
+  standalone: true,
+  imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class MapComponent implements OnInit {
 
@@ -63,3 +68,4 @@ export class MapComponent implements OnInit {
    }
 
 }
+

@@ -1,26 +1,39 @@
-<div class="bg-white final-receipt-page">
-    <mat-card class="pt-0 w-100 m-0">
-        <!-- Header del card con el título -->
-        <div class="card-header">
-            <h5 class="color_title title-add-to-card mb-0">Agregaste en tu carrito:</h5>
-        </div>
+<div class="add-to-cart-dialog">
+    <div class="dialog-overlay" (click)="onContinueShopping()"></div>
+    <div class="dialog-container">
+        <div class="dialog-content">
+            <!-- Success Icon -->
+            <div class="success-icon">
+                <svg class="checkmark" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="m14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
 
-        <!-- Contenido del card -->
-        <div class="py-3 px-3">
-            <div class="d-flex flex-column align-items-center justify-content-center">
-                <div class="product-image-container mb-3">
+            <!-- Header -->
+            <div class="dialog-header">
+                <h3 class="dialog-title">¡Producto agregado!</h3>
+                <p class="dialog-subtitle">Se ha añadido a tu carrito de compras</p>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-section">
+                <div class="product-image-wrapper">
                     <img [src]="data.image" [alt]="data.name" class="product-image">
+                    <div class="image-overlay"></div>
                 </div>
-                <div class="product-info-container text-center">
-                    <p class="mb-2"><b class="add-to-card">{{data.name}}</b></p>
-                    <p class="mb-4"><b class="add-to-card">{{data.price | currency : 'USD' : 'symbol' : '1.0-0'}}</b></p>
-                    <div class="button-view-cart">
-                        <button mat-raised-button color="accent" class="w-100" (click)="onClose()">
-                            Ver carrito
-                        </button>
-                    </div>
+                <div class="product-details">
+                    <h4 class="product-name">{{data.name}}</h4>
+                    <p class="product-price">{{data.price | currency : 'USD' : 'symbol' : '1.0-0'}}</p>
                 </div>
             </div>
+
+            <!-- Action Buttons -->
+            <div class="dialog-actions">
+                <button class="btn-primary" (click)="onContinueShopping()">
+                    <span>Continuar comprando</span>
+                </button>
+            </div>
         </div>
-    </mat-card>
+    </div>
 </div>

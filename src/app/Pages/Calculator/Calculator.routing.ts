@@ -7,3 +7,4 @@ export const CalculatorRoutes: Routes = [
     component: CalculatorComponent
   }
 ];
+

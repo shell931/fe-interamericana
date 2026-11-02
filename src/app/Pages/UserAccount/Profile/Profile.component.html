@@ -1,17 +1,24 @@
-<b>Tu información</b>
-<div class="pt-3">
-    <div class="proflie-field mb-3">
-        <label>Nombre:</label>
-        <span>{{name}}</span>
+<div class="profile-container">
+    <div class="profile-header">
+        <b>Tu información</b>
     </div>
-    <!-- <div class="proflie-field mb-3">
-      <label>Mobile Number:</label>
-      <span>+120 256 254 125</span>
-    </div> -->
-    <div class="proflie-field mb-3">
-        <label>E-mail:</label>
-        <span>{{email}}</span>
+    
+    <div class="profile-content">
+        <div class="profile-field">
+            <label>Nombre</label>
+            <span>{{name}}</span>
+        </div>
+        
+        <div class="profile-field">
+            <label>Correo electrónico</label>
+            <span>{{email}}</span>
+        </div>
     </div>
 
-    <button mat-raised-button color="accent" [routerLink]="['edit']" [queryParams]="{type:'info'}">Editar</button>
+    <div class="profile-actions">
+        <button mat-raised-button [routerLink]="['edit']" [queryParams]="{type:'info'}">
+            <i class="material-icons" style="margin-right: 8px;">edit</i>
+            Editar perfil
+        </button>
+    </div>
 </div>

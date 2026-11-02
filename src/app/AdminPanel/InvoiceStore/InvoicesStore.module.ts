@@ -10,16 +10,12 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatPaginatorModule} from '@angular/material/paginator';
-
-
-import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { InvoicesStoreComponent } from './InvoicesStore/InvoicesStore.component';
 import { InvoicesStoreRoutes} from './InvoicesStore.routing';
 
 @NgModule({
-	declarations: [InvoicesStoreComponent],
 	imports: [
+		InvoicesStoreComponent,
 		MatIconModule,
 		MatButtonModule,
 		MatCardModule,
@@ -27,9 +23,9 @@ import { InvoicesStoreRoutes} from './InvoicesStore.routing';
       CommonModule,
       MatFormFieldModule,
       MatInputModule,
-      FlexLayoutModule,
       MatPaginatorModule,
 		RouterModule.forChild(InvoicesStoreRoutes)
 	]
 })
 export class InvoicesStoreModule { }
+
