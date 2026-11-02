@@ -763,6 +763,14 @@
         /* anula margen superior genérico */
     }
 
+    .modern-product-page .price-actions-inline .btn-wishlist {
+        width: 30px;
+        height: 30px;
+        min-height: 30px;
+        margin-top: 0;
+        padding: 0;
+    }
+
     /* Oculta bloque de acciones grande en móvil */
     .action-buttons {
         display: none !important;

@@ -64,14 +64,18 @@
                             </div>
                         
                         <!-- Acciones compactas junto al precio (solo móvil) -->
-                        <div class="price-actions-inline" *ngIf="detailData?.stock > 0">
-                            <button class="btn-secondary" (click)="addToCart(detailData)">
+                        <div class="price-actions-inline">
+                            <button class="btn-secondary" (click)="addToCart(detailData)" *ngIf="detailData?.stock > 0">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span class="btn-label">Añadir</span>
                             </button>
-                            <button class="btn-primary" (click)="buyNow(detailData)">
+                            <button class="btn-primary" (click)="buyNow(detailData)" *ngIf="detailData?.stock > 0">
                                 <i class="fa fa-bolt"></i>
                                 <span class="btn-label">Comprar</span>
+                            </button>
+                            <!-- En mobile las cards no muestran el corazón: se agrega a "me gusta" desde acá -->
+                            <button class="btn-wishlist" (click)="addToWishlist(detailData)" title="Añadir a me gusta" aria-label="Añadir a me gusta">
+                                <i class="fa fa-heart"></i>
                             </button>
                         </div>
                             
