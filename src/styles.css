@@ -1473,7 +1473,9 @@ button {
   pointer-events: auto !important;
   cursor: pointer !important;
   position: relative !important;
-  z-index: 999 !important;
+  /* Era 999: con eso todos los botones de la página se dibujaban encima del header
+     y la barra inferior fijos en mobile. 1 alcanza para quedar sobre su propio contenido. */
+  z-index: 1 !important;
 }
 
 /* Allow button content to be visible but clicks go to button */
@@ -1523,7 +1525,9 @@ button.mdc-button,
   pointer-events: auto !important;
   cursor: pointer !important;
   position: relative !important;
-  z-index: 1000 !important;
+  /* Era 1000: empataba con el header fijo (z-index 1000) y, por ir después en el DOM,
+     los botones del contenido se dibujaban encima del header y la barra inferior en mobile. */
+  z-index: 1 !important;
   touch-action: manipulation !important;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important;
 }
