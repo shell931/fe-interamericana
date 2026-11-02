@@ -125,6 +125,7 @@
         <div class="megamenu-wrapper" [class.logged-in]="show">
           <ul class="megamenu">
             <li><a [routerLink]="['/']">INICIO</a></li>
+            <!-- Interamericana: solo Inicio y Acceder/Registrar
             <li>
               <a *ngIf="show_info" [matMenuTriggerFor]="cat" class="space_menus pointer">
                 CATEGORÍAS <i class="fa fa-chevron-down"></i>
@@ -139,6 +140,7 @@
                 INFORMACIÓN <i class="fa fa-chevron-down"></i>
               </a>
             </li>
+            -->
           </ul>
 
           <ul class="menu3 top-link list-inline">
@@ -186,18 +188,17 @@
     <button mat-menu-item (click)="exit_store_front(); onCommerceMenuClick('Salir')">Salir</button>
   </mat-menu>
 
-  <!-- Categorías -->
+  <!-- Interamericana: menús ocultos junto con sus links
   <mat-menu #cat="matMenu" class="custom-menu">
     <a mat-menu-item *ngFor="let item of get_categories" [routerLink]="['/storelist/searchstorebycategories/', item.id]">
       {{ item.name_category }}
     </a>
   </mat-menu>
 
-  <!-- Info -->
   <mat-menu #info_business="matMenu" class="custom-menu">
-    <!-- Interamericana: solo protección de datos -->
     <a mat-menu-item [routerLink]="['/data_protection']">Protección de datos</a>
   </mat-menu>
+  -->
 </header>
 
 <!-- MOBILE MENU OVERLAY -->
@@ -205,6 +206,7 @@
   <div class="table-cell" (click)="$event.stopPropagation()">
     <ul class="list-unstyled">
       <li><a [routerLink]="['/']" (click)="closeMobileMenu()">INICIO</a></li>
+      <!-- Interamericana: solo Inicio y Acceder/Registrar
       <li>
         <a *ngIf="show_info" [matMenuTriggerFor]="cat_mobile">
           CATEGORÍAS <i class="fa fa-chevron-down"></i>
@@ -219,6 +221,7 @@
           INFORMACIÓN <i class="fa fa-chevron-down"></i>
         </a>
       </li>
+      -->
       <li><a *ngIf="show_add" [routerLink]="['/session/signin']" (click)="closeMobileMenu()">ACCEDER / REGISTRAR</a></li>
       <li>
         <a *ngIf="show" [matMenuTriggerFor]="loginuser_mobile">
@@ -235,18 +238,17 @@
 </div>
 
 <!-- MOBILE MENU DROPDOWNS -->
-  <!-- Categorías Mobile -->
+<!-- Interamericana: menús ocultos junto con sus links
 <mat-menu #cat_mobile="matMenu" class="custom-menu">
   <a mat-menu-item *ngFor="let item of get_categories" [routerLink]="['/storelist/searchstorebycategories/', item.id]" (click)="closeMobileMenu()">
     {{ item.name_category }}
   </a>
 </mat-menu>
 
-<!-- Info Mobile -->
 <mat-menu #info_business_mobile="matMenu" class="custom-menu">
-  <!-- Interamericana: solo protección de datos -->
   <a mat-menu-item [routerLink]="['/data_protection']" (click)="closeMobileMenu()">Protección de datos</a>
 </mat-menu>
+-->
 
 <mat-menu #loginuser_mobile="matMenu" class="custom-menu">
   <a mat-menu-item [routerLink]="['/account/profile']" (click)="closeMobileMenu()"><i class="material-icons mr-1 col_icon">settings</i><span>Cuenta</span></a>
