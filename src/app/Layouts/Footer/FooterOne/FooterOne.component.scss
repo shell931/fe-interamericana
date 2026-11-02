@@ -1502,3 +1502,119 @@ p {
     }
     .social-icon i { font-size: 14px; margin-bottom: 2px; }
 }
+
+/* ===== CONTACTO: lista con íconos (web y mobile) ===== */
+.contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.contact-item > i {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(76, 175, 80, 0.15);
+    color: #4CAF50;
+    font-size: 15px;
+}
+
+.contact-item__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: left;
+}
+
+.contact-item__label {
+    color: #4CAF50;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.contact-item__value {
+    color: #ffffff;
+    font-size: 14px;
+    text-decoration: none;
+    overflow-wrap: anywhere; /* el correo es largo: que parta línea y no se salga */
+}
+
+a.contact-item__value:hover {
+    color: #4CAF50;
+}
+
+/* ===== MOBILE: secciones alineadas a la izquierda y separadas =====
+   Va al final para ganarle a las reglas centradas de los @media anteriores */
+@media (max-width: 768px) {
+    .family-footer .main-footer-content {
+        padding: 28px 0 24px;
+    }
+
+    .family-footer .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+        text-align: left;
+        padding: 0 20px;
+    }
+
+    .family-footer .footer-column + .footer-column {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .family-footer .footer-section {
+        align-items: flex-start;
+        padding: 18px 0;
+    }
+
+    .family-footer .footer-title {
+        text-align: left;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+    }
+
+    .family-footer .footer-text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .family-footer .footer-links {
+        text-align: left;
+    }
+
+    .family-footer .footer-links li {
+        margin-bottom: 0;
+    }
+
+    .family-footer .footer-bottom {
+        /* fondo sólido: el translúcido dejaba ver el gris de la página detrás */
+        background: #232323;
+        padding-top: 16px;
+        /* espacio para la barra inferior fija (~70px) y el botón de WhatsApp encima de ella,
+           así al final del scroll el copyright no queda tapado */
+        padding-bottom: 150px;
+    }
+
+    .family-footer .copyright {
+        font-size: 12px;
+        text-align: center;
+    }
+}

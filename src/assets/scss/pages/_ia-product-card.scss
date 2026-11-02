@@ -39,9 +39,12 @@
     background: #fff;
   }
 
-  /* !important en position: src/styles.css fuerza `button { position: relative !important }` en todo el sitio */
+  /* !important en position y z-index: src/styles.css fuerza
+     `button { position: relative !important; z-index: 999 !important }` en todo el sitio,
+     y con 999 los botones se dibujaban encima del header y el footer fijos en mobile */
   .ia-product-card__action {
     position: absolute !important;
+    z-index: 1 !important;
     top: 50%;
     transform: translateY(-50%);
     width: 40px;
@@ -79,15 +82,17 @@
     color: #fff;
   }
 
+  /* Los botones aparecen solo al pasar el mouse por la card */
   .ia-product-card:hover .ia-product-card__action,
-  .ia-product-card__action:focus-visible {
+  .ia-product-card:focus-within .ia-product-card__action {
     opacity: 1;
   }
 
-  /* En pantallas táctiles no hay hover: botones siempre visibles */
+  /* En táctil no hay hover y la interacción quedaba rara: sin botones en la card,
+     el carrito y "me gusta" se usan desde el detalle del producto */
   @media (hover: none) {
     .ia-product-card__action {
-      opacity: 1;
+      display: none !important;
     }
   }
 

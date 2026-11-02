@@ -4538,6 +4538,8 @@ div.main-container div.container.container-wide div.destacados-grid div.products
   margin-right: auto !important;
   padding-left: 20px !important;
   padding-right: 20px !important;
+  /* con width: 100% en content-box el padding sumaba 40px y la grilla salía de la pantalla en mobile */
+  box-sizing: border-box !important;
 }
 
 .destacados-grid.sin-sidebar {
@@ -4573,3 +4575,9 @@ div.main-container div.container.container-wide div.destacados-grid div.products
 
 /* === INTERAMERICANA: card de producto (estilos en assets/scss/pages/_ia-product-card.scss) === */
 @include card.ia-product-card;
+
+/* "Ver todos los productos": anula el `button { z-index: 999 !important }` global de src/styles.css,
+   que lo dibujaba encima del header fijo en mobile */
+.ver-mas-productos-section .transparent-btn {
+  z-index: auto !important;
+}

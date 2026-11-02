@@ -81,7 +81,6 @@
                                 <a *ngIf="!card?.id_product" [routerLink]="[card?.route_product]">{{ card?.name }}</a>
                             </h6>
                             <p class="ia-product-card__price">{{ card?.price | currency : 'USD' : 'symbol' : '1.0-0' }}</p>
-                            <span class="ia-product-card__shipping"><img src="assets/images/shipping-fast-solid.svg" alt="" /> Envío a todo el país</span>
                         </div>
                     </article>
                 </div>
