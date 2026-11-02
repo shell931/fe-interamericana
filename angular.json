@@ -40,6 +40,7 @@
           "configurations": {
             "production": {
               "tsConfig":"tsconfig.app.json",
+              "outputHashing": "all",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
