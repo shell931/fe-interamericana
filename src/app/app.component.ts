@@ -4,6 +4,7 @@ import { ViewportScroller } from '@angular/common';
 import { GlobalModule } from './Global/Global.module';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { LoaderComponent } from './Global/Loader/Loader.component';
+import { MetaPixelService } from './Services/meta-pixel.service';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,9 @@ export class AppComponent implements AfterViewInit {
   
   @ViewChild('animatedElement', { static: false }) animatedElement!: ElementRef;
   
-  constructor(private router: Router, private viewportScroller: ViewportScroller) {
+  constructor(private router: Router, private viewportScroller: ViewportScroller, private metaPixel: MetaPixelService) {
     // Inicialización del componente
+    this.metaPixel.init();
     try { if ('scrollRestoration' in history) { (history as any).scrollRestoration = 'manual'; } } catch {}
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

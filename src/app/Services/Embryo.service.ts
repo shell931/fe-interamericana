@@ -10,6 +10,7 @@ import { ConfirmationPopupComponent } from '../Global/ConfirmationPopup/Confirma
 import { LocationPredeterminedComponent } from '../AdminPanel/Widget/PopUp/LocationPredetermined/LocationPredetermined.component';
 import { AddCartComponent } from '../AdminPanel/Widget/PopUp/AddCart/AddCart.component';
 import { ShowCartDataComponent } from '../AdminPanel/Widget/PopUp/ShowCartData/ShowCartData.component';
+import { MetaPixelService } from './meta-pixel.service';
 
 
 
@@ -54,6 +55,7 @@ export class EmbryoService {
       private dialog: MatDialog,
       // private db: AngularFireDatabase,
       private toastyService: ToastrService,
+      private metaPixel: MetaPixelService,
       ) {
 
       this.calculateLocalWishlistProdCounts();
@@ -174,6 +176,7 @@ export class EmbryoService {
          price:data.price,
          produc_code:data.produc_code};
       this.addCartPopup(this.get_product_data);
+      this.metaPixel.addToCart(data);
 
       setTimeout(() => {
          localStorage.setItem("cart_item", JSON.stringify(products));
@@ -219,6 +222,7 @@ export class EmbryoService {
 
       localStorage.setItem("cart_item", JSON.stringify(products));
       this.calculateLocalCartProdCounts();
+      this.metaPixel.addToCart(data);
    }
 
    public updateAllLocalCartProduct(products: any) {

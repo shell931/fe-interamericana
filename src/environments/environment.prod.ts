@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  metaPixelId: '1461117445867720',
   get domain() { return `${window.location.protocol}//${window.location.host}`; },
   basePath: '/interamericana',
   api: {
