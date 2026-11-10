@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { BarRatingModule } from 'ngx-bar-rating';
 
 import { EmbryoService } from '../../Services/Embryo.service';
+import { MetaPixelService } from '../../Services/meta-pixel.service';
 
 @Component({
    selector: 'embryo-ShopDetails',
@@ -40,7 +41,8 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
    constructor(private route: ActivatedRoute,
       private router: Router,
       public embryoService: EmbryoService,
-      public dialog: MatDialog 
+      public dialog: MatDialog,
+      private metaPixel: MetaPixelService
    ) {
 
    }
@@ -73,6 +75,8 @@ export class ShopDetailsComponent implements OnInit, OnChanges {
       
       // Re-initialize arrays when data changes
       this.initializeProductArrays();
+
+      this.metaPixel.viewContent(this.detailData);
    }
 
    /**

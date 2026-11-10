@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { LoadScriptsService } from "../../../load-scripts.service";
 import { environment } from '../../../../environments/environment';
 import { PopupManagerService } from '../../../Services/popup-manager.service';
+import { MetaPixelService } from '../../../Services/meta-pixel.service';
 
 // Angular imports for standalone component
 import { CommonModule, CurrencyPipe } from '@angular/common';
@@ -273,7 +274,8 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     public router: Router,
     private apiService: ApiService,
     private _LoadScript: LoadScriptsService,
-    private popupManager: PopupManagerService) {
+    private popupManager: PopupManagerService,
+    private metaPixel: MetaPixelService) {
 
     this.embryoService.removeBuyProducts();
     _LoadScript.Carga(["card/card"]);
@@ -320,6 +322,8 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       });
 
       this.apiService.PredeterminateLocationsByIdUser(id_user_front).subscribe((res: any) => this.getDataLocations(res));
+
+      this.metaPixel.initiateCheckout(this.embryoService.localStorageCartProducts, this.getCartProducts());
 
       // START ANGULAR MAT SEARCH MONTH
 
@@ -626,6 +630,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
                           form.appendChild(input);
                         }
                       }
+                      this.metaPixel.addPaymentInfo(this.amount);
                       document.body.appendChild(form);
                       form.submit();
 
@@ -775,6 +780,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
                           input.value = String(fields[name]);
                           form.appendChild(input);
                        }
+                       this.metaPixel.addPaymentInfo(this.amount);
                        document.body.appendChild(form);
                        form.submit();
 
@@ -1187,6 +1193,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
         form.appendChild(input);
       }
     }
+    this.metaPixel.addPaymentInfo(this.amount);
     document.body.appendChild(form);
     form.submit();
   }
