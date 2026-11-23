@@ -1599,3 +1599,28 @@ body {
     }
   }
 }
+/* WhatsApp order button (orders close on WhatsApp, see Core/sales-channel.config.ts) */
+.pay-button.whatsapp-order-button {
+  background: linear-gradient(135deg, #25d366, #1ebe5a) !important;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3) !important;
+  max-width: 320px !important;
+  padding: 0.6rem 1rem !important;
+
+  &:hover {
+    background: linear-gradient(135deg, #1ebe5a, #17a84e) !important;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4) !important;
+  }
+
+  .pay-button-content {
+    gap: 0.5rem !important;
+
+    i {
+      font-size: 1.4rem !important;
+    }
+  }
+
+  .pay-button-security {
+    max-width: none !important;
+    font-size: 0.7rem !important;
+  }
+}

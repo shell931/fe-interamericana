@@ -18,6 +18,7 @@ import { environment } from '../../../../../src/environments/environment';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { AppLogoComponent } from '../../../Global/AppLogo/AppLogo.component';
+import { SALES_CHANNEL } from '../../../Core/sales-channel.config';
 import { HeaderCartComponent } from '../../../Global/HeaderCart/HeaderCart.component';
 import { WishListComponent } from '../../../Global/WishList/WishList.component';
 import $ from 'jquery';
@@ -141,6 +142,8 @@ export class HeaderOneComponent implements OnInit, OnDestroy {
 
    // Route detection for cart page
    public isOnCartPage = false;
+
+  readonly onlinePaymentEnabled = SALES_CHANNEL.onlinePaymentEnabled;
 
   constructor(
       public embryoService: EmbryoService,

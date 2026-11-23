@@ -153,7 +153,7 @@
               </a>
             </li>
             <li class="account">
-              <a *ngIf="show" [routerLink]="['/checkout']" class="btn-xs">
+              <a *ngIf="show && onlinePaymentEnabled" [routerLink]="['/checkout']" class="btn-xs">
                 <span>CHECKOUT</span> <i class="fa fa-check-square-o" aria-hidden="true"></i>
               </a>
             </li>

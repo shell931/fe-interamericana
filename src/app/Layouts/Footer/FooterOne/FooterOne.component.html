@@ -80,7 +80,8 @@
 <!-- //  / Footer Container -->
 
 <!--WhatsApp Button-->
-<a href="https://wa.me/573202863947?text=Hola,%20necesito%20información%20sobre%20sus%20productos"
+<a [href]="whatsappContactUrl"
+   (click)="onWhatsappContact()"
    target="_blank"
    rel="noopener"
    class="whatsapp-float"

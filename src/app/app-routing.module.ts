@@ -1,8 +1,14 @@
 
-import { Routes} from '@angular/router';
+import { inject } from '@angular/core';
+import { Router, Routes} from '@angular/router';
 
 import { MainComponent } from './Main/Main.component';
 import { CartComponent } from './Pages/Cart/Cart.component';
+import { SALES_CHANNEL } from './Core/sales-channel.config';
+
+/** While orders close on WhatsApp, every way into the gateway checkout lands on the cart. */
+const onlinePaymentGuard = () =>
+   SALES_CHANNEL.onlinePaymentEnabled || inject(Router).createUrlTree(['/cart']);
 
 
 
@@ -100,7 +106,9 @@ export const AppRoutes : Routes = [
             import('./Pages/Session/Session.module').then (m => m.SessionModule)
          },
          {
-            path: 'checkout',loadChildren: ()=>
+            path: 'checkout',
+            canMatch: [onlinePaymentGuard],
+            loadChildren: ()=>
             import('./Pages/Checkout/Checkout.module').then (m => m.CheckoutModule)
          },
         //  {
