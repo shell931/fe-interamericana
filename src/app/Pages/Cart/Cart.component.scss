@@ -1624,3 +1624,68 @@ body {
     font-size: 0.7rem !important;
   }
 }
+
+// Post-send state: order went to WhatsApp, cart was emptied, offer to restore it
+.sent-order-icon {
+  font-size: 3.5rem;
+  color: #25d366;
+  margin-bottom: 1rem;
+}
+
+.sent-order-hint {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0 0 0.75rem 0;
+}
+
+.sent-order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.sent-order-restore,
+.sent-order-dismiss {
+  border-radius: 10px;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.sent-order-restore {
+  background: #fff;
+  color: #1d3557;
+  border: 1px solid #1d3557;
+
+  &:hover { background: #f1f5f9; }
+}
+
+.sent-order-dismiss {
+  background: #1d3557;
+  color: #fff;
+  border: 1px solid #1d3557;
+
+  &:hover { background: #14263f; }
+}
+
+// Editable quantity (wholesale orders type the amount instead of tapping + many times)
+.qty-input {
+  width: 56px !important;
+  padding: 0;
+  border-top: none;
+  border-bottom: none;
+  background: transparent;
+  font-family: inherit;
+  outline: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &:focus { background: #f1f5f9; }
+}

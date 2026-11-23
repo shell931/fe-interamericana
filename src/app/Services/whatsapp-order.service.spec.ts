@@ -45,6 +45,35 @@ describe('WhatsappOrderService', () => {
   });
 });
 
+describe('WhatsappOrderService sent-order restore', () => {
+  const service = new WhatsappOrderService();
+  const items = [{ id_product: 142, name: 'Rodamiento', price: 4200, quantity: 50 }];
+
+  afterEach(() => localStorage.removeItem('last_whatsapp_order'));
+
+  it('returns the remembered cart', () => {
+    service.rememberSentOrder(items);
+    expect(service.lastSentOrder()).toEqual(items);
+  });
+
+  it('forgets the cart', () => {
+    service.rememberSentOrder(items);
+    service.forgetSentOrder();
+    expect(service.lastSentOrder()).toBeNull();
+  });
+
+  it('drops a sent cart older than 48h', () => {
+    localStorage.setItem('last_whatsapp_order',
+      JSON.stringify({ at: Date.now() - 49 * 60 * 60 * 1000, items }));
+    expect(service.lastSentOrder()).toBeNull();
+  });
+
+  it('ignores corrupted storage', () => {
+    localStorage.setItem('last_whatsapp_order', '{not json');
+    expect(service.lastSentOrder()).toBeNull();
+  });
+});
+
 describe('MetaPixelService.lead', () => {
   it('sends Lead with value, COP and the catalog ids', () => {
     const pixel = new MetaPixelService({ events: { pipe: () => ({ subscribe: () => {} }) } } as any);

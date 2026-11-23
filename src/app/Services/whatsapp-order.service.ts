@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { SALES_CHANNEL } from '../Core/sales-channel.config';
 
+const SENT_ORDER_KEY = 'last_whatsapp_order';
+const SENT_ORDER_TTL_MS = 48 * 60 * 60 * 1000;
+
 export interface OrderLine {
   name: string;
   code?: string;
@@ -45,6 +48,28 @@ export class WhatsappOrderService {
 
   contactUrl(text = 'Hola, necesito información sobre sus productos'): string {
     return this.url(text);
+  }
+
+  /** Keeps the cart that was just sent, so it can be restored if the customer never sent the message. */
+  rememberSentOrder(cartItems: any[]): void {
+    try {
+      localStorage.setItem(SENT_ORDER_KEY, JSON.stringify({ at: Date.now(), items: cartItems || [] }));
+    } catch { /* storage unavailable: restore just won't be offered */ }
+  }
+
+  /** The last sent cart, or null when there is none or it is older than the restore window. */
+  lastSentOrder(): any[] | null {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SENT_ORDER_KEY) || 'null');
+      if (!saved?.items?.length || Date.now() - Number(saved.at) > SENT_ORDER_TTL_MS) { return null; }
+      return saved.items;
+    } catch {
+      return null;
+    }
+  }
+
+  forgetSentOrder(): void {
+    try { localStorage.removeItem(SENT_ORDER_KEY); } catch { /* ignore */ }
   }
 
   private url(text: string): string {
