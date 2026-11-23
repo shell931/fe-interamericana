@@ -41,14 +41,14 @@
                                 [disabled]="getQuantityValue(product) <= 1 || isUpdating">
                                 <span>−</span>
                             </button>
-                            <span class="qty-display">
-                                <span *ngIf="updatingProductId === (product.id_product || product.id)"
-                                    class="loading-spinner"></span>
-                                <span
-                                    *ngIf="updatingProductId !== (product.id_product || product.id)">{{getQuantityValue(product)}}</span>
-                            </span>
+                            <input #qtyInput type="number" inputmode="numeric" class="qty-display qty-input"
+                                aria-label="Cantidad"
+                                [min]="1" [max]="maxQuantity(product)"
+                                [value]="getQuantityValue(product)"
+                                (change)="setQuantity(product, qtyInput)"
+                                (keydown.enter)="qtyInput.blur()">
                             <button type="button" class="qty-btn plus" (click)="increment(product)"
-                                [disabled]="getQuantityValue(product) >= 10 || isUpdating">
+                                [disabled]="getQuantityValue(product) >= maxQuantity(product) || isUpdating">
                                 <span>+</span>
                             </button>
                         </div>
@@ -121,8 +121,24 @@
 </div>
 <ng-template #elseBlock>
     <div class="empty-cart-state">
-        <div class="empty-cart-content">
-            <h2 class="empty-cart-title">Tu carrito está vacío</h2>
+        <div class="empty-cart-content" *ngIf="sentOrder?.length; else plainEmpty">
+            <i class="fa fa-whatsapp sent-order-icon" aria-hidden="true"></i>
+            <h2 class="empty-cart-title">¡Pedido enviado!</h2>
+            <p class="empty-cart-description">
+                Te respondemos por WhatsApp para confirmar precio, disponibilidad y envío.
+            </p>
+            <p class="sent-order-hint">¿No se envió el mensaje?</p>
+            <div class="sent-order-actions">
+                <button type="button" class="sent-order-restore" (click)="restoreSentOrder()">
+                    Recuperar carrito ({{ sentOrder?.length }} {{ sentOrder?.length === 1 ? 'producto' : 'productos' }})
+                </button>
+                <button type="button" class="sent-order-dismiss" (click)="dismissSentOrder()">Listo</button>
+            </div>
         </div>
+        <ng-template #plainEmpty>
+            <div class="empty-cart-content">
+                <h2 class="empty-cart-title">Tu carrito está vacío</h2>
+            </div>
+        </ng-template>
     </div>
 </ng-template>

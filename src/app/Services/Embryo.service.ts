@@ -225,6 +225,11 @@ export class EmbryoService {
       this.metaPixel.addToCart(data);
    }
 
+   public clearLocalCart() {
+      localStorage.removeItem('cart_item');
+      this.calculateLocalCartProdCounts();
+   }
+
    public updateAllLocalCartProduct(products: any) {
       localStorage.removeItem('cart_item');
       localStorage.setItem("cart_item", JSON.stringify(products))
