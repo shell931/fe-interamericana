@@ -7,6 +7,9 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
 import { EmbryoService } from '../../Services/Embryo.service';
+import { WhatsappOrderService } from '../../Services/whatsapp-order.service';
+import { MetaPixelService } from '../../Services/meta-pixel.service';
+import { SALES_CHANNEL } from '../../Core/sales-channel.config';
 
 @Component({
     selector: 'embryo-Cart',
@@ -30,11 +33,14 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
     updatingProductId: string | null = null;
     showDeleteDialog = false;
     productToDelete: any = null;
+    readonly onlinePaymentEnabled = SALES_CHANNEL.onlinePaymentEnabled;
 
     constructor(public embryoService: EmbryoService,
         private router: Router,
         private loadingBar: LoadingBarService,
-        private cdRef: ChangeDetectorRef) {
+        private cdRef: ChangeDetectorRef,
+        private whatsappOrder: WhatsappOrderService,
+        private metaPixel: MetaPixelService) {
 
         // Suscribirse a eventos de navegación
         this.router.events.pipe(
@@ -149,6 +155,16 @@ export class CartComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
         return total;
 
+    }
+
+    /** Opens WhatsApp with the whole order prefilled; this is the sale's conversion point. */
+    public sendOrderByWhatsapp() {
+        const items = this.embryoService.localStorageCartProducts || [];
+        if (!items.length) { return; }
+        this.embryoService.updateAllLocalCartProduct(items);
+        const lines = this.whatsappOrder.toOrderLines(items);
+        this.metaPixel.lead(items, this.whatsappOrder.total(lines));
+        window.open(this.whatsappOrder.orderUrl(lines), '_blank', 'noopener');
     }
 
     public updateLocalCartProduct() {

@@ -100,6 +100,24 @@ export class MetaPixelService {
     this.track('AddPaymentInfo', { value: Number(total) || 0, currency: CURRENCY });
   }
 
+  /** Cart sent as a WhatsApp order: the business conversion while sales close on WhatsApp. */
+  lead(cartItems: any[], total: number): void {
+    const items = (cartItems || []).filter((p) => this.productId(p));
+    this.track('Lead', {
+      content_ids: items.map((p) => this.productId(p)),
+      contents: items.map((p) => ({ id: this.productId(p), quantity: Number(p.quantity) || 1 })),
+      content_type: 'product',
+      num_items: items.reduce((acc, p) => acc + (Number(p.quantity) || 1), 0),
+      value: Number(total) || 0,
+      currency: CURRENCY,
+    });
+  }
+
+  /** Generic WhatsApp contact (floating button), no cart attached. */
+  contact(): void {
+    this.track('Contact');
+  }
+
   private track(event: string, params?: Record<string, any>): void {
     if (!this.enabled || !window.fbq) { return; }
     try {
