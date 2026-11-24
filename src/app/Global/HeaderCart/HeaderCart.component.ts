@@ -30,7 +30,8 @@ export class HeaderCartComponent implements OnInit, OnChanges, OnDestroy {
    @Input() currency     : string = '';
 
    mobWidth : any;
-   mobScreenSize : number = 1024;
+   /** Must match the header's desktop breakpoint (HeaderOne.component.scss, 992px): desktop header ⇒ dropdown popup. */
+   mobScreenSize : number = 992;
 
    @Output() removeProductData : EventEmitter<any> = new EventEmitter();
    @Output() editProductData : EventEmitter<any> = new EventEmitter();

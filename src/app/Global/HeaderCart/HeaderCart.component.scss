@@ -575,7 +575,7 @@ div.premium-popup .unit-price {
 }
 
 /* ESPECÍFICO PARA MÓVIL Y TABLET */
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
     ::ng-deep .mobile-popup .remove-btn,
     ::ng-deep .premium-popup.mobile-popup .remove-btn,
     ::ng-deep .premium-popup .remove-btn,
@@ -1998,7 +1998,7 @@ div.footermobile button.cart-trigger-mobile,
 }
 
 /* === MOBILE TOUCH IMPROVEMENTS === */
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
     /* FORZAR TAMAÑO DEL BOTÓN ELIMINAR EN MÓVIL Y TABLET */
     .remove-btn {
         width: 28px !important;
@@ -2151,7 +2151,7 @@ div.footermobile button.cart-trigger-mobile {
 }
 
 /* === RESPONSIVE DESIGN === */
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
     /* FORZAR TAMAÑO DEL BOTÓN ELIMINAR EN MÓVIL Y TABLET CON MÁXIMA ESPECIFICIDAD */
     .premium-popup .remove-btn,
     .mobile-popup .remove-btn,
@@ -2455,7 +2455,7 @@ div.premium-popup.mobile-popup .cart-summary .total-price {
 }
 
 /* === MOBILE AND TABLET OPTIMIZATIONS === */
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
     .premium-popup.mobile-popup {
         width: calc(100vw - 40px) !important;
         left: 50% !important;

@@ -1353,7 +1353,7 @@ $light-gray: #e0e0e0;
 }
 
 /* === DESKTOP LAYOUT === */
-@media (min-width: 1400px) {
+@media (min-width: 992px) {
   .mobile-layout {
     display: none !important;
   }
@@ -1571,7 +1571,7 @@ $mobile-search-height: 36px;
 $mobile-gap: 8px;
 
 /* === MOBILE AND TABLET LAYOUT === */
-@media (max-width: 1399px) {
+@media (max-width: 991px) {
 
 
   .header-middle {
@@ -1761,8 +1761,8 @@ $mobile-gap: 8px;
   }
 }
 
-/* Update breakpoint for mobile/tablet to include up to 1399px */
-@media (max-width: 1399px) {
+/* Mobile/tablet layout up to 991px; laptops (992px+) get the desktop header */
+@media (max-width: 991px) {
   .desktop-layout {
     display: none !important;
   }
@@ -1774,7 +1774,7 @@ $mobile-gap: 8px;
   .megamenu { display: none; }
 }
 
-@media (max-width: 1399px) {
+@media (max-width: 991px) {
   .menuBtn { display: block; }
   .mobile-actions {
     display: flex;
@@ -1803,7 +1803,7 @@ $mobile-gap: 8px;
   }
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 992px) {
   .menuBtn { display: none; }
   .mobile-actions { display: none; }
   .desktop-actions { display: flex; }
@@ -2279,7 +2279,7 @@ $mobile-gap: 8px;
 }
 
 /* === FORCE MOBILE AND TABLET HEADER HEIGHT === */
-@media (max-width: 1399px) {
+@media (max-width: 991px) {
   header.kompraloheader,
   .header-middle {
     min-height: 85px !important;
@@ -2468,7 +2468,7 @@ $mobile-gap: 8px;
   }
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 992px) {
   .header-middle .logo-container ::ng-deep embryo-applogo img,
   .header-middle .logo-container ::ng-deep .logoimg,
   .header-middle .logo-container img,
@@ -2496,7 +2496,7 @@ $mobile-gap: 8px;
 }
 
 /* === ULTRA SPECIFIC MOBILE AND TABLET OVERRIDES === */
-@media (max-width: 1399px) {
+@media (max-width: 991px) {
   header#header.kompraloheader {
     min-height: 85px !important;
     height: 85px !important;
@@ -2845,7 +2845,7 @@ input[placeholder="Buscar productos"]:-moz-placeholder,
 /* ===== CLEAN SOLUTION - MOBILE AND DESKTOP SPECIFIC ===== */
 
 /* MOBILE AND TABLET - Search button inside search bar */
-@media (max-width: 1399px) {
+@media (max-width: 991px) {
   .mobile-search-row .search-wrapper {
     position: relative !important;
   }
@@ -2872,7 +2872,7 @@ input[placeholder="Buscar productos"]:-moz-placeholder,
 }
 
 /* DESKTOP - Normal positioning with optimized button width */
-@media (min-width: 1400px) {
+@media (min-width: 992px) {
   .search-button {
     position: static !important;
     margin: 0 !important;
@@ -2896,7 +2896,7 @@ input[placeholder="Buscar productos"]:-moz-placeholder,
 }
 
 /* REMOVE EMPTY OVERLAPPING CONTAINER ON DESKTOP */
-@media (min-width: 1400px) {
+@media (min-width: 992px) {
   /* Hide mobile footer on desktop - this might be the overlapping container */
   .footermobile,
   .footermobile.hidden-md.hidden-lg,
@@ -2988,7 +2988,7 @@ input[placeholder="Buscar productos"]:-moz-placeholder,
 }
 
 /* NUCLEAR OPTION - Force hide overlapping elements globally */
-@media (min-width: 1400px) {
+@media (min-width: 992px) {
   /* Hide all potential overlapping elements */
   .footermobile,
   .mobile-layout,
@@ -3068,7 +3068,7 @@ input[placeholder="Buscar productos"]:-moz-placeholder,
 }
 
 /* === VISUAL TWEAK: nudge mobile logo slightly to the left for balance === */
-@media (max-width: 1399px) {
+@media (max-width: 991px) {
   .mobile-logo {
     /* keep centered logic but move ~8px to the left */
     transform: translateX(calc(-50% - 14px)) !important;
